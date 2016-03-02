@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/benoit.unity
+- path: Assets/Scene/IA.unity
   isLoaded: 1
   isActive: 1

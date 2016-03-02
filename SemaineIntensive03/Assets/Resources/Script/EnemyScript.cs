@@ -10,7 +10,13 @@ public class EnemyScript : MonoBehaviour
     public float rotation;
     public GameObject Player;
     public bool playerDetected;
+    public float distanceshoot;
+    public float sprint;
+    public float observationSprint;
 
+    private float walk;
+    private float observation;
+    private float vision;
     private bool isMoving;
     private bool canMove;
     private float stunStart;
@@ -24,6 +30,8 @@ public class EnemyScript : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        walk = GetComponent<NavMeshAgent>().speed;
+        observation = GetComponent<NavMeshAgent>().angularSpeed;
         canMove = true;
         isMoving = false;
         temp = GameObject.FindGameObjectsWithTag("NavigationPoint");
@@ -61,22 +69,23 @@ public class EnemyScript : MonoBehaviour
         {
             chase();
         }
-	}
+        GetComponent<NavMeshAgent>().SetDestination(destination);
+    }
 
     void patrol()
     {
+        GetComponent<NavMeshAgent>().speed = walk;
+        GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
         {
             int rand = Random.Range(0, index);
             destination = NavigationPoints[rand].transform.position;
-            GetComponent<NavMeshAgent>().SetDestination(destination);
             isMoving = true;
         }
         else if (canMove)
         {
             if ((transform.position.x + transform.position.z) - (destination.x + destination.z) <= 1 && (destination.x + destination.z) - (transform.position.x + transform.position.z) <= 1)
             {
-                GetComponent<NavMeshAgent>().SetDestination(transform.position);
                 isMoving = false;
                 canMove = false;
                 stunStart = Time.time;
@@ -101,7 +110,6 @@ public class EnemyScript : MonoBehaviour
                 rotationDestination *= 90;
                 rotationDestination += 90;
                 rotationDestination = rotationDestination % 360;
-                Debug.Log(rotationDestination);
             }
             else
             {
@@ -119,11 +127,12 @@ public class EnemyScript : MonoBehaviour
     }
     void chase()
     {
-        if ((transform.position.x + transform.position.z) - (destination.x + destination.z) <= 1 && (destination.x + destination.z) - (transform.position.x + transform.position.z) <= 1)
+        transform.LookAt(destination);
+        GetComponent<NavMeshAgent>().speed = sprint;
+        GetComponent<NavMeshAgent>().angularSpeed = observationSprint;
+        if ((transform.position.x + transform.position.z) - (destination.x + destination.z) <= distanceshoot && (destination.x + destination.z) - (transform.position.x + transform.position.z) <= distanceshoot)
         {
-
+            destination = Player.transform.position;
         }
-        destination = Player.transform.position;
-        GetComponent<NavMeshAgent>().SetDestination(destination);
     }
 }
