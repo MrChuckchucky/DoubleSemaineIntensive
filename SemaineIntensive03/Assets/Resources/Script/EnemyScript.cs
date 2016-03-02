@@ -110,10 +110,6 @@ public class EnemyScript : MonoBehaviour
                 rotationDestination *= 90;
                 rotationDestination += 90;
                 rotationDestination = rotationDestination % 360;
-<<<<<<< HEAD
-                //Debug.Log(rotationDestination);
-=======
->>>>>>> Poulpe
             }
             else
             {
@@ -134,9 +130,10 @@ public class EnemyScript : MonoBehaviour
         transform.LookAt(destination);
         GetComponent<NavMeshAgent>().speed = sprint;
         GetComponent<NavMeshAgent>().angularSpeed = observationSprint;
-        if ((transform.position.x + transform.position.z) - (destination.x + destination.z) <= distanceshoot && (destination.x + destination.z) - (transform.position.x + transform.position.z) <= distanceshoot)
+        /*if ((transform.position.x + transform.position.z) - (destination.x + destination.z) <= distanceshoot && (destination.x + destination.z) - (transform.position.x + transform.position.z) <= distanceshoot)
         {
             destination = Player.transform.position;
-        }
+        }*/
+        destination = Player.transform.position;
     }
 }

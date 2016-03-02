@@ -12,7 +12,6 @@ public class PlayerDetection : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
         cam = this.gameObject.GetComponent<Camera>();
         planes = GeometryUtility.CalculateFrustumPlanes(cam);
     }
@@ -20,6 +19,7 @@ public class PlayerDetection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         viewPos = gameObject.GetComponent<Camera>().WorldToViewportPoint(player.transform.position);
         if (viewPos.x <= 1 && viewPos.x >= 0 && Mathf.Abs((player.transform.position.x + player.transform.position.z) - (transform.position.x + transform.position.z)) <= this.GetComponent<Camera>().farClipPlane)
         {
