@@ -20,11 +20,12 @@ public class InputManager : MonoBehaviour {
 	void Update () 
 	{
 		CamCheck ();
-		ScreenShake ();
+		//ScreenShake ();
 		CheckInput ();
-	}
+        Camera.main.transform.LookAt(this.gameObject.transform);
+    }
 
-	void CamCheck()
+    void CamCheck()
 	{
 		//int layerMask = 1 << 8; //layer 8 = Obstacle
 		if (lastHit != null){SetOpacity (lastHit, 1);}

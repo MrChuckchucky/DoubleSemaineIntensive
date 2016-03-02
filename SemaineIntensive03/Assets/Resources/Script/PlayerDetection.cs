@@ -16,7 +16,7 @@ public class PlayerDetection : MonoBehaviour
 	    
 	}
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
         if(collision.gameObject.tag == "Player")
         {
@@ -24,7 +24,7 @@ public class PlayerDetection : MonoBehaviour
             gameObject.transform.parent.GetComponent<EnemyScript>().playerDetected = true;
         }
     }
-    void OnCollisionExit()
+    void OnTriggerExit()
     {
         gameObject.transform.parent.GetComponent<EnemyScript>().playerDetected = false;
     }

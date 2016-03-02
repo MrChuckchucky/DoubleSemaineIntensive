@@ -17,17 +17,19 @@ public class EnemyScript : MonoBehaviour
     private float stunDuration;
     private float rotationStart;
     public float rotationDuration;
-    private GameObject[] temp;
-    private GameObject[] NavigationPoints;
+    public GameObject[] temp;
+    public GameObject[] NavigationPoints;
     private float rotationDestination;
+    private int index;
 	// Use this for initialization
 	void Start ()
     {
         canMove = true;
         isMoving = false;
         temp = GameObject.FindGameObjectsWithTag("NavigationPoint");
+        NavigationPoints = new GameObject[temp.Length];
         playerDetected = false;
-        int index = 0;
+        index = 0;
         foreach(GameObject navpoint in temp)
         {
             int[] IDS = navpoint.GetComponent<NavigationPointScript>().ID;
@@ -65,7 +67,7 @@ public class EnemyScript : MonoBehaviour
     {
         if (!isMoving && canMove)
         {
-            int rand = Random.Range(0, NavigationPoints.Length - 1);
+            int rand = Random.Range(0, index);
             destination = NavigationPoints[rand].transform.position;
             GetComponent<NavMeshAgent>().SetDestination(destination);
             isMoving = true;
