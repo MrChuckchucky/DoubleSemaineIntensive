@@ -20,7 +20,12 @@ public class PlayerDetection : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            gameObject.transform.parent.GetComponent<EnemyScript>().destination = collision.gameObject.transform.position;
+            gameObject.transform.parent.GetComponent<EnemyScript>().Player = collision.gameObject;
+            gameObject.transform.parent.GetComponent<EnemyScript>().playerDetected = true;
         }
+    }
+    void OnCollisionExit()
+    {
+        gameObject.transform.parent.GetComponent<EnemyScript>().playerDetected = false;
     }
 }

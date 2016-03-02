@@ -7,6 +7,8 @@ public class EnemyScript : MonoBehaviour
     public float stunDurationMin;
     public float stunDurationMax;
     public float rotation;
+    public GameObject Player;
+    public bool playerDetected;
 
     private bool isMoving;
     private bool canMove;
@@ -22,21 +24,34 @@ public class EnemyScript : MonoBehaviour
         canMove = true;
         isMoving = false;
         NavigationPoints = GameObject.FindGameObjectsWithTag("NavigationPoint");
+        playerDetected = false;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if(!isMoving && canMove)
+        if(!playerDetected)
+        {
+            patrol();
+        }
+        else
+        {
+            chase();
+        }
+	}
+
+    void patrol()
+    {
+        if (!isMoving && canMove)
         {
             int rand = Random.Range(0, NavigationPoints.Length - 1);
             destination = NavigationPoints[rand].transform.position;
             GetComponent<NavMeshAgent>().SetDestination(destination);
             isMoving = true;
         }
-        else if(canMove)
+        else if (canMove)
         {
-            if (transform.position.x - destination.x <= 1 && transform.position.y - destination.y <= 1 && destination.x - transform.position.x <= 1 && destination.y - transform.position.y <= 1)
+            if ((transform.position.x + transform.position.z) - (destination.x + destination.z) <= 1 && (destination.x + destination.z) - (transform.position.x + transform.position.z) <= 1)
             {
                 GetComponent<NavMeshAgent>().SetDestination(transform.position);
                 isMoving = false;
@@ -49,11 +64,12 @@ public class EnemyScript : MonoBehaviour
                 rot *= 90;
                 rotationStart = Time.time;
                 rotationDestination = rot;
+                destination = transform.position;
             }
         }
-        if(!canMove)
+        if (!canMove)
         {
-            if(rotationStart + rotationDuration <= Time.time)
+            if (rotationStart + rotationDuration <= Time.time)
             {
                 rotationStart = Time.time;
                 rotationDestination = transform.eulerAngles.y;
@@ -66,16 +82,25 @@ public class EnemyScript : MonoBehaviour
             }
             else
             {
-                if(rotationDestination - transform.eulerAngles.y >= 1 || transform.eulerAngles.y - rotationDestination >= 1)
+                if (rotationDestination - transform.eulerAngles.y >= 1 || transform.eulerAngles.y - rotationDestination >= 1)
                 {
                     transform.eulerAngles += new Vector3(0, rotation, 0);
                     transform.eulerAngles = new Vector3(0, Mathf.Round(transform.eulerAngles.y) % 360, 0);
                 }
             }
         }
-        if(stunStart + stunDuration <= Time.time)
+        if (stunStart + stunDuration <= Time.time)
         {
             canMove = true;
         }
-	}
+    }
+    void chase()
+    {
+        if ((transform.position.x + transform.position.z) - (destination.x + destination.z) <= 1 && (destination.x + destination.z) - (transform.position.x + transform.position.z) <= 1)
+        {
+
+        }
+        destination = Player.transform.position;
+        GetComponent<NavMeshAgent>().SetDestination(destination);
+    }
 }
