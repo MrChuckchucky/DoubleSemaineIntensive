@@ -6,8 +6,8 @@ public class InputManager : MonoBehaviour {
 	public float speed = 10;
 	RaycastHit hit;
 	GameObject lastHit = null;
-	Vector3 centerPointScreen;
-	Vector3 centerPointWorld;
+	float speedShake = 1f;
+	float degreeShakeMax = 20;
 	int layerMask = 1 << 8; //layer 8 = Obstacle
 
 	// Use this for initialization
@@ -20,12 +20,8 @@ public class InputManager : MonoBehaviour {
 	void Update () 
 	{
 		CamCheck ();
+		ScreenShake ();
 		CheckInput ();
-		//centerPointScreen =  new Vector3(Screen.width/2.0f, Screen.height/2.0f, Camera.main.nearClipPlane);
-		//centerPointWorld =  Camera.main.ScreenToWorldPoint(centerPointScreen);
-		Camera.main.transform.LookAt(this.gameObject.transform);
-		//Debug.Log ("CPW = " + centerPointWorld);
-		//Debug.Log ("Player = " + this.gameObject.transform.position);
 	}
 
 	void CamCheck()
@@ -99,19 +95,49 @@ public class InputManager : MonoBehaviour {
 	{
 		this.gameObject.tag = "Swapable";
 		newPlayer.tag = "Player";
-		Quaternion rot = Camera.main.transform.rotation;
+
+		Vector3 pos = Camera.main.transform.localPosition;
+		Vector3 rot = Camera.main.transform.localEulerAngles;
+		Debug.Log ("initpos : " + pos);
 		Debug.Log ("initrot : " + rot);
+
 		Camera.main.transform.parent = newPlayer.transform;
+
+		Camera.main.transform.localPosition = pos;
+		Camera.main.transform.localEulerAngles = rot;
+		Debug.Log ("finalpos : " + Camera.main.transform.localPosition);
+		Debug.Log ("finalrot : " + Camera.main.transform.localEulerAngles);
+
 		Vector3 newPos = newPlayer.transform.position;
 		//newPos.x = 0;
 		newPos.y += 10;
 		newPos.z -= 10;
 		Camera.main.transform.position = newPos;
-		Camera.main.transform.rotation = rot;
-		Debug.Log ("finalrot : " + Camera.main.transform.rotation);
 		newPlayer.AddComponent<InputManager> ();
 		this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
+		SwitchPos (this.gameObject, newPlayer);
 		Destroy (this.gameObject.GetComponent<InputManager>());
+	}
+
+	void SwitchPos(GameObject GO1, GameObject GO2)
+	{
+		Vector3 Pos1 = GO1.transform.position;
+		Vector3 Pos2 = GO2.transform.position;
+		GO1.transform.position = Pos2;
+		GO2.transform.position = Pos1;
+	}
+
+	void ScreenShake()
+	{
+		Camera.main.transform.Rotate(0,0,speedShake);
+		if (Camera.main.transform.eulerAngles.z > degreeShakeMax && speedShake > 0){speedShake *= -1;}
+		if (Camera.main.transform.eulerAngles.z < 360-degreeShakeMax  && Camera.main.transform.eulerAngles.z > degreeShakeMax && speedShake < 0)
+		{
+			Debug.Log("endshake");
+			Vector3 euler = Camera.main.transform.eulerAngles;
+			euler.z = 0;
+			Camera.main.transform.eulerAngles = euler;
+		}
 	}
 
 	void DoMovement(string dir)
