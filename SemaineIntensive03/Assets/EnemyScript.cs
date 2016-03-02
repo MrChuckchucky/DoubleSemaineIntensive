@@ -3,6 +3,7 @@ using System.Collections;
 
 public class EnemyScript : MonoBehaviour
 {
+    public int ID;
     public Vector3 destination;
     public float stunDurationMin;
     public float stunDurationMax;
@@ -16,6 +17,7 @@ public class EnemyScript : MonoBehaviour
     private float stunDuration;
     private float rotationStart;
     public float rotationDuration;
+    private GameObject[] temp;
     private GameObject[] NavigationPoints;
     private float rotationDestination;
 	// Use this for initialization
@@ -23,8 +25,27 @@ public class EnemyScript : MonoBehaviour
     {
         canMove = true;
         isMoving = false;
-        NavigationPoints = GameObject.FindGameObjectsWithTag("NavigationPoint");
+        temp = GameObject.FindGameObjectsWithTag("NavigationPoint");
         playerDetected = false;
+        int index = 0;
+        foreach(GameObject navpoint in temp)
+        {
+            int[] IDS = navpoint.GetComponent<NavigationPointScript>().ID;
+            bool valid = false;
+            foreach (int id in IDS)
+            {
+                if(id == ID)
+                {
+                    valid = true;
+                    break;
+                }
+            }
+            if(valid)
+            {
+                NavigationPoints[index] = navpoint;
+                index++;
+            }
+        }
 	}
 	
 	// Update is called once per frame
