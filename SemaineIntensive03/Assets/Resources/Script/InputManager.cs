@@ -4,11 +4,14 @@ using System.Collections;
 public class InputManager : MonoBehaviour {
 
 	public float speed = 10;
+	public float speedTurn = 50;
 	RaycastHit hit;
 	GameObject lastHit = null;
-	float speedShake = 1f;
-	float degreeShakeMax = 20;
+	float speedShake = 3;
+	float degreeShakeMax = 10;
 	int layerMask = 1 << 8; //layer 8 = Obstacle
+	bool camFix = true;
+	string stateShake = "one";
 
 	// Use this for initialization
 	void Start () 
@@ -22,7 +25,7 @@ public class InputManager : MonoBehaviour {
 		CamCheck ();
 		//ScreenShake ();
 		CheckInput ();
-        Camera.main.transform.LookAt(this.gameObject.transform);
+		if (camFix) {Camera.main.transform.LookAt (this.gameObject.transform);}
     }
 
     void CamCheck()
@@ -65,11 +68,13 @@ public class InputManager : MonoBehaviour {
 		if (Input.GetKey (KeyCode.A)) 
 		{
 			//Camera.main.transform.LookAt(this.gameObject.transform);
+			//this.gameObject.transform.Rotate(-Vector3.up * speedTurn * Time.deltaTime);
 			Camera.main.transform.Translate(Vector3.right * speed * Time.deltaTime);
 		}
 		if (Input.GetKey (KeyCode.E))
 		{
 			//Camera.main.transform.LookAt(this.gameObject.transform);
+			//this.gameObject.transform.Rotate(Vector3.up * speedTurn * Time.deltaTime);
 			Camera.main.transform.Translate(-Vector3.right * speed *  Time.deltaTime);
 		}
 	}
@@ -98,22 +103,24 @@ public class InputManager : MonoBehaviour {
 		newPlayer.tag = "Player";
 
 		Vector3 pos = Camera.main.transform.localPosition;
-		Vector3 rot = Camera.main.transform.localEulerAngles;
-		Debug.Log ("initpos : " + pos);
-		Debug.Log ("initrot : " + rot);
+		//Vector3 rot = Camera.main.transform.localEulerAngles;
+		//Debug.Log ("initpos : " + pos);
+		//Debug.Log ("initrot : " + rot);
 
 		Camera.main.transform.parent = newPlayer.transform;
 
-		Camera.main.transform.localPosition = pos;
-		Camera.main.transform.localEulerAngles = rot;
-		Debug.Log ("finalpos : " + Camera.main.transform.localPosition);
-		Debug.Log ("finalrot : " + Camera.main.transform.localEulerAngles);
 
 		Vector3 newPos = newPlayer.transform.position;
 		//newPos.x = 0;
 		newPos.y += 10;
 		newPos.z -= 10;
 		Camera.main.transform.position = newPos;
+
+		Camera.main.transform.localPosition = pos;
+		//Camera.main.transform.localEulerAngles = rot;
+		//Debug.Log ("finalpos : " + Camera.main.transform.localPosition);
+		//Debug.Log ("finalrot : " + Camera.main.transform.localEulerAngles);
+
 		newPlayer.AddComponent<InputManager> ();
 		this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
 		SwitchPos (this.gameObject, newPlayer);
@@ -130,14 +137,22 @@ public class InputManager : MonoBehaviour {
 
 	void ScreenShake()
 	{
-		Camera.main.transform.Rotate(0,0,speedShake);
-		if (Camera.main.transform.eulerAngles.z > degreeShakeMax && speedShake > 0){speedShake *= -1;}
-		if (Camera.main.transform.eulerAngles.z < 360-degreeShakeMax  && Camera.main.transform.eulerAngles.z > degreeShakeMax && speedShake < 0)
+		if (stateShake == "one") 
 		{
-			Debug.Log("endshake");
-			Vector3 euler = Camera.main.transform.eulerAngles;
-			euler.z = 0;
-			Camera.main.transform.eulerAngles = euler;
+			Camera.main.transform.Rotate(0,0,speedShake);
+			Camera.main.transform.position -= new Vector3(0,0,speedShake*10) * Time.deltaTime;
+			if (Camera.main.transform.eulerAngles.z > degreeShakeMax) {stateShake = "two";}
+		}
+		else if (stateShake == "two") 
+		{
+			Camera.main.transform.Rotate(0,0,-speedShake);
+			Camera.main.transform.position += new Vector3(0,0,speedShake*10) * Time.deltaTime;
+			if (Camera.main.transform.eulerAngles.z < 360-degreeShakeMax && Camera.main.transform.eulerAngles.z > degreeShakeMax) {stateShake = "three";}
+		}
+		else if (stateShake == "three") 
+		{
+			Camera.main.transform.Rotate(0,0,speedShake);
+			if (Camera.main.transform.eulerAngles.z < degreeShakeMax) {camFix = true;}
 		}
 	}
 

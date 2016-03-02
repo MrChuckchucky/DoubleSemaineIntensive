@@ -101,7 +101,7 @@ public class EnemyScript : MonoBehaviour
                 rotationDestination *= 90;
                 rotationDestination += 90;
                 rotationDestination = rotationDestination % 360;
-                Debug.Log(rotationDestination);
+                //Debug.Log(rotationDestination);
             }
             else
             {
