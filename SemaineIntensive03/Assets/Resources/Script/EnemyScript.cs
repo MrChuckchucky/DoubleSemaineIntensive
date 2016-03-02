@@ -8,15 +8,14 @@ public class EnemyScript : MonoBehaviour
     public float stunDurationMin;
     public float stunDurationMax;
     public float rotation;
-    public GameObject Player;
-    public bool playerDetected;
+    public bool PlayerDetected;
     public float distanceshoot;
     public float sprint;
     public float observationSprint;
+    public float vision;
 
     private float walk;
     private float observation;
-    private float vision;
     private bool isMoving;
     private bool canMove;
     private float stunStart;
@@ -27,16 +26,20 @@ public class EnemyScript : MonoBehaviour
     public GameObject[] NavigationPoints;
     private float rotationDestination;
     private int index;
-	// Use this for initialization
-	void Start ()
+    private GameObject Player;
+    private int layerMask;
+    private RaycastHit hit;
+    // Use this for initialization
+    void Start ()
     {
+        layerMask = 1 << 8;
         walk = GetComponent<NavMeshAgent>().speed;
         observation = GetComponent<NavMeshAgent>().angularSpeed;
         canMove = true;
         isMoving = false;
         temp = GameObject.FindGameObjectsWithTag("NavigationPoint");
         NavigationPoints = new GameObject[temp.Length];
-        playerDetected = false;
+        PlayerDetected = false;
         index = 0;
         foreach(GameObject navpoint in temp)
         {
@@ -61,7 +64,8 @@ public class EnemyScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if(!playerDetected)
+        PlayerDetected = PlayerDetection();
+        if(!PlayerDetected)
         {
             patrol();
         }
@@ -72,6 +76,26 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().SetDestination(destination);
     }
 
+    bool PlayerDetection()
+    {
+        Player = GameObject.FindGameObjectWithTag("Player");
+        float distance = Mathf.Abs((Player.transform.position.x - transform.position.x) + (Player.transform.position.z - transform.position.z));
+        if (distance > vision)
+        {
+            return false;
+        }
+        Vector3 forward = Vector3.Normalize(transform.TransformDirection(Vector3.forward));
+        Vector3 toOther = Vector3.Normalize(Player.transform.position - transform.position);
+        if(Vector3.Dot(forward, toOther) < 0.4 || Vector3.Dot(forward, toOther) > 1.6f)
+        {
+            return false;
+        }
+        if (Physics.Linecast(transform.position, Player.transform.position, out hit, layerMask))
+        {
+            return false;
+        }
+        return true;
+    }
     void patrol()
     {
         GetComponent<NavMeshAgent>().speed = walk;
@@ -127,13 +151,8 @@ public class EnemyScript : MonoBehaviour
     }
     void chase()
     {
-        transform.LookAt(destination);
         GetComponent<NavMeshAgent>().speed = sprint;
-        GetComponent<NavMeshAgent>().angularSpeed = observationSprint;
-        /*if ((transform.position.x + transform.position.z) - (destination.x + destination.z) <= distanceshoot && (destination.x + destination.z) - (transform.position.x + transform.position.z) <= distanceshoot)
-        {
-            destination = Player.transform.position;
-        }*/
         destination = Player.transform.position;
+        transform.LookAt(destination);
     }
 }
