@@ -3,8 +3,7 @@ using System.Collections;
 
 public class InputManager : MonoBehaviour {
 
-	public float speed = 10;
-	public float speedTurn = 50;
+	//public float speedTurn = 50;
 	RaycastHit hit;
 	GameObject lastHit = null;
 	float speedShake = 3;
@@ -13,10 +12,31 @@ public class InputManager : MonoBehaviour {
 	bool camFix = true;
 	string stateShake = "one";
 
+	EnemyManager Emanage;
+
+	EnemyManager.EnemyType EType;
+
+	public float life = 0;
+	public float range;
+	public float damage;
+	public float speed;
+
 	// Use this for initialization
 	void Start () 
 	{
-		this.gameObject.GetComponent<Renderer> ().material.color = Color.red;	
+		this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
+		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
+		this.gameObject.GetComponent<NavMeshAgent> ().enabled = false;
+		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
+		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
+		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
+		Debug.Log (EType);
+		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
+		Emanage.SetClass (EType, out life, out range, out damage, out speed);
+		Debug.Log ("life : " + life);
+		Debug.Log ("range : " + range);
+		Debug.Log ("damage : " + damage);
+		Debug.Log ("speed : " + speed);
 	}
 	
 	// Update is called once per frame
@@ -122,8 +142,12 @@ public class InputManager : MonoBehaviour {
 		//Debug.Log ("finalrot : " + Camera.main.transform.localEulerAngles);
 
 		newPlayer.AddComponent<InputManager> ();
-		this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
 		SwitchPos (this.gameObject, newPlayer);
+		this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
+		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
+		this.gameObject.GetComponent<NavMeshAgent> ().enabled = true;
+		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = false;
+		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = true;
 		Destroy (this.gameObject.GetComponent<InputManager>());
 	}
 

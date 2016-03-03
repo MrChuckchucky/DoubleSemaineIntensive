@@ -29,9 +29,23 @@ public class EnemyScript : MonoBehaviour
     private GameObject Player;
     private int layerMask;
     private RaycastHit hit;
+
+	EnemyManager Emanage;
+
+	[Header("Enemy Settings")]
+	public EnemyManager.EnemyType EType;
+
+	public float life = 0;
+	public float range;
+	public float damage;
+	public float speed;
+
+
     // Use this for initialization
     void Start ()
     {
+		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
+		Emanage.SetClass (EType, out life, out range, out damage, out speed);
         layerMask = 1 << 8;
         walk = GetComponent<NavMeshAgent>().speed;
         observation = GetComponent<NavMeshAgent>().angularSpeed;
