@@ -256,8 +256,6 @@ public class InputManager : MonoBehaviour {
 
 		newPlayer.AddComponent<InputManager> ();
 
-		Vector3 rotP = this.gameObject.transform.rotation.eulerAngles;
-
 		SwitchPos (this.gameObject, newPlayer);
 		this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
 		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
