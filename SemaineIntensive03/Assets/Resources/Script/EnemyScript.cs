@@ -36,10 +36,13 @@ public class EnemyScript : MonoBehaviour
 	[Header("Enemy Settings")]
 	public EnemyManager.EnemyType EType;
 
-	public float life = 0;
+	public float life;
 	public float range;
 	public float damage;
 	public float speed;
+	public float CDMax;
+
+	float currentCD = 0;
 
     private int indexpatrol;
     // Use this for initialization
@@ -47,7 +50,7 @@ public class EnemyScript : MonoBehaviour
     {
         indexpatrol = 0;
         Emanage = GameObject.FindObjectOfType<EnemyManager>();
-        Emanage.SetClass(EType, out life, out range, out damage, out speed);
+		Emanage.SetClass(EType, out life, out range, out damage, out speed, out CDMax);
         layerMask = 1 << 8;
         walk = GetComponent<NavMeshAgent>().speed;
         observation = GetComponent<NavMeshAgent>().angularSpeed;
@@ -83,6 +86,7 @@ public class EnemyScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+		currentCD -= Time.deltaTime;
         PlayerDetected = PlayerDetection();
         if(!PlayerDetected)
         {
@@ -101,6 +105,12 @@ public class EnemyScript : MonoBehaviour
         }
         GetComponent<NavMeshAgent>().SetDestination(destination);
     }
+
+	public void takeDamage(float dmg)
+	{
+		life -= dmg;
+		if (life <= 0) {Destroy (this.gameObject);}
+	}
 
     bool PlayerDetection()
     {
@@ -186,7 +196,7 @@ public class EnemyScript : MonoBehaviour
                 indexpatrol = 0;
             }
             destination = NavigationPoints[indexpatrol].transform.position;
-            Debug.Log(destination);
+            //Debug.Log(destination);
             isMoving = true;
             indexpatrol++;
         }

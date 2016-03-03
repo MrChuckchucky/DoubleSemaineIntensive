@@ -3,7 +3,7 @@ using System.Collections;
 
 public class InputManager : MonoBehaviour {
 
-	//public float speedTurn = 50;
+	float degreeCam = 90;
 	RaycastHit hit;
 	GameObject lastHit = null;
 	float speedShake = 3;
@@ -16,10 +16,15 @@ public class InputManager : MonoBehaviour {
 
 	EnemyManager.EnemyType EType;
 
-	public float life = 0;
+	public float life;
 	public float range;
 	public float damage;
 	public float speed;
+	public float CDMax;
+
+	float dispShotgun = 2;
+	int nbMunitions = 10000000;
+	float currentCD = 0;
 
 	// Use this for initialization
 	void Start () 
@@ -30,18 +35,14 @@ public class InputManager : MonoBehaviour {
 		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
-		Debug.Log (EType);
 		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
-		Emanage.SetClass (EType, out life, out range, out damage, out speed);
-		Debug.Log ("life : " + life);
-		Debug.Log ("range : " + range);
-		Debug.Log ("damage : " + damage);
-		Debug.Log ("speed : " + speed);
+		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax);
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		currentCD -= Time.deltaTime;
 		CamCheck ();
 		//ScreenShake ();
 		CheckInput ();
@@ -83,19 +84,131 @@ public class InputManager : MonoBehaviour {
 		if (Input.GetKey (KeyCode.Q)) {DoMovement ("left");}
 		if (Input.GetKey (KeyCode.S)) {DoMovement ("down");}
 		if (Input.GetKey (KeyCode.D)) {DoMovement ("right");}
+		if (Input.GetKeyDown (KeyCode.Space)) {Fire();}
 		if (Input.GetButtonDown("Fire1")) {CheckSwap ();}
-
-		if (Input.GetKey (KeyCode.A)) 
+		if (Input.GetKeyDown (KeyCode.A)) 
 		{
 			//Camera.main.transform.LookAt(this.gameObject.transform);
-			//this.gameObject.transform.Rotate(-Vector3.up * speedTurn * Time.deltaTime);
-			Camera.main.transform.Translate(Vector3.right * speed * Time.deltaTime);
+			this.gameObject.transform.Rotate(-Vector3.up * degreeCam);
+			//Camera.main.transform.Translate(Vector3.right * speed * Time.deltaTime);
+			Camera.main.transform.position = (Camera.main.transform.position - this.gameObject.transform.position).normalized * 16 + this.gameObject.transform.position;
+			Camera.main.transform.position = new Vector3 (Camera.main.transform.position.x,9,Camera.main.transform.position.z);
 		}
-		if (Input.GetKey (KeyCode.E))
+		if (Input.GetKeyDown (KeyCode.E))
 		{
 			//Camera.main.transform.LookAt(this.gameObject.transform);
-			//this.gameObject.transform.Rotate(Vector3.up * speedTurn * Time.deltaTime);
-			Camera.main.transform.Translate(-Vector3.right * speed *  Time.deltaTime);
+			this.gameObject.transform.Rotate(Vector3.up * degreeCam);
+			//Camera.main.transform.Translate(-Vector3.right * speed *  Time.deltaTime);
+			Camera.main.transform.position = (Camera.main.transform.position - this.gameObject.transform.position).normalized * 16 + this.gameObject.transform.position;
+			Camera.main.transform.position = new Vector3 (Camera.main.transform.position.x,9,Camera.main.transform.position.z);
+		}
+	}
+
+	public void takeDamage(float dmg)
+	{
+		life -= dmg;
+		if (life <= 0) {Destroy (this.gameObject);}
+	}
+		
+	void Fire()
+	{
+		if (currentCD < 0 && nbMunitions > 0) 
+		{
+			nbMunitions--;
+			Vector3 dir = Camera.main.transform.forward;
+			Vector3 vision = this.gameObject.transform.position;
+			if (EType != EnemyManager.EnemyType.HEAVY) 
+			{
+				if (dir.x == 0 && dir.z > 0) 
+				{
+					vision.z += range;
+					Debug.DrawLine (this.gameObject.transform.position, vision, Color.red);
+					if (Physics.Linecast (this.gameObject.transform.position, vision, out hit)) {
+						if (hit.collider.tag == "Swapable") {
+							hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+						}
+					}
+				}
+				else if (dir.x == 0 && dir.z < 0) 
+				{
+					vision.z -= range;
+					Debug.DrawLine (this.gameObject.transform.position, vision, Color.yellow);
+					if (Physics.Linecast (this.gameObject.transform.position, vision, out hit)) {
+						if (hit.collider.tag == "Swapable") {
+							hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+						}
+					}
+				}
+				else if (dir.x > 0) 
+				{
+					vision.x += range;
+					Debug.DrawLine (this.gameObject.transform.position, vision, Color.blue);
+					if (Physics.Linecast (this.gameObject.transform.position, vision, out hit)) {
+						if (hit.collider.tag == "Swapable") {
+							hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+						}
+					}
+				}
+				else if (dir.x < 0) 
+				{
+					vision.x -= range;
+					Debug.DrawLine (this.gameObject.transform.position, vision, Color.green);
+					if (Physics.Linecast (this.gameObject.transform.position, vision, out hit)) {
+						if (hit.collider.tag == "Swapable") {
+							hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+						}
+					}
+				}
+			}
+			else 
+			{
+				GameObject[] targets = GameObject.FindGameObjectsWithTag ("Swapable");
+				foreach (GameObject go in targets) 
+				{
+					float dist = Vector3.Distance (this.gameObject.transform.position, go.transform.position);
+					if (dist < range) 
+					{
+						Vector3 goPos = go.transform.position;
+						float minDistX = goPos.x - dispShotgun;
+						float maxDistX = goPos.x + dispShotgun;
+						float minDistZ = goPos.z - dispShotgun;
+						float maxDistZ = goPos.z + dispShotgun;
+						if (dir.x == 0 && dir.z > 0) 
+						{
+							if (goPos.x > minDistX && goPos.x < maxDistX) 
+							{
+								Debug.Log ("shoot front");
+								go.GetComponent<EnemyScript> ().takeDamage (damage);
+							}
+						}
+						else if (dir.x == 0 && dir.z < 0) 
+						{
+							if (goPos.x > minDistX && goPos.x < maxDistX) 
+							{
+								Debug.Log ("shoot back");
+								go.GetComponent<EnemyScript> ().takeDamage (damage);
+							}
+						}
+						else if (dir.x > 0) 
+						{
+							if (goPos.z > minDistZ && goPos.z < maxDistZ) 
+							{
+								Debug.Log ("shoot right");
+								go.GetComponent<EnemyScript> ().takeDamage (damage);
+							}
+						}
+						else if (dir.x < 0) 
+						{
+							if (goPos.z > minDistZ && goPos.z < maxDistZ) 
+							{
+								Debug.Log ("shoot left");
+								go.GetComponent<EnemyScript> ().takeDamage (damage);
+							}
+						}
+					}
+				}
+			}
+			//currentCD = CDMax;
 		}
 	}
 
@@ -132,8 +245,8 @@ public class InputManager : MonoBehaviour {
 
 		Vector3 newPos = newPlayer.transform.position;
 		//newPos.x = 0;
-		newPos.y += 10;
-		newPos.z -= 10;
+		newPos.y += 9;
+		newPos.z -= 13;
 		Camera.main.transform.position = newPos;
 
 		Camera.main.transform.localPosition = pos;
@@ -142,13 +255,23 @@ public class InputManager : MonoBehaviour {
 		//Debug.Log ("finalrot : " + Camera.main.transform.localEulerAngles);
 
 		newPlayer.AddComponent<InputManager> ();
+
+		Vector3 rotP = this.gameObject.transform.rotation.eulerAngles;
+
 		SwitchPos (this.gameObject, newPlayer);
 		this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
 		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
+		//this.gameObject.GetComponent<EnemyScript> ().isStun = true;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = true;
 		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = false;
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = true;
-		Destroy (this.gameObject.GetComponent<InputManager>());
+
+
+		float rectY = (Mathf.Round( newPlayer.transform.eulerAngles.y / 90) * 90) % 360;
+		Vector3 rectVec = new Vector3 (0,rectY,0);
+		newPlayer.transform.eulerAngles = rectVec;
+
+		Destroy (this.gameObject.GetComponent<InputManager>());		
 	}
 
 	void SwitchPos(GameObject GO1, GameObject GO2)
