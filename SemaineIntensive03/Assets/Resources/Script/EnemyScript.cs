@@ -13,6 +13,7 @@ public class EnemyScript : MonoBehaviour
     public float sprint;
     public float observationSprint;
     public float vision;
+    public bool patrouilleRandom;
 
     private float walk;
     private float observation;
@@ -29,34 +30,39 @@ public class EnemyScript : MonoBehaviour
     private GameObject Player;
     private int layerMask;
     private RaycastHit hit;
+    private int indexpatrol;
     // Use this for initialization
     void Start ()
     {
+        indexpatrol = 0;
         layerMask = 1 << 8;
         walk = GetComponent<NavMeshAgent>().speed;
         observation = GetComponent<NavMeshAgent>().angularSpeed;
         canMove = true;
         isMoving = false;
-        temp = GameObject.FindGameObjectsWithTag("NavigationPoint");
-        NavigationPoints = new GameObject[temp.Length];
         PlayerDetected = false;
-        index = 0;
-        foreach(GameObject navpoint in temp)
+        if(patrouilleRandom)
         {
-            int[] IDS = navpoint.GetComponent<NavigationPointScript>().ID;
-            bool valid = false;
-            foreach (int id in IDS)
+            temp = GameObject.FindGameObjectsWithTag("NavigationPoint");
+            NavigationPoints = new GameObject[temp.Length];
+            index = 0;
+            foreach (GameObject navpoint in temp)
             {
-                if(id == ID)
+                int[] IDS = navpoint.GetComponent<NavigationPointScript>().ID;
+                bool valid = false;
+                foreach (int id in IDS)
                 {
-                    valid = true;
-                    break;
+                    if (id == ID)
+                    {
+                        valid = true;
+                        break;
+                    }
                 }
-            }
-            if(valid)
-            {
-                NavigationPoints[index] = navpoint;
-                index++;
+                if (valid)
+                {
+                    NavigationPoints[index] = navpoint;
+                    index++;
+                }
             }
         }
 	}
@@ -67,7 +73,14 @@ public class EnemyScript : MonoBehaviour
         PlayerDetected = PlayerDetection();
         if(!PlayerDetected)
         {
-            patrol();
+            if(patrouilleRandom)
+            {
+                Randompatrol();
+            }
+            else
+            {
+                patrol();
+            }
         }
         else
         {
@@ -96,7 +109,7 @@ public class EnemyScript : MonoBehaviour
         }
         return true;
     }
-    void patrol()
+    void Randompatrol()
     {
         GetComponent<NavMeshAgent>().speed = walk;
         GetComponent<NavMeshAgent>().angularSpeed = observation;
@@ -108,7 +121,65 @@ public class EnemyScript : MonoBehaviour
         }
         else if (canMove)
         {
-            if ((transform.position.x + transform.position.z) - (destination.x + destination.z) <= 1 && (destination.x + destination.z) - (transform.position.x + transform.position.z) <= 1)
+            if (Mathf.Abs(transform.position.x - destination.x) <= 1 && Mathf.Abs(transform.position.z - destination.z) <= 1)
+            {
+                isMoving = false;
+                canMove = false;
+                stunStart = Time.time;
+                stunDuration = Random.Range(stunDurationMin, stunDurationMax);
+                float rot = transform.eulerAngles.y;
+                rot /= 90;
+                rot = Mathf.Round(rot);
+                rot *= 90;
+                rotationStart = Time.time;
+                rotationDestination = rot;
+                destination = transform.position;
+            }
+        }
+        if (!canMove)
+        {
+            if (rotationStart + rotationDuration <= Time.time)
+            {
+                rotationStart = Time.time;
+                rotationDestination = transform.eulerAngles.y;
+                rotationDestination /= 90;
+                rotationDestination = Mathf.Round(rotationDestination);
+                rotationDestination *= 90;
+                rotationDestination += 90;
+                rotationDestination = rotationDestination % 360;
+            }
+            else
+            {
+                if (rotationDestination - transform.eulerAngles.y >= 1 || transform.eulerAngles.y - rotationDestination >= 1)
+                {
+                    transform.eulerAngles += new Vector3(0, rotation, 0);
+                    transform.eulerAngles = new Vector3(0, Mathf.Round(transform.eulerAngles.y) % 360, 0);
+                }
+            }
+        }
+        if (stunStart + stunDuration <= Time.time)
+        {
+            canMove = true;
+        }
+    }
+    void patrol()
+    {
+        GetComponent<NavMeshAgent>().speed = walk;
+        GetComponent<NavMeshAgent>().angularSpeed = observation;
+        if (!isMoving && canMove)
+        {
+            if(indexpatrol == NavigationPoints.Length)
+            {
+                indexpatrol = 0;
+            }
+            destination = NavigationPoints[indexpatrol].transform.position;
+            Debug.Log(destination);
+            isMoving = true;
+            indexpatrol++;
+        }
+        else if (canMove)
+        {
+            if (Mathf.Abs(transform.position.x - destination.x) <= 1 && Mathf.Abs(transform.position.z - destination.z) <= 1)
             {
                 isMoving = false;
                 canMove = false;
