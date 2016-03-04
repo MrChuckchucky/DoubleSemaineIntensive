@@ -40,9 +40,8 @@ public class PlayerScript : MonoBehaviour
     void Start () 
 	{
 		AllTotems = GameObject.FindGameObjectsWithTag ("Totem");
-		//this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
-		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().enabled = true;
-		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().material.color = Color.green;
+        //this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
+        this.gameObject.transform.FindChild("Head").GetComponent<Renderer>().enabled = false;
 		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
