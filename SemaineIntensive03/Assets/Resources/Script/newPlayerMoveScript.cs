@@ -5,10 +5,10 @@ public class newPlayerMoveScript : MonoBehaviour {
 
 	RaycastHit hit;
 	GameObject swaped;
-	float rangeSwap = 10000000;
+	//float rangeSwap = 10000000;
 	float speed = 10;
 	float rotationSpeed = 40;
-	float range = 5;
+	//float range = 5;
 	//Vector3 lastDir;
 	// Use this for initialization
 	void Start () {

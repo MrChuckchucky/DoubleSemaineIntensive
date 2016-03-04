@@ -17,25 +17,28 @@ public class EnemyManager : MonoBehaviour {
 	public float speedHeavy;
 	public float CDHeavy;
 	public int nbMunitionsHeavy;
+    public int hitChanceHeavy;
 
-	[Header("Sneaky Settings")]
+    [Header("Sneaky Settings")]
 	public float lifeMaxSneaky;
 	public float rangeSneaky;
 	public float damageSneaky;
 	public float speedSneaky;
 	public float CDSneaky;
 	public int nbMunitionsSneaky;
+    public int hitChanceSneaky;
 
-	[Header("Sniper Settings")]
+    [Header("Sniper Settings")]
 	public float lifeMaxSniper;
 	public float rangeSniper;
 	public float damageSniper;
 	public float speedSniper;
 	public float CDSniper;
 	public int nbMunitionsSniper;
+    public int hitChanceSniper;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -43,10 +46,10 @@ public class EnemyManager : MonoBehaviour {
 	void Update () {
 	
 	}
-
-	public void SetClass(EnemyType EClass, out float life, out float range, out float damage, out float speed, out float CD, out int nbMuni)
+    
+	public void SetClass(EnemyType EClass, out float life, out float range, out float damage, out float speed, out float CD, out int nbMuni, out int HC)
 	{
-		life = range = damage = speed = CD = nbMuni = 0;
+		life = range = damage = speed = CD = nbMuni = HC = 0;
 		switch(EClass)
 		{
 			case EnemyType.HEAVY:
@@ -56,6 +59,7 @@ public class EnemyManager : MonoBehaviour {
 				speed = speedHeavy;
 				CD = CDHeavy;
 				nbMuni = nbMunitionsHeavy;
+                HC = hitChanceHeavy;
 			break;
 			case EnemyType.SNEAKY:
 				life = lifeMaxSneaky;
@@ -64,7 +68,8 @@ public class EnemyManager : MonoBehaviour {
 				speed = speedSneaky;
 				CD = CDSneaky;
 				nbMuni = nbMunitionsSneaky;
-			break;
+                HC = hitChanceSneaky;
+                break;
 			case EnemyType.SNIPER:
 				life = lifeMaxSniper;
 				range = rangeSniper;
@@ -72,7 +77,8 @@ public class EnemyManager : MonoBehaviour {
 				speed = speedSniper;
 				CD = CDSniper;
 				nbMuni = nbMunitionsSniper;
-			break;
+                HC = hitChanceSniper;
+                break;
 		}
 	}
 }

@@ -7,10 +7,11 @@ public class TotemScript : MonoBehaviour
     public bool dysActive;
     public float dysactiveStart;
     public float dysactiveDelay;
+    public float distance;
 
-	float unitLoad = 30;
+    float unitLoad = 30;
 	float loadBar;
-
+    
 	// Use this for initialization
 	void Start ()
     {
@@ -28,10 +29,7 @@ public class TotemScript : MonoBehaviour
         {
             dysactiveStart = Time.time;
         }
-
-
-
-		if (isActive) {this.gameObject.GetComponent<Renderer> ().material.color = Color.green;} 
+        if (isActive) {this.gameObject.GetComponent<Renderer> ().material.color = Color.green;} 
 		else {this.gameObject.GetComponent<Renderer> ().material.color = Color.white;}
 	}
 
@@ -51,6 +49,24 @@ public class TotemScript : MonoBehaviour
 			loadBar -= unitLoad * Time.deltaTime;
 			if (loadBar < 0) {loadBar = 0;}
 		}
+        if(dysActive)
+        {
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Swapable");
+            bool test = true;
+            foreach(GameObject enemy in enemies)
+            {
+                float far = Mathf.Abs(transform.position.x - enemy.transform.position.x) + Mathf.Abs(transform.position.z - enemy.transform.position.z);
+                if(far < distance)
+                {
+                    test = false;
+                    break;
+                }
+            }
+            if(test)
+            {
+                dysActive = false;
+            }
+        }
 	}
 
     void dysactive()

@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerScript : MonoBehaviour {
-
+public class PlayerScript : MonoBehaviour
+{
 	GameObject swaped;
 	Color swapedColor;
 	RaycastHit hit;
 	GameObject lastHit = null;
 	int layerMask = 1 << 8; //layer 8 = Obstacle
-	float currentCD = 0;
 	GameObject[] AllTotems;
 	bool choosingTotem = false;
 	bool axisChoose = false;
@@ -18,21 +17,27 @@ public class PlayerScript : MonoBehaviour {
 
 	EnemyManager.EnemyType EType;
 
+    public float rotation;
+
 	public float life;
 	public float range;
 	public float damage;
 	public float speed;
 	public float CDMax;
 	public int nbMunitions;
+    public int HC;
 
 	float rotationSpeed = 40;
 	float rangeSwap = 10;
 	float dispShotgun = 1.5f;
 	float rangeTotem = 5;
-	//int nbMunitions = 10;
-
-	// Use this for initialization
-	void Start () 
+    
+	float currentCD = 0;
+    bool isTurning;
+    Vector3 angleTurn;
+    int rotationDirection;
+    // Use this for initialization
+    void Start () 
 	{
 		AllTotems = GameObject.FindGameObjectsWithTag ("Totem");
 		//this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
@@ -44,12 +49,25 @@ public class PlayerScript : MonoBehaviour {
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
 		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
-		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions);
-	}
+		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC);
+        isTurning = false;
+    }
 
 	// Update is called once per frame
 	void Update () 
 	{
+        if(isTurning)
+        {
+            if(Mathf.Abs(transform.eulerAngles.y - angleTurn.y) > rotation * 3)
+            {
+                transform.eulerAngles += new Vector3(0, rotation * rotationDirection, 0);
+            }
+            else
+            {
+                isTurning = false;
+                RectifyAngle();
+            }
+        }
 		Camera.main.transform.LookAt (this.gameObject.transform);
 		currentCD -= Time.deltaTime;
 		CamCheck ();
@@ -65,6 +83,10 @@ public class PlayerScript : MonoBehaviour {
 			CheckSwap ();
 			CheckFire ();
 		}
+        if(!isTurning)
+        {
+            CheckJoystickInput();
+        }
 	}
 
 	void CamCheck()
@@ -122,16 +144,18 @@ public class PlayerScript : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.Joystick1Button5))
 		{
-			Vector3 angleTurn = new Vector3(0,90,0);
-			this.gameObject.transform.Rotate (angleTurn);
-			RectifyAngle ();
+			angleTurn = new Vector3(0,transform.eulerAngles.y + 90,0);
+            angleTurn = new Vector3(0, Mathf.Round(angleTurn.y / 90) * 90 % 360, 0);
+            rotationDirection = 1;
+            isTurning = true;
 		}
 
 		if (Input.GetKeyDown (KeyCode.Joystick1Button4))
-		{
-			Vector3 angleTurn = new Vector3(0,-90,0);
-			this.gameObject.transform.Rotate (angleTurn);
-			RectifyAngle ();
+        {
+            angleTurn = new Vector3(0, (transform.eulerAngles.y - 90 + 360) % 360, 0);
+            angleTurn = new Vector3(0, Mathf.Round(angleTurn.y / 90) * 90 % 360, 0);
+            rotationDirection = -1;
+            isTurning = true;
 		}
 
 		if (Input.GetKeyDown (KeyCode.Joystick1Button0) && swaped != null) {Swap ();}
@@ -142,6 +166,7 @@ public class PlayerScript : MonoBehaviour {
 
 	public void takeDamage(float dmg)
 	{
+        //ParticleSystem blood = Instantiate(Resources.Load("Particules/Blood"), transform.position, transform.rotation) as ParticleSystem;
 		life -= dmg;
 		if (life <= 0) {Death ();}
 	}
@@ -344,9 +369,11 @@ public class PlayerScript : MonoBehaviour {
 
 	void Fire()
 	{
-		if (currentCD < 0 && nbMunitions > 0) 
-		{
-			nbMunitions--;
+		if (currentCD < 0 && nbMunitions > 0)
+        {
+            GameObject smoke = Instantiate(Resources.Load("Particules/Shoot"), transform.position, transform.rotation) as GameObject;
+            Destroy(smoke, 1);
+            nbMunitions--;
 			if (EType != EnemyManager.EnemyType.HEAVY) 
 			{
 				if (Physics.Raycast(this.gameObject.transform.position, this.gameObject.transform.forward, out hit, range)) 
@@ -368,10 +395,10 @@ public class PlayerScript : MonoBehaviour {
 					{
 						foreach(RaycastHit RH in inSphere)
 						{
-								if(RH.collider.gameObject == go)
-								{
-									RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
-								}
+							if(RH.collider.gameObject == go)
+							{
+								RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+							}
 						}
 					}
 				}
