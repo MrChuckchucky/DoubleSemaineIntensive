@@ -7,10 +7,13 @@ public class TotemScript : MonoBehaviour
     public bool dysActive;
     public float dysactiveStart;
     public float dysactiveDelay;
+
+	float unitLoad = 30;
+	float loadBar;
+
 	// Use this for initialization
 	void Start ()
     {
-        isActive = false;
         dysActive = false;
 	}
 	
@@ -25,6 +28,29 @@ public class TotemScript : MonoBehaviour
         {
             dysactiveStart = Time.time;
         }
+
+
+
+		if (isActive) {this.gameObject.GetComponent<Renderer> ().material.color = Color.green;} 
+		else {this.gameObject.GetComponent<Renderer> ().material.color = Color.white;}
+	}
+
+	public void loadTotem()
+	{
+		if (!isActive) 
+		{
+			loadBar += unitLoad * Time.deltaTime;
+			if (loadBar >= 100) {isActive = true;}
+		}
+	}
+
+	public void deloadTotem()
+	{
+		if (!isActive && loadBar >= 0) 
+		{
+			loadBar -= unitLoad * Time.deltaTime;
+			if (loadBar < 0) {loadBar = 0;}
+		}
 	}
 
     void dysactive()

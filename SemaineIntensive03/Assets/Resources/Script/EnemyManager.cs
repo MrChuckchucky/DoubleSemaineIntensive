@@ -16,6 +16,7 @@ public class EnemyManager : MonoBehaviour {
 	public float damageHeavy;
 	public float speedHeavy;
 	public float CDHeavy;
+	public int nbMunitionsHeavy;
 
 	[Header("Sneaky Settings")]
 	public float lifeMaxSneaky;
@@ -23,6 +24,7 @@ public class EnemyManager : MonoBehaviour {
 	public float damageSneaky;
 	public float speedSneaky;
 	public float CDSneaky;
+	public int nbMunitionsSneaky;
 
 	[Header("Sniper Settings")]
 	public float lifeMaxSniper;
@@ -30,6 +32,7 @@ public class EnemyManager : MonoBehaviour {
 	public float damageSniper;
 	public float speedSniper;
 	public float CDSniper;
+	public int nbMunitionsSniper;
 
 	// Use this for initialization
 	void Start () {
@@ -41,9 +44,9 @@ public class EnemyManager : MonoBehaviour {
 	
 	}
 
-	public void SetClass(EnemyType EClass, out float life, out float range, out float damage, out float speed, out float CD)
+	public void SetClass(EnemyType EClass, out float life, out float range, out float damage, out float speed, out float CD, out int nbMuni)
 	{
-		life = range = damage = speed = CD = 0;
+		life = range = damage = speed = CD = nbMuni = 0;
 		switch(EClass)
 		{
 			case EnemyType.HEAVY:
@@ -52,6 +55,7 @@ public class EnemyManager : MonoBehaviour {
 				damage = damageHeavy;
 				speed = speedHeavy;
 				CD = CDHeavy;
+				nbMuni = nbMunitionsHeavy;
 			break;
 			case EnemyType.SNEAKY:
 				life = lifeMaxSneaky;
@@ -59,6 +63,7 @@ public class EnemyManager : MonoBehaviour {
 				damage = damageSneaky;
 				speed = speedSneaky;
 				CD = CDSneaky;
+				nbMuni = nbMunitionsSneaky;
 			break;
 			case EnemyType.SNIPER:
 				life = lifeMaxSniper;
@@ -66,6 +71,7 @@ public class EnemyManager : MonoBehaviour {
 				damage = damageSniper;
 				speed = speedSniper;
 				CD = CDSniper;
+				nbMuni = nbMunitionsSniper;
 			break;
 		}
 	}

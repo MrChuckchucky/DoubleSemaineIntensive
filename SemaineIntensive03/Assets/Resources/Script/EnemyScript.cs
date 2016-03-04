@@ -46,6 +46,7 @@ public class EnemyScript : MonoBehaviour
 	public float damage;
 	public float speed;
 	public float CDMax;
+	public int nbMunitions;
 
 	float currentCD = 0;
 
@@ -55,7 +56,7 @@ public class EnemyScript : MonoBehaviour
     {
         indexpatrol = 0;
         Emanage = GameObject.FindObjectOfType<EnemyManager>();
-		Emanage.SetClass(EType, out life, out range, out damage, out speed, out CDMax);
+		Emanage.SetClass(EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions);
         layerMask = 1 << 8;
         walk = GetComponent<NavMeshAgent>().speed;
         observation = GetComponent<NavMeshAgent>().angularSpeed;
@@ -339,7 +340,7 @@ public class EnemyScript : MonoBehaviour
             totemSpotted.GetComponent<TotemScript>().dysActive = true;
         }
     }
-    void death()
+    public void death()
     {
         GameObject[] spawners = GameObject.FindGameObjectsWithTag("Spawner");
         foreach(GameObject spawner in spawners)

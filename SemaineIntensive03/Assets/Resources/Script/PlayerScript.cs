@@ -3,12 +3,15 @@ using System.Collections;
 
 public class PlayerScript : MonoBehaviour {
 
-	float rotationSpeed = 40;
 	GameObject swaped;
-	float rangeSwap = 10;
 	RaycastHit hit;
 	GameObject lastHit = null;
 	int layerMask = 1 << 8; //layer 8 = Obstacle
+	float currentCD = 0;
+	GameObject[] AllTotems;
+	bool choosingTotem = false;
+	bool axisChoose = false;
+	public int indexTot = 0;
 
 	EnemyManager Emanage;
 
@@ -19,14 +22,18 @@ public class PlayerScript : MonoBehaviour {
 	public float damage;
 	public float speed;
 	public float CDMax;
+	public int nbMunitions;
 
+	float rotationSpeed = 40;
+	float rangeSwap = 10;
 	float dispShotgun = 1.5f;
-	int nbMunitions = 10;
-	float currentCD = 0;
+	float rangeTotem = 5;
+	//int nbMunitions = 10;
 
 	// Use this for initialization
 	void Start () 
 	{
+		AllTotems = GameObject.FindGameObjectsWithTag ("Totem");
 		this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
 		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = false;
@@ -34,7 +41,7 @@ public class PlayerScript : MonoBehaviour {
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
 		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
-		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax);
+		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions);
 	}
 
 	// Update is called once per frame
@@ -44,9 +51,17 @@ public class PlayerScript : MonoBehaviour {
 		currentCD -= Time.deltaTime;
 		CamCheck ();
 		//CheckInput ();
-		CheckJoystickInput ();
-		CheckSwap ();
-		CheckFire ();
+		if (choosingTotem) 
+		{
+			chooseDest();
+		} 
+		else 
+		{
+			CheckJoystickInput ();
+			checkTotem ();
+			CheckSwap ();
+			CheckFire ();
+		}
 	}
 
 	void CamCheck()
@@ -118,6 +133,8 @@ public class PlayerScript : MonoBehaviour {
 
 		if (Input.GetKeyDown (KeyCode.Joystick1Button0) && swaped != null) {Swap ();}
 		if (Input.GetKeyDown (KeyCode.Joystick1Button1)) {Fire ();}
+		if (Input.GetKeyDown (KeyCode.Joystick1Button2)) {takeDamage (20);}
+		if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {TPTotem ();}
 	}
 
 	public void takeDamage(float dmg)
@@ -128,7 +145,115 @@ public class PlayerScript : MonoBehaviour {
 
 	void Death()
 	{
-		Destroy (this.gameObject);
+		checkFreeTotem ();
+		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
+		this.gameObject.GetComponent<EnemyScript> ().death ();
+		Destroy (this.gameObject.GetComponent<PlayerScript>());
+	}
+
+	void checkFreeTotem()
+	{
+		GameObject chooseTotem = null;
+		GameObject farTotem = null;
+		float distMax = 0;
+		float distRet = 9999;
+		foreach (GameObject totem in AllTotems)
+		{
+			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.position);
+			if (dist < distRet && totem.GetComponent<TotemScript>().dysActive == false && totem.GetComponent<TotemScript>().isActive) {chooseTotem = totem;}
+			if (dist > distMax && totem.GetComponent<TotemScript>().isActive) {farTotem = totem;}
+		}
+		if (chooseTotem) {SpawnAndPossess (chooseTotem);}
+		else if (farTotem) {SpawnAndPossess (farTotem);} 
+		else {Loose ();}
+	}
+
+	void Loose()
+	{
+		Debug.Log ("Loose");
+	}
+
+	void TPTotem()
+	{
+		GameObject closeTotem = null;
+		float distMax = 9999;
+		foreach (GameObject totem in AllTotems)
+		{
+			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.position);
+			if (dist < rangeTotem && dist < distMax && totem.GetComponent<TotemScript>().isActive) {closeTotem = totem;}
+		}
+		if (closeTotem) {choosingTotem = true;} 
+	}
+
+	void chooseDest()
+	{
+		float LJV = Input.GetAxis ("LeftJoystickVertical");
+		if(LJV != 0)
+		{
+			if(axisChoose == false)
+			{
+				if (LJV < 0) 
+				{
+					indexTot--;
+					if(indexTot < 0){ indexTot = AllTotems.Length-1;}
+					while (!AllTotems [indexTot].GetComponent<TotemScript> ().isActive) 
+					{
+						indexTot--;
+						if(indexTot < 0){ indexTot = AllTotems.Length-1;}
+					}
+				} 
+				else if (LJV > 0) 
+				{
+					indexTot++;
+					if(indexTot > AllTotems.Length-1){indexTot = 0;}
+					while (!AllTotems [indexTot].GetComponent<TotemScript> ().isActive) 
+					{
+						indexTot++;
+						if(indexTot > AllTotems.Length-1){indexTot = 0;}
+					}
+				}
+				axisChoose = true;
+			}
+		}
+		if(LJV == 0)
+		{
+			axisChoose = false;
+		}    
+
+		if (AllTotems [indexTot].GetComponent<TotemScript> ().isActive) {this.gameObject.transform.position = AllTotems [indexTot].transform.position;}
+		if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {choosingTotem = false;}
+
+	}
+
+	void SpawnAndPossess(GameObject totem)
+	{
+		GameObject newEnn = Resources.Load ("Prefabs/Player") as GameObject;
+		GameObject Enemy = Instantiate(newEnn, totem.transform.position, Quaternion.identity) as GameObject;
+		Enemy.GetComponent<EnemyScript>().ID = 0;
+		Enemy.GetComponent<EnemyScript>().patrouilleRandom = true;
+		int rand = Random.Range(1, 4);
+		switch(rand)
+		{
+		case 1:
+			Enemy.GetComponent<EnemyScript>().EType = EnemyManager.EnemyType.HEAVY;
+			break;
+		case 2:
+			Enemy.GetComponent<EnemyScript>().EType = EnemyManager.EnemyType.SNEAKY;
+			break;
+		case 3:
+			Enemy.GetComponent<EnemyScript>().EType = EnemyManager.EnemyType.SNIPER;
+			break;
+		}
+	}
+
+	void checkTotem()
+	{
+		foreach (GameObject totem in AllTotems)
+		{
+			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.position);
+			if (dist < rangeTotem) {totem.GetComponent<TotemScript> ().loadTotem ();} 
+			else {totem.GetComponent<TotemScript> ().deloadTotem ();}
+		}
 	}
 
 	void CheckSwap()

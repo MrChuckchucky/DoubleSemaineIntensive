@@ -26,7 +26,7 @@ public class SpawnScript : MonoBehaviour
             Enemy.GetComponent<EnemyScript>().ID = ID;
             Enemy.GetComponent<EnemyScript>().NavigationPoints = NavigationPoint;
             Enemy.GetComponent<EnemyScript>().patrouilleRandom = randomPatrol;
-            int rand = Random.Range(1, 3);
+            int rand = Random.Range(1, 4);
             switch(rand)
             {
                 case 1:
