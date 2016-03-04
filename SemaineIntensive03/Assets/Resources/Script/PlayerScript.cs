@@ -20,7 +20,7 @@ public class PlayerScript : MonoBehaviour {
 	public float speed;
 	public float CDMax;
 
-	float dispShotgun = 2;
+	float dispShotgun = 1.5f;
 	int nbMunitions = 10;
 	float currentCD = 0;
 
@@ -206,46 +206,6 @@ public class PlayerScript : MonoBehaviour {
 		}
 	}
 
-	/*Quaternion startingAngle = Quaternion.AngleAxis(-60, Vector3.up);
-	Quaternion stepAngle = Quaternion.AngleAxis(5, Vector3.up);
-	void DetectThings()
-	{
-		RaycastHit hit;
-		Quaternion angle = transform.rotation * startingAngle;
-		Vector3 direction = angle * -this.gameObject.transform.right;
-		direction.y = 1;
-		for(var i = 0; i < 48; i++)
-		{
-			if(Physics.Raycast(this.gameObject.transform.position, direction, out hit, range))
-			{
-				if(hit.collider.GetComponent<EnemyScript>())
-				{
-					GameObject go = new GameObject ();
-					go.transform.position = hit.collider.gameObject.transform.position;
-					//hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
-				}
-			}
-			direction = stepAngle * direction;
-		}
-	}*/
-
-	void OnSquare(GameObject go)
-	{
-		Vector3 BottomLeft = -this.gameObject.transform.right;
-		BottomLeft.x -= dispShotgun;
-		Vector3 BottomRight = this.gameObject.transform.right;
-		BottomRight.x += dispShotgun;
-		Vector3 UpLeft = BottomLeft;
-		BottomLeft.z += range;
-		Vector3 UpRight = BottomRight;
-		BottomRight.z += range;
-		/*Debug.Log ("BL = " + BottomLeft);
-		Debug.Log ("BR = " + BottomRight);
-		Debug.Log ("TL = " + UpLeft);
-		Debug.Log ("TR = " + UpRight);*/
-		if (go.transform.position.x > BottomLeft.x && go.transform.position.x < BottomRight.x && go.transform.position.z - this.gameObject.transform.position.z < range) {Debug.Log (go.name);}
-	}
-
 	void Fire()
 	{
 		if (currentCD < 0 && nbMunitions > 0) 
@@ -264,17 +224,23 @@ public class PlayerScript : MonoBehaviour {
 			else 
 			{
 				GameObject[] targets = GameObject.FindGameObjectsWithTag ("Swapable");
+				RaycastHit[] inSphere = Physics.SphereCastAll(this.gameObject.transform.position, dispShotgun, this.gameObject.transform.forward, range);
 				foreach (GameObject go in targets) 
 				{
 					float dist = Vector3.Distance (this.gameObject.transform.position, go.transform.position);
 					if (dist < range) 
 					{
-						//OnSquare (go);
-						//DetectThings ();
+						foreach(RaycastHit RH in inSphere)
+						{
+								if(RH.collider.gameObject == go)
+								{
+									RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+								}
+						}
 					}
 				}
 			}
-			//currentCD = CDMax;
+			currentCD = CDMax;
 		}
 	}
 
