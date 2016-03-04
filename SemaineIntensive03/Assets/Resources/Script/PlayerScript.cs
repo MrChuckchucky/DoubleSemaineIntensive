@@ -123,7 +123,12 @@ public class PlayerScript : MonoBehaviour {
 	public void takeDamage(float dmg)
 	{
 		life -= dmg;
-		if (life <= 0) {Destroy (this.gameObject);}
+		if (life <= 0) {Death ();}
+	}
+
+	void Death()
+	{
+		Destroy (this.gameObject);
 	}
 
 	void CheckSwap()
