@@ -5,7 +5,7 @@ public class TotemScript : MonoBehaviour
 {
     public bool isActive;
     public bool dysActive;
-    public float dysactiveStart;
+    float dysactiveStart;
     public float dysactiveDelay;
     public float distance;
 
