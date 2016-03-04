@@ -11,13 +11,13 @@ public class PlayerScript : MonoBehaviour
 	GameObject[] AllTotems;
 	bool choosingTotem = false;
 	bool axisChoose = false;
-	public int indexTot = 0;
+	int indexTot = 0;
 
 	EnemyManager Emanage;
 
 	EnemyManager.EnemyType EType;
 
-    public float rotation;
+    float rotation = 4;
 
 	public float life;
 	public float range;
@@ -75,17 +75,13 @@ public class PlayerScript : MonoBehaviour
 		{
 			chooseDest();
 		} 
-		else 
-		{
-			CheckJoystickInput ();
-			checkTotem ();
+		else
+        {
+            CheckJoystickInput();
+            checkTotem ();
 			CheckSwap ();
 			CheckFire ();
 		}
-        if(!isTurning)
-        {
-            CheckJoystickInput();
-        }
 	}
 
 	void CamCheck()
@@ -103,13 +99,13 @@ public class PlayerScript : MonoBehaviour
 	{
 		Material mat = obj.GetComponent<MeshRenderer> ().material;
 
-		//mat.SetFloat("_Mode", 4f);
+		mat.SetFloat("_Mode", 4f);
 		mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
 		mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-		//mat.SetInt("_ZWrite", 0);
-		//mat.DisableKeyword("_ALPHATEST_ON");
+		mat.SetInt("_ZWrite", 0);
+		mat.DisableKeyword("_ALPHATEST_ON");
 		mat.EnableKeyword("_ALPHABLEND_ON");
-		//mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+		mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
 		mat.renderQueue = 3000;
 
 		Color newCol = mat.GetColor ("_Color");
@@ -140,8 +136,8 @@ public class PlayerScript : MonoBehaviour
 
 		this.gameObject.transform.position += camFor * speed * Time.deltaTime * LJH;
 		this.gameObject.transform.position += camRight * speed * Time.deltaTime * LJV;
-
-		if (Input.GetKeyDown(KeyCode.Joystick1Button5))
+        
+        if (Input.GetKeyDown(KeyCode.Joystick1Button5) && !isTurning)
 		{
 			angleTurn = new Vector3(0,transform.eulerAngles.y + 90,0);
             angleTurn = new Vector3(0, Mathf.Round(angleTurn.y / 90) * 90 % 360, 0);
@@ -149,7 +145,7 @@ public class PlayerScript : MonoBehaviour
             isTurning = true;
 		}
 
-		if (Input.GetKeyDown (KeyCode.Joystick1Button4))
+		if (Input.GetKeyDown (KeyCode.Joystick1Button4) && !isTurning)
         {
             angleTurn = new Vector3(0, (transform.eulerAngles.y - 90 + 360) % 360, 0);
             angleTurn = new Vector3(0, Mathf.Round(angleTurn.y / 90) * 90 % 360, 0);
@@ -158,7 +154,7 @@ public class PlayerScript : MonoBehaviour
 		}
 
 		if (Input.GetKeyDown (KeyCode.Joystick1Button0) && swaped != null) {Swap ();}
-		if (Input.GetKeyDown (KeyCode.Joystick1Button1)) {Fire ();}
+		if (Input.GetKeyDown (KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Space)) {Fire ();}
 		if (Input.GetKeyDown (KeyCode.Joystick1Button2)) {takeDamage (20);}
 		if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {TPTotem ();}
 	}
@@ -171,12 +167,12 @@ public class PlayerScript : MonoBehaviour
 	}
 
 	void Death()
-	{
-		checkFreeTotem ();
-		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
-		this.gameObject.GetComponent<EnemyScript> ().death ();
-		Destroy (this.gameObject.GetComponent<PlayerScript>());
-	}
+    {
+        checkFreeTotem();
+        this.gameObject.GetComponent<EnemyScript> ().enabled = true;
+        Destroy(this.gameObject.GetComponent<PlayerScript>());
+        this.gameObject.GetComponent<EnemyScript> ().death ();
+    }
 
 	void checkFreeTotem()
 	{
@@ -306,6 +302,7 @@ public class PlayerScript : MonoBehaviour
 	{
 		this.gameObject.tag = "Swapable";
 		swaped.tag = "Player";
+        Debug.Log("yo");
 
 		Vector3 pos = Camera.main.transform.localPosition;
 
@@ -367,9 +364,10 @@ public class PlayerScript : MonoBehaviour
 	}
 
 	void Fire()
-	{
-		if (currentCD < 0 && nbMunitions > 0)
+    {
+        if (currentCD < 0 && nbMunitions > 0)
         {
+            Debug.Log("fire");
             GameObject smoke = Instantiate(Resources.Load("Particules/Shoot"), transform.position, transform.rotation) as GameObject;
             Destroy(smoke, 1);
             nbMunitions--;
@@ -379,6 +377,7 @@ public class PlayerScript : MonoBehaviour
 				{
 					if (hit.collider.tag == "Swapable") 
 					{
+                        Debug.Log("hit");
 						hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
 					}
 				}
@@ -395,8 +394,9 @@ public class PlayerScript : MonoBehaviour
 						foreach(RaycastHit RH in inSphere)
 						{
 							if(RH.collider.gameObject == go)
-							{
-								RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+                            {
+                                Debug.Log("hit");
+                                RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
 							}
 						}
 					}
