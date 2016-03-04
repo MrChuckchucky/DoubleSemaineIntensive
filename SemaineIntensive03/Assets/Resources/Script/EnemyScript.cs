@@ -142,7 +142,10 @@ public class EnemyScript : MonoBehaviour
 	public void takeDamage(float dmg)
 	{
 		life -= dmg;
-		if (life <= 0) {Destroy (this.gameObject);}
+		if (life <= 0)
+        {
+            death();
+        }
 	}
 
     bool PlayerDetection()
@@ -347,5 +350,6 @@ public class EnemyScript : MonoBehaviour
                 spawner.GetComponent<SpawnScript>().isActive = true;
             }
         }
+        Destroy(this.gameObject);
     }
 }
