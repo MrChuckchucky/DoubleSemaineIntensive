@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerScript : MonoBehaviour {
 
 	GameObject swaped;
+	Color swapedColor;
 	RaycastHit hit;
 	GameObject lastHit = null;
 	int layerMask = 1 << 8; //layer 8 = Obstacle
@@ -34,7 +35,9 @@ public class PlayerScript : MonoBehaviour {
 	void Start () 
 	{
 		AllTotems = GameObject.FindGameObjectsWithTag ("Totem");
-		this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
+		//this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
+		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().enabled = true;
+		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().material.color = Color.green;
 		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
@@ -261,6 +264,7 @@ public class PlayerScript : MonoBehaviour {
 		if (swaped) 
 		{
 			//swaped.GetComponent<Renderer> ().material.color = Color.white;
+			swaped.GetComponent<Renderer> ().material.color = swapedColor;
 			swaped = null;
 		}
 		if (Physics.Raycast(this.gameObject.transform.position,  this.gameObject.transform.forward, out hit, rangeSwap)) 
@@ -268,7 +272,8 @@ public class PlayerScript : MonoBehaviour {
 			if (hit.collider.tag == "Swapable") 
 			{
 				swaped = hit.collider.gameObject;
-				//swaped.GetComponent<Renderer> ().material.color = Color.green;
+				swapedColor = swaped.GetComponent<Renderer> ().material.color;
+				swaped.GetComponent<Renderer> ().material.color = Color.green;
 			}
 		}
 	}
@@ -293,7 +298,8 @@ public class PlayerScript : MonoBehaviour {
 		swaped.AddComponent<PlayerScript> ();
 
 		SwitchPos (this.gameObject, swaped);
-		this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
+		//this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
+		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().enabled = false;
 		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
 		this.gameObject.GetComponent<EnemyScript> ().isStun = true;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = true;
@@ -323,7 +329,7 @@ public class PlayerScript : MonoBehaviour {
 	{
 		if (fired) 
 		{
-			fired.GetComponent<Renderer> ().material.color = Color.white;
+			//fired.GetComponent<Renderer> ().material.color = Color.white;
 			fired = null;
 		}
 		if (Physics.Raycast(this.gameObject.transform.position, this.gameObject.transform.forward, out hit, range)) 
@@ -331,7 +337,7 @@ public class PlayerScript : MonoBehaviour {
 			if (hit.collider.tag == "Swapable") 
 			{
 				fired = hit.collider.gameObject;
-				fired.GetComponent<Renderer> ().material.color = Color.red;
+				//fired.GetComponent<Renderer> ().material.color = Color.red;
 			}
 		}
 	}

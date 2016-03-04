@@ -54,9 +54,11 @@ public class EnemyScript : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+		Coloring ();
         indexpatrol = 0;
         Emanage = GameObject.FindObjectOfType<EnemyManager>();
 		Emanage.SetClass(EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions);
+		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().enabled = false;
         layerMask = 1 << 8;
         walk = GetComponent<NavMeshAgent>().speed;
         observation = GetComponent<NavMeshAgent>().angularSpeed;
@@ -88,7 +90,26 @@ public class EnemyScript : MonoBehaviour
             }
         }
 	}
-	
+
+	void Coloring()
+	{
+		switch(EType)
+		{
+			case EnemyManager.EnemyType.HEAVY:
+				this.gameObject.GetComponent<Renderer> ().material.color = Color.red;
+				this.gameObject.transform.FindChild ("HeavyO").GetComponent<Renderer> ().enabled = true;
+			break;
+			case EnemyManager.EnemyType.SNIPER:
+				this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
+				this.gameObject.transform.FindChild ("SniperO").GetComponent<Renderer> ().enabled = true;
+			break;
+			case EnemyManager.EnemyType.SNEAKY:
+				this.gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
+				this.gameObject.transform.FindChild ("SneakyO").GetComponent<Renderer> ().enabled = true;
+			break;
+		}
+	}
+
 	// Update is called once per frame
 	void Update ()
     {
