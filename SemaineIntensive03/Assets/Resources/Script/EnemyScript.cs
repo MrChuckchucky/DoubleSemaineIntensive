@@ -204,7 +204,7 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
         {
-            int rand = Random.Range(0, index + 1);
+            int rand = Random.Range(0, index);
             destination = NavigationPoints[rand].transform.position;
             isMoving = true;
         }
@@ -345,6 +345,8 @@ public class EnemyScript : MonoBehaviour
     {
         if (currentCD < 0)
         {
+            GameObject smoke = Instantiate(Resources.Load("Particules/Shoot"), transform.position, transform.rotation) as GameObject;
+            Destroy(smoke, 1);
             int chance = Random.Range(0, 101);
             if(chance < HC)
             {

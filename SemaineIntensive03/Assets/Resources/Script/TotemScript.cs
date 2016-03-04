@@ -40,7 +40,7 @@ public class TotemScript : MonoBehaviour
             }
             if(test)
             {
-                dysActive = false;
+                //dysActive = false;
             }
         }
 	}
