@@ -7,10 +7,10 @@ public class TotemScript : MonoBehaviour
     public bool dysActive;
     public float dysactiveStart;
     public float dysactiveDelay;
+    public float distance;
 	// Use this for initialization
 	void Start ()
     {
-        isActive = false;
         dysActive = false;
 	}
 	
@@ -24,6 +24,24 @@ public class TotemScript : MonoBehaviour
         if(!dysActive)
         {
             dysactiveStart = Time.time;
+        }
+        if(dysActive)
+        {
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Swapable");
+            bool test = true;
+            foreach(GameObject enemy in enemies)
+            {
+                float far = Mathf.Abs(transform.position.x - enemy.transform.position.x) + Mathf.Abs(transform.position.z - enemy.transform.position.z);
+                if(far < distance)
+                {
+                    test = false;
+                    break;
+                }
+            }
+            if(test)
+            {
+                dysActive = false;
+            }
         }
 	}
 

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerScript : MonoBehaviour {
-
+public class PlayerScript : MonoBehaviour
+{
 	float rotationSpeed = 40;
 	GameObject swaped;
 	float rangeSwap = 10;
@@ -19,6 +19,7 @@ public class PlayerScript : MonoBehaviour {
 	public float damage;
 	public float speed;
 	public float CDMax;
+    public int HC;
 
 	float dispShotgun = 1.5f;
 	int nbMunitions = 10;
@@ -34,7 +35,7 @@ public class PlayerScript : MonoBehaviour {
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
 		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
-		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax);
+		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out HC);
 	}
 
 	// Update is called once per frame
@@ -232,10 +233,10 @@ public class PlayerScript : MonoBehaviour {
 					{
 						foreach(RaycastHit RH in inSphere)
 						{
-								if(RH.collider.gameObject == go)
-								{
-									RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
-								}
+							if(RH.collider.gameObject == go)
+							{
+								RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+							}
 						}
 					}
 				}

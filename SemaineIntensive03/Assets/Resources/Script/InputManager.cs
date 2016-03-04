@@ -21,6 +21,7 @@ public class InputManager : MonoBehaviour {
 	public float damage;
 	public float speed;
 	public float CDMax;
+    public int HC;
 
 	float dispShotgun = 2;
 	int nbMunitions = 10000000;
@@ -36,7 +37,7 @@ public class InputManager : MonoBehaviour {
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
 		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
-		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax);
+		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out HC);
 	}
 	
 	// Update is called once per frame

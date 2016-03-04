@@ -10,7 +10,6 @@ public class EnemyScript : MonoBehaviour
     public float rotation;
     public bool PlayerDetected;
     public bool totemDetected;
-    public float distanceShoot;
     public float sprint;
     public float vision;
     public bool patrouilleRandom;
@@ -35,8 +34,9 @@ public class EnemyScript : MonoBehaviour
     private int layerMask;
     private RaycastHit hit;
     public GameObject totemSpotted;
+    private int HC;
 
-	EnemyManager Emanage;
+    EnemyManager Emanage;
 
 	[Header("Enemy Settings")]
 	public EnemyManager.EnemyType EType;
@@ -50,12 +50,13 @@ public class EnemyScript : MonoBehaviour
 	float currentCD = 0;
 
     private int indexpatrol;
+    float dispShotgun = 1.5f;
     // Use this for initialization
     void Start ()
     {
         indexpatrol = 0;
         Emanage = GameObject.FindObjectOfType<EnemyManager>();
-		Emanage.SetClass(EType, out life, out range, out damage, out speed, out CDMax);
+		Emanage.SetClass(EType, out life, out range, out damage, out speed, out CDMax, out HC);
         layerMask = 1 << 8;
         walk = GetComponent<NavMeshAgent>().speed;
         observation = GetComponent<NavMeshAgent>().angularSpeed;
@@ -203,7 +204,7 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
         {
-            int rand = Random.Range(0, index);
+            int rand = Random.Range(0, index + 1);
             destination = NavigationPoints[rand].transform.position;
             isMoving = true;
         }
@@ -312,9 +313,10 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().speed = sprint;
         destination = Player.transform.position;
         transform.LookAt(destination);
-        if (Mathf.Abs(transform.position.x - destination.x) <= distanceShoot && Mathf.Abs(transform.position.z - destination.z) <= distanceShoot)
+        if (Mathf.Abs(transform.position.x - destination.x) <= range && Mathf.Abs(transform.position.z - destination.z) <= range)
         {
             destination = new Vector3(Mathf.Round(transform.position.x * 10) / 10, Mathf.Round(transform.position.y * 10) / 10, Mathf.Round(transform.position.z * 10) / 10);
+            Fire();
         }
     }
     void cloche()
@@ -333,13 +335,50 @@ public class EnemyScript : MonoBehaviour
     {
         GetComponent<NavMeshAgent>().speed = sprint;
         destination = totemSpotted.transform.position;
-        if (Mathf.Abs(transform.position.x - destination.x) <= 2 && Mathf.Abs(transform.position.z - destination.z) <= 2)
+        if (Mathf.Abs(transform.position.x - destination.x) <= totemSpotted.GetComponent<TotemScript>().distance && Mathf.Abs(transform.position.z - destination.z) <= totemSpotted.GetComponent<TotemScript>().distance)
         {
             destination = new Vector3(Mathf.Round(transform.position.x * 10) / 10, Mathf.Round(transform.position.y * 10) / 10, Mathf.Round(transform.position.z * 10) / 10);
             totemSpotted.GetComponent<TotemScript>().dysActive = true;
         }
     }
-    void death()
+    void Fire()
+    {
+        if (currentCD < 0)
+        {
+            int chance = Random.Range(0, 101);
+            if(chance < HC)
+            {
+                if (EType != EnemyManager.EnemyType.HEAVY)
+                {
+                    if (Physics.Raycast(this.gameObject.transform.position, this.gameObject.transform.forward, out hit, range))
+                    {
+                        if (hit.collider.tag == "Player")
+                        {
+                            hit.collider.gameObject.GetComponent<PlayerScript>().takeDamage(damage);
+                        }
+                    }
+                }
+                else
+                {
+                    GameObject targets = GameObject.FindGameObjectWithTag("Player");
+                    RaycastHit[] inSphere = Physics.SphereCastAll(this.gameObject.transform.position, dispShotgun, this.gameObject.transform.forward, range);
+                    float dist = Vector3.Distance(this.gameObject.transform.position, targets.transform.position);
+                    if (dist < range)
+                    {
+                        foreach (RaycastHit RH in inSphere)
+                        {
+                            if (RH.collider.gameObject == targets)
+                            {
+                                RH.collider.gameObject.GetComponent<PlayerScript>().takeDamage(damage);
+                            }
+                        }
+                    }
+                }
+            }
+            currentCD = CDMax;
+        }
+    }
+    public void death()
     {
         GameObject[] spawners = GameObject.FindGameObjectsWithTag("Spawner");
         foreach(GameObject spawner in spawners)
@@ -348,6 +387,8 @@ public class EnemyScript : MonoBehaviour
             {
                 spawner.GetComponent<SpawnScript>().spawnStart = Time.time;
                 spawner.GetComponent<SpawnScript>().isActive = true;
+                Destroy(this.gameObject);
+                return;
             }
         }
         Destroy(this.gameObject);
