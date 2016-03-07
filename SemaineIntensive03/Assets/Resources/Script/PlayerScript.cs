@@ -10,6 +10,7 @@ public class PlayerScript : MonoBehaviour
 	int layerMask = 1 << 8; //layer 8 = Obstacle
 	GameObject[] AllTotems;
 	bool choosingTotem = false;
+	bool startChoose = false;
 	bool axisChoose = false;
 	int indexTot = 0;
 
@@ -126,6 +127,10 @@ public class PlayerScript : MonoBehaviour
 		float LJH = Input.GetAxis ("LeftJoystickHorizontal");
 		float LJV = Input.GetAxis ("LeftJoystickVertical");
 		float RJH = Input.GetAxis ("RightJoystickHorizontal");
+
+		float TL = Input.GetAxis ("TriggerLeft");
+		float TR = Input.GetAxis ("TriggerRight");
+
 		//float RJV = Input.GetAxis ("RightJoystickVertical");
 
 		Vector3 rotation = new Vector3(0,RJH,0);
@@ -154,8 +159,8 @@ public class PlayerScript : MonoBehaviour
             isTurning = true;
 		}
 
-		if (Input.GetKeyDown (KeyCode.Joystick1Button0) && swaped != null) {Swap ();}
-		if (Input.GetKeyDown (KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Space)) {Fire ();}
+		if (TL > 0 && swaped != null) {Swap ();}
+		if (TR > 0 || Input.GetKeyDown(KeyCode.Space)) {Fire ();}
 		if (Input.GetKeyDown (KeyCode.Joystick1Button2)) {takeDamage (20);}
 		if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {TPTotem ();}
 	}
@@ -206,7 +211,11 @@ public class PlayerScript : MonoBehaviour
 			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.position);
 			if (dist < rangeTotem && dist < distMax && totem.GetComponent<TotemScript>().isActive) {closeTotem = totem;}
 		}
-		if (closeTotem) {choosingTotem = true;} 
+		if (closeTotem) 
+		{
+			this.gameObject.transform.position = closeTotem.transform.position;
+			choosingTotem = true;
+		} 
 	}
 
 	void chooseDest()
@@ -216,6 +225,7 @@ public class PlayerScript : MonoBehaviour
 		{
 			if(axisChoose == false)
 			{
+				startChoose = true;
 				if (LJV < 0) 
 				{
 					indexTot--;
@@ -244,8 +254,8 @@ public class PlayerScript : MonoBehaviour
 			axisChoose = false;
 		}    
 
-		if (AllTotems [indexTot].GetComponent<TotemScript> ().isActive) {this.gameObject.transform.position = AllTotems [indexTot].transform.position;}
-		if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {choosingTotem = false;}
+		if (AllTotems [indexTot].GetComponent<TotemScript> ().isActive && startChoose) {this.gameObject.transform.position = AllTotems [indexTot].transform.position;}
+		if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {choosingTotem = false;startChoose = false;}
 
 	}
 
