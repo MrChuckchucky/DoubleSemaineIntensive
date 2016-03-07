@@ -32,7 +32,6 @@ public class PlayerScript : MonoBehaviour
 	float rotationSpeed = 100;
 	float rangeSwap = 10;
 	float dispShotgun = 1.5f;
-	float rangeTotem = 5;
     
 	float currentCD = 0;
     bool isTurning;
@@ -96,12 +95,15 @@ public class PlayerScript : MonoBehaviour
 		} 
 		else
         {
-            if(!isDying && !isSwaping)
-            {
-                CheckJoystickInput();
-            }
             checkTotem ();
-			CheckSwap ();
+            if(!isSwaping)
+            {
+                CheckSwap();
+                if (!isDying)
+                {
+                    CheckJoystickInput();
+                }
+            }
 			CheckFire ();
 		}
 	}
@@ -225,12 +227,6 @@ public class PlayerScript : MonoBehaviour
 		}
 		if (chooseTotem) {SpawnAndPossess (chooseTotem);}
 		else if (farTotem) {SpawnAndPossess (farTotem);} 
-		else {Loose ();}
-	}
-
-	void Loose()
-	{
-		Debug.Log ("Loose");
 	}
 
 	void TPTotem()
@@ -240,7 +236,7 @@ public class PlayerScript : MonoBehaviour
 		foreach (GameObject totem in AllTotems)
 		{
 			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.position);
-			if (dist < rangeTotem && dist < distMax && totem.GetComponent<TotemScript>().isActive) {closeTotem = totem;}
+			if (dist < totem.GetComponent<TotemScript>().distance && dist < distMax && totem.GetComponent<TotemScript>().isActive) {closeTotem = totem;}
 		}
 		if (closeTotem) 
 		{
@@ -316,7 +312,10 @@ public class PlayerScript : MonoBehaviour
 		foreach (GameObject totem in AllTotems)
 		{
 			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.position);
-			if (dist < rangeTotem) {totem.GetComponent<TotemScript> ().loadTotem ();} 
+			if (dist < totem.GetComponent<TotemScript>().distance)
+            {
+                totem.GetComponent<TotemScript> ().loadTotem ();
+            } 
 			else {totem.GetComponent<TotemScript> ().deloadTotem ();}
 		}
 	}
@@ -343,8 +342,8 @@ public class PlayerScript : MonoBehaviour
 	void Swap()
     {
         this.gameObject.tag = "Swapable";
-		swaped.tag = "Player";
-        Debug.Log("yo");
+        swaped.tag = "Player";
+        //Debug.Log("yo");
 
 		Vector3 pos = Camera.main.transform.localPosition;
 
@@ -408,7 +407,7 @@ public class PlayerScript : MonoBehaviour
     {
         if (currentCD < 0 && nbMunitions > 0)
         {
-            Debug.Log("fire");
+            //Debug.Log("fire");
             GameObject smoke = Instantiate(Resources.Load("Particules/Shoot"), transform.position, transform.rotation) as GameObject;
             Destroy(smoke, 1);
             nbMunitions--;
@@ -418,7 +417,7 @@ public class PlayerScript : MonoBehaviour
 				{
 					if (hit.collider.tag == "Swapable") 
 					{
-                        Debug.Log("hit");
+                        //Debug.Log("hit");
 						hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
 					}
 				}
@@ -436,7 +435,7 @@ public class PlayerScript : MonoBehaviour
 						{
 							if(RH.collider.gameObject == go)
                             {
-                                Debug.Log("hit");
+                                //Debug.Log("hit");
                                 RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
 							}
 						}

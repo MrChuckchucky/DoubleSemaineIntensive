@@ -11,7 +11,6 @@ public class EnemyScript : MonoBehaviour
     public bool PlayerDetected;
     public bool totemDetected;
     public float sprint;
-    public float vision;
     public bool patrouilleRandom;
     public float stunDuration;
     public bool isStun;
@@ -148,7 +147,7 @@ public class EnemyScript : MonoBehaviour
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Swapable");
         foreach(GameObject ally in allies)
         {
-            float distance = Mathf.Abs(transform.position.x - ally.transform.position.x) + Mathf.Abs(transform.position.y - ally.transform.position.y);
+            float distance = Vector3.Distance(transform.position, ally.transform.position);
             if(distance <= distanceAlert)
             {
                 ally.GetComponent<EnemyScript>().PlayerDetected = true;
@@ -192,22 +191,26 @@ public class EnemyScript : MonoBehaviour
     bool PlayerDetection()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
-        float distance = Mathf.Abs((Player.transform.position.x - transform.position.x) + (Player.transform.position.z - transform.position.z));
-        if (distance > vision)
+        if(Player)
         {
-            return false;
+            float distance = Vector3.Distance(Player.transform.position, transform.position);
+            if (distance > distanceAlert)
+            {
+                return false;
+            }
+            Vector3 forward = Vector3.Normalize(transform.TransformDirection(Vector3.forward));
+            Vector3 toOther = Vector3.Normalize(Player.transform.position - transform.position);
+            if (Vector3.Dot(forward, toOther) < 0.4 || Vector3.Dot(forward, toOther) > 1.6f)
+            {
+                return false;
+            }
+            if (Physics.Linecast(transform.position, Player.transform.position, out hit, layerMask))
+            {
+                return false;
+            }
+            return true;
         }
-        Vector3 forward = Vector3.Normalize(transform.TransformDirection(Vector3.forward));
-        Vector3 toOther = Vector3.Normalize(Player.transform.position - transform.position);
-        if(Vector3.Dot(forward, toOther) < 0.4 || Vector3.Dot(forward, toOther) > 1.6f)
-        {
-            return false;
-        }
-        if (Physics.Linecast(transform.position, Player.transform.position, out hit, layerMask))
-        {
-            return false;
-        }
-        return true;
+        return false;
     }
     bool totemDetection()
     {
@@ -218,8 +221,8 @@ public class EnemyScript : MonoBehaviour
             {
                 continue;
             }
-            float distance = Mathf.Abs((totem.transform.position.x - transform.position.x) + (totem.transform.position.z - transform.position.z));
-            if (distance > vision)
+            float distance = Vector3.Distance(totem.transform.position, transform.position);
+            if (distance > distanceAlert)
             {
                 continue;
             }
@@ -250,7 +253,7 @@ public class EnemyScript : MonoBehaviour
         }
         else if (canMove)
         {
-            if (Mathf.Abs(transform.position.x - destination.x) <= 1 && Mathf.Abs(transform.position.z - destination.z) <= 1)
+            if (Vector3.Distance(transform.position, destination) <= 1)
             {
                 isMoving = false;
                 canMove = false;
@@ -307,7 +310,7 @@ public class EnemyScript : MonoBehaviour
         }
         else if (canMove)
         {
-            if (Mathf.Abs(transform.position.x - destination.x) <= 1 && Mathf.Abs(transform.position.z - destination.z) <= 1)
+            if (Vector3.Distance(transform.position, destination) <= 1)
             {
                 isMoving = false;
                 canMove = false;
@@ -353,7 +356,7 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().speed = sprint;
         destination = Player.transform.position;
         transform.LookAt(destination);
-        if (Mathf.Abs(transform.position.x - destination.x) <= range && Mathf.Abs(transform.position.z - destination.z) <= range)
+        if (Vector3.Distance(transform.position, destination) <= range)
         {
             destination = new Vector3(Mathf.Round(transform.position.x * 10) / 10, Mathf.Round(transform.position.y * 10) / 10, Mathf.Round(transform.position.z * 10) / 10);
             Fire();
@@ -365,7 +368,7 @@ public class EnemyScript : MonoBehaviour
         GameObject cloche = GameObject.FindGameObjectWithTag("Cloche");
         destination = cloche.transform.position;
         transform.LookAt(destination);
-        if (Mathf.Abs(transform.position.x - destination.x) <= 2 && Mathf.Abs(transform.position.z - destination.z) <= 2)
+        if (Vector3.Distance(transform.position, destination) <= 2)
         {
             cloche.GetComponent<ClocheScript>().totemSpotted = totemSpotted;
             cloche.GetComponent<ClocheScript>().isActive = true;
@@ -375,7 +378,7 @@ public class EnemyScript : MonoBehaviour
     {
         GetComponent<NavMeshAgent>().speed = sprint;
         destination = totemSpotted.transform.position;
-        if (Mathf.Abs(transform.position.x - destination.x) <= totemSpotted.GetComponent<TotemScript>().distance && Mathf.Abs(transform.position.z - destination.z) <= totemSpotted.GetComponent<TotemScript>().distance)
+        if (Vector3.Distance(transform.position, destination) <= totemSpotted.GetComponent<TotemScript>().distance - 1)
         {
             destination = new Vector3(Mathf.Round(transform.position.x * 10) / 10, Mathf.Round(transform.position.y * 10) / 10, Mathf.Round(transform.position.z * 10) / 10);
             totemSpotted.GetComponent<TotemScript>().dysActive = true;

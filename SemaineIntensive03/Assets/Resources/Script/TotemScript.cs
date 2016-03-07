@@ -10,8 +10,8 @@ public class TotemScript : MonoBehaviour
     public float distance;
 
     float unitLoad = 30;
-	float loadBar;
-    bool animated;
+	public float loadBar;
+    public bool animated;
 	// Use this for initialization
 	void Start ()
     {
@@ -24,14 +24,27 @@ public class TotemScript : MonoBehaviour
     {
         if(dysactiveStart + dysactiveDelay <= Time.time && dysActive)
         {
+            loadBar = 0;
             dysactive();
         }
         if(!dysActive)
         {
             dysactiveStart = Time.time;
         }
-        if (isActive) {this.gameObject.GetComponent<Renderer> ().material.color = Color.green;} 
-		else {this.gameObject.GetComponent<Renderer> ().material.color = Color.white;}
+        if (isActive)
+        {
+            this.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+        } 
+		else
+        {
+            this.gameObject.GetComponent<Renderer> ().material.color = Color.white;
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (animated && Vector3.Distance(player.transform.position, transform.position) > distance)
+            {
+                animated = false;
+                player.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Idle");
+            }
+        }
 	}
 
 	public void loadTotem()
@@ -61,8 +74,8 @@ public class TotemScript : MonoBehaviour
             bool test = true;
             foreach(GameObject enemy in enemies)
             {
-                float far = Mathf.Abs(transform.position.x - enemy.transform.position.x) + Mathf.Abs(transform.position.z - enemy.transform.position.z);
-                if(far < distance)
+                float far = Vector3.Distance(enemy.transform.position, transform.position);
+                if (far < distance)
                 {
                     test = false;
                     break;
@@ -77,6 +90,8 @@ public class TotemScript : MonoBehaviour
 
     void dysactive()
     {
+        Debug.Log("yo2");
+        animated = false;
         dysActive = false;
         isActive = false;
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Swapable");
