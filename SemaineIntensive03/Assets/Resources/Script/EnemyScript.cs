@@ -34,7 +34,6 @@ public class EnemyScript : MonoBehaviour
     private int layerMask;
     private RaycastHit hit;
     public GameObject totemSpotted;
-    private int HC;
 
     EnemyManager Emanage;
 
@@ -47,8 +46,10 @@ public class EnemyScript : MonoBehaviour
 	public float speed;
 	public float CDMax;
 	public int nbMunitions;
+    public int HC;
+    public float distanceAlert;
 
-	float currentCD = 0;
+    float currentCD = 0;
 
     private int indexpatrol;
     float dispShotgun = 1.5f;
@@ -58,38 +59,14 @@ public class EnemyScript : MonoBehaviour
 		Coloring ();
         indexpatrol = 0;
         Emanage = GameObject.FindObjectOfType<EnemyManager>();
-		Emanage.SetClass(EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC);
-		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().enabled = false;
+		Emanage.SetClass(EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC, out distanceAlert);
+		this.gameObject.transform.FindChild ("Head").gameObject.SetActive(false);
         layerMask = 1 << 8;
         walk = GetComponent<NavMeshAgent>().speed;
         observation = GetComponent<NavMeshAgent>().angularSpeed;
         canMove = true;
         isMoving = false;
         PlayerDetected = false;
-        if(patrouilleRandom)
-        {
-            temp = GameObject.FindGameObjectsWithTag("NavigationPoint");
-            NavigationPoints = new GameObject[temp.Length];
-            index = 0;
-            foreach (GameObject navpoint in temp)
-            {
-                int[] IDS = navpoint.GetComponent<NavigationPointScript>().ID;
-                bool valid = false;
-                foreach (int id in IDS)
-                {
-                    if (id == ID)
-                    {
-                        valid = true;
-                        break;
-                    }
-                }
-                if (valid)
-                {
-                    NavigationPoints[index] = navpoint;
-                    index++;
-                }
-            }
-        }
 	}
 
 	void Coloring()
@@ -114,6 +91,10 @@ public class EnemyScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        if(NavigationPoints.Length == 0)
+        {
+            setNavigationPoints();
+        }
 		currentCD -= Time.deltaTime;
         if(!isStun)
         {
@@ -164,6 +145,16 @@ public class EnemyScript : MonoBehaviour
 
 	public void takeDamage(float dmg)
 	{
+        GameObject[] allies = GameObject.FindGameObjectsWithTag("Swapable");
+        foreach(GameObject ally in allies)
+        {
+            float distance = Mathf.Abs(transform.position.x - ally.transform.position.x) + Mathf.Abs(transform.position.y - ally.transform.position.y);
+            if(distance <= distanceAlert)
+            {
+                ally.GetComponent<EnemyScript>().PlayerDetected = true;
+                ally.GetComponent<EnemyScript>().destination = GameObject.FindGameObjectWithTag("Player").transform.position;
+            }
+        }
 		life -= dmg;
 		if (life <= 0)
         {
@@ -171,6 +162,33 @@ public class EnemyScript : MonoBehaviour
         }
 	}
 
+    void setNavigationPoints()
+    {
+        if (patrouilleRandom)
+        {
+            temp = GameObject.FindGameObjectsWithTag("NavigationPoint");
+            NavigationPoints = new GameObject[temp.Length];
+            index = 0;
+            foreach (GameObject navpoint in temp)
+            {
+                int[] IDS = navpoint.GetComponent<NavigationPointScript>().ID;
+                bool valid = false;
+                foreach (int id in IDS)
+                {
+                    if (id == ID)
+                    {
+                        valid = true;
+                        break;
+                    }
+                }
+                if (valid)
+                {
+                    NavigationPoints[index] = navpoint;
+                    index++;
+                }
+            }
+        }
+    }
     bool PlayerDetection()
     {
         Player = GameObject.FindGameObjectWithTag("Player");

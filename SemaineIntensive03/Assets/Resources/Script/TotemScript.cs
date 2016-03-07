@@ -11,10 +11,11 @@ public class TotemScript : MonoBehaviour
 
     float unitLoad = 30;
 	float loadBar;
-    
+    bool animated;
 	// Use this for initialization
 	void Start ()
     {
+        animated = false;
         dysActive = false;
 	}
 	
@@ -37,6 +38,11 @@ public class TotemScript : MonoBehaviour
 	{
 		if (!isActive) 
 		{
+            if(!animated)
+            {
+                animated = true;
+                GameObject.FindGameObjectWithTag("Player").transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Invocation");
+            }
 			loadBar += unitLoad * Time.deltaTime;
 			if (loadBar >= 100) {isActive = true;}
 		}

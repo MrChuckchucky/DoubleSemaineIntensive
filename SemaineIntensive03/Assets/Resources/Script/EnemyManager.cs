@@ -18,6 +18,7 @@ public class EnemyManager : MonoBehaviour {
 	public float CDHeavy;
 	public int nbMunitionsHeavy;
     public int hitChanceHeavy;
+    public float distanceAlertHeavy;
 
     [Header("Sneaky Settings")]
 	public float lifeMaxSneaky;
@@ -27,6 +28,7 @@ public class EnemyManager : MonoBehaviour {
 	public float CDSneaky;
 	public int nbMunitionsSneaky;
     public int hitChanceSneaky;
+    public float distanceAlertSneaky;
 
     [Header("Sniper Settings")]
 	public float lifeMaxSniper;
@@ -36,6 +38,7 @@ public class EnemyManager : MonoBehaviour {
 	public float CDSniper;
 	public int nbMunitionsSniper;
     public int hitChanceSniper;
+    public float distanceAlertSniper;
 
     // Use this for initialization
     void Start () {
@@ -47,9 +50,10 @@ public class EnemyManager : MonoBehaviour {
 	
 	}
     
-	public void SetClass(EnemyType EClass, out float life, out float range, out float damage, out float speed, out float CD, out int nbMuni, out int HC)
+	public void SetClass(EnemyType EClass, out float life, out float range, out float damage, out float speed, out float CD, out int nbMuni, out int HC, out float distanceAlert)
 	{
 		life = range = damage = speed = CD = nbMuni = HC = 0;
+        distanceAlert = 0;
 		switch(EClass)
 		{
 			case EnemyType.HEAVY:
@@ -60,6 +64,7 @@ public class EnemyManager : MonoBehaviour {
 				CD = CDHeavy;
 				nbMuni = nbMunitionsHeavy;
                 HC = hitChanceHeavy;
+                distanceAlert = distanceAlertHeavy;
 			break;
 			case EnemyType.SNEAKY:
 				life = lifeMaxSneaky;
@@ -69,6 +74,7 @@ public class EnemyManager : MonoBehaviour {
 				CD = CDSneaky;
 				nbMuni = nbMunitionsSneaky;
                 HC = hitChanceSneaky;
+                distanceAlert = distanceAlertSneaky;
                 break;
 			case EnemyType.SNIPER:
 				life = lifeMaxSniper;
@@ -78,6 +84,7 @@ public class EnemyManager : MonoBehaviour {
 				CD = CDSniper;
 				nbMuni = nbMunitionsSniper;
                 HC = hitChanceSniper;
+                distanceAlert = distanceAlertSniper;
                 break;
 		}
 	}

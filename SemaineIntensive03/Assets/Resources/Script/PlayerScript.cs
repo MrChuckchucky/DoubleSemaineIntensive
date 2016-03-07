@@ -27,6 +27,7 @@ public class PlayerScript : MonoBehaviour
 	public float CDMax;
 	public int nbMunitions;
     public int HC;
+    public float distanceAlert;
 
 	float rotationSpeed = 100;
 	float rangeSwap = 10;
@@ -37,26 +38,42 @@ public class PlayerScript : MonoBehaviour
     bool isTurning;
     Vector3 angleTurn;
     int rotationDirection;
+    float swapStart;
+    float swapDelay = 1;
+    bool isSwaping;
+    float deathStart;
+    float deathDelay = 1f;
+    bool isDying;
     // Use this for initialization
-    void Start () 
-	{
-		AllTotems = GameObject.FindGameObjectsWithTag ("Totem");
-		//this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
-		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().enabled = true;
-		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().material.color = Color.green;
+    void Start ()
+    {
+        isSwaping = false;
+        isDying = false;
+        this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Idle");
+        AllTotems = GameObject.FindGameObjectsWithTag ("Totem");
+        //this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
+        this.gameObject.transform.FindChild("Head").gameObject.SetActive(true);
 		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
 		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
-		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC);
+		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC, out distanceAlert);
         isTurning = false;
     }
 
 	// Update is called once per frame
 	void Update () 
 	{
+        if(isDying && deathDelay + deathStart <= Time.time)
+        {
+            trueDeath();
+        }
+        if(isSwaping && swapStart + swapDelay <= Time.time)
+        {
+            Swap();
+        }
         if(isTurning)
         {
             if(Mathf.Abs(transform.eulerAngles.y - angleTurn.y) > rotation * 3)
@@ -79,7 +96,10 @@ public class PlayerScript : MonoBehaviour
 		} 
 		else
         {
-            CheckJoystickInput();
+            if(!isDying && !isSwaping)
+            {
+                CheckJoystickInput();
+            }
             checkTotem ();
 			CheckSwap ();
 			CheckFire ();
@@ -158,9 +178,14 @@ public class PlayerScript : MonoBehaviour
             rotationDirection = -1;
             isTurning = true;
 		}
-
-		if (TL > 0 && swaped != null) {Swap ();}
-		if (TR > 0 || Input.GetKeyDown(KeyCode.Space)) {Fire ();}
+        
+		if (TL > 0 && swaped != null)
+        {
+            this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Swap");
+            swapStart = Time.time;
+            isSwaping = true;
+        }
+        if (TR > 0 || Input.GetKeyDown(KeyCode.Space)) {Fire ();}
 		if (Input.GetKeyDown (KeyCode.Joystick1Button2)) {takeDamage (20);}
 		if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {TPTotem ();}
 	}
@@ -174,10 +199,16 @@ public class PlayerScript : MonoBehaviour
 
 	void Death()
     {
+        this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Death");
+        deathStart = Time.time;
+        isDying = true;
+    }
+    void trueDeath()
+    {
         checkFreeTotem();
-        this.gameObject.GetComponent<EnemyScript> ().enabled = true;
+        this.gameObject.GetComponent<EnemyScript>().enabled = true;
         Destroy(this.gameObject.GetComponent<PlayerScript>());
-        this.gameObject.GetComponent<EnemyScript> ().death ();
+        this.gameObject.GetComponent<EnemyScript>().death();
     }
 
 	void checkFreeTotem()
@@ -310,8 +341,8 @@ public class PlayerScript : MonoBehaviour
 	}
 
 	void Swap()
-	{
-		this.gameObject.tag = "Swapable";
+    {
+        this.gameObject.tag = "Swapable";
 		swaped.tag = "Player";
         Debug.Log("yo");
 
@@ -331,18 +362,17 @@ public class PlayerScript : MonoBehaviour
 
 		SwitchPos (this.gameObject, swaped);
 		//this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
-		this.gameObject.transform.FindChild ("Head").GetComponent<Renderer> ().enabled = false;
+		this.gameObject.transform.FindChild ("Head").gameObject.SetActive(false);
 		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
 		this.gameObject.GetComponent<EnemyScript> ().isStun = true;
-		this.gameObject.GetComponent<NavMeshAgent> ().enabled = true;
-		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = false;
+        this.gameObject.GetComponent<NavMeshObstacle>().enabled = false;
+        this.gameObject.GetComponent<NavMeshAgent> ().enabled = true;
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = true;
 
 
 		float rectY = (Mathf.Round( swaped.transform.eulerAngles.y / 90) * 90) % 360;
 		Vector3 rectVec = new Vector3 (0,rectY,0);
 		swaped.transform.eulerAngles = rectVec;
-
 		Destroy (this.gameObject.GetComponent<PlayerScript>());		
 	}
 
