@@ -31,7 +31,7 @@ public class PlayerScript : MonoBehaviour
 
 	float rotationSpeed = 100;
 	float rangeSwap = 10;
-	float dispShotgun = 1.5f;
+	float dispShotgun = 1.75f;
     
 	float currentCD = 0;
     bool isTurning;
@@ -196,7 +196,7 @@ public class PlayerScript : MonoBehaviour
 	{
         //ParticleSystem blood = Instantiate(Resources.Load("Particules/Blood"), transform.position, transform.rotation) as ParticleSystem;
 		life -= dmg;
-		if (life <= 0) {Death ();}
+		if (life <= 0 && !isDying) {Death ();}
 	}
 
 	void Death()

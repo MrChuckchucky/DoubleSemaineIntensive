@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/benoit.unity
+- path: Assets/Scene/Layout_2_prefabs_v2L.unity
   isLoaded: 1
   isActive: 1

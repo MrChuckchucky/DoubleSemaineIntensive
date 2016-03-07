@@ -90,7 +90,7 @@ public class TotemScript : MonoBehaviour
 
     void dysactive()
     {
-        Debug.Log("yo2");
+        //Debug.Log("yo2");
         animated = false;
         dysActive = false;
         isActive = false;
