@@ -27,7 +27,7 @@ public class PlayerScript : MonoBehaviour
 	public int nbMunitions;
     public int HC;
 
-	float rotationSpeed = 40;
+	float rotationSpeed = 100;
 	float rangeSwap = 10;
 	float dispShotgun = 1.5f;
 	float rangeTotem = 5;
