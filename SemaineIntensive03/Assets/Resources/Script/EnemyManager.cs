@@ -40,6 +40,11 @@ public class EnemyManager : MonoBehaviour {
     public int hitChanceSniper;
     public float distanceAlertSniper;
 
+	[Header("Percent Settings")]
+	public float againstSupPercent;
+	public float againstSamePercent;
+	public float againstLessPercent;
+
     // Use this for initialization
     void Start () {
 		

@@ -35,6 +35,10 @@ public class EnemyScript : MonoBehaviour
     public GameObject totemSpotted;
 
     EnemyManager Emanage;
+	[Header("General Settings")]
+	public float againstSupPercent;
+	public float againstSamePercent;
+	public float againstLessPercent;
 
 	[Header("Enemy Settings")]
 	public EnemyManager.EnemyType EType;
@@ -60,6 +64,9 @@ public class EnemyScript : MonoBehaviour
 		Coloring ();
         indexpatrol = 0;
         Emanage = GameObject.FindObjectOfType<EnemyManager>();
+		againstSupPercent = Emanage.againstSupPercent;
+		againstSamePercent = Emanage.againstSamePercent;
+		againstLessPercent = Emanage.againstLessPercent;
 		Emanage.SetClass(EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC, out distanceAlert);
 		this.gameObject.transform.FindChild ("Head").gameObject.SetActive(false);
         layerMask = 1 << 8;
@@ -153,7 +160,51 @@ public class EnemyScript : MonoBehaviour
 		}
     }
 
-	public void takeDamage(float dmg)
+	float Percent(EnemyManager.EnemyType type)
+	{
+		if (EType == type) {return againstSamePercent;}
+		switch(type)
+		{
+			case EnemyManager.EnemyType.HEAVY:
+				switch(EType)
+				{
+					case EnemyManager.EnemyType.HEAVY:
+						return againstSamePercent;
+					case EnemyManager.EnemyType.SNIPER:
+						return againstSupPercent;
+					case EnemyManager.EnemyType.SNEAKY:
+						return againstLessPercent;
+				}
+			break;
+
+			case EnemyManager.EnemyType.SNIPER:
+				switch(EType)
+				{
+					case EnemyManager.EnemyType.HEAVY:
+						return againstLessPercent;
+					case EnemyManager.EnemyType.SNIPER:
+						return againstSamePercent;
+					case EnemyManager.EnemyType.SNEAKY:
+						return againstSupPercent;
+				}
+			break;
+
+			case EnemyManager.EnemyType.SNEAKY:
+				switch(EType)
+				{
+					case EnemyManager.EnemyType.HEAVY:
+						return againstSupPercent;
+					case EnemyManager.EnemyType.SNIPER:
+						return againstLessPercent;
+					case EnemyManager.EnemyType.SNEAKY:
+						return againstSamePercent;
+				}
+			break;
+		}
+		return againstSamePercent;
+	}
+
+	public void takeDamage(float dmg,  EnemyManager.EnemyType type)
 	{
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Swapable");
         foreach(GameObject ally in allies)
@@ -165,7 +216,7 @@ public class EnemyScript : MonoBehaviour
                 ally.GetComponent<EnemyScript>().destination = GameObject.FindGameObjectWithTag("Player").transform.position;
             }
         }
-		life -= dmg;
+		life -= dmg * Percent(type);
 		if (life <= 0)
         {
             death();
@@ -410,7 +461,7 @@ public class EnemyScript : MonoBehaviour
                     {
                         if (hit.collider.tag == "Player")
                         {
-                            hit.collider.gameObject.GetComponent<PlayerScript>().takeDamage(damage);
+							hit.collider.gameObject.GetComponent<PlayerScript>().takeDamage(damage, EType);
                         }
                     }
                 }
@@ -425,7 +476,7 @@ public class EnemyScript : MonoBehaviour
                         {
                             if (RH.collider.gameObject == targets)
                             {
-                                RH.collider.gameObject.GetComponent<PlayerScript>().takeDamage(damage);
+								RH.collider.gameObject.GetComponent<PlayerScript>().takeDamage(damage, EType);
                             }
                         }
                     }
