@@ -153,7 +153,7 @@ public class EnemyScript : MonoBehaviour
 				GetComponent<NavMeshAgent> ().SetDestination (destination);
 				if (stunStart >= stunDuration)
                 {
-                    Debug.Log("yo");
+                    //Debug.Log("yo");
 					isStun = false;
 				}
 			}

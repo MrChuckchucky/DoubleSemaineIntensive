@@ -49,7 +49,7 @@ public class ButtonManager : MonoBehaviour {
             if (NewGame.GetComponent<Button>().interactable)
             {
                 ButtonNewGame();
-                Debug.Log("a");
+                //Debug.Log("a");
             }
             else
             {
@@ -78,7 +78,7 @@ public class ButtonManager : MonoBehaviour {
             PanelNoir.GetComponent<Image>().color = new Color(0f, 0f, 0f, x);
             yield return new WaitForEndOfFrame();
         }
-        Debug.Log("a");
+        //Debug.Log("a");
         Application.LoadLevel(1);
 
     }
