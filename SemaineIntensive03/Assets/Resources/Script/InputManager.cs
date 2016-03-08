@@ -44,11 +44,11 @@ public class InputManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		currentCD -= Time.deltaTime;
+		/*currentCD -= Time.deltaTime;
 		CamCheck ();
 		//ScreenShake ();
 		CheckInput ();
-		if (camFix) {Camera.main.transform.LookAt (this.gameObject.transform);}
+		if (camFix) {Camera.main.transform.LookAt (this.gameObject.transform);}*/
     }
 
     void CamCheck()
@@ -86,7 +86,7 @@ public class InputManager : MonoBehaviour {
 		if (Input.GetKey (KeyCode.Q)) {DoMovement ("left");}
 		if (Input.GetKey (KeyCode.S)) {DoMovement ("down");}
 		if (Input.GetKey (KeyCode.D)) {DoMovement ("right");}
-		if (Input.GetKeyDown (KeyCode.Space)) {Fire();}
+		//if (Input.GetKeyDown (KeyCode.Space)) {Fire();}
 		if (Input.GetButtonDown("Fire1")) {CheckSwap ();}
 		if (Input.GetKeyDown (KeyCode.A)) 
 		{
@@ -112,7 +112,7 @@ public class InputManager : MonoBehaviour {
 		if (life <= 0) {Destroy (this.gameObject);}
 	}
 		
-	void Fire()
+	/*void Fire()
 	{
 		if (currentCD < 0 && nbMunitions > 0) 
 		{
@@ -127,7 +127,7 @@ public class InputManager : MonoBehaviour {
 					Debug.DrawLine (this.gameObject.transform.position, vision, Color.red);
 					if (Physics.Linecast (this.gameObject.transform.position, vision, out hit)) {
 						if (hit.collider.tag == "Swapable") {
-							hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+							hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage, EType);
 						}
 					}
 				}
@@ -137,7 +137,7 @@ public class InputManager : MonoBehaviour {
 					Debug.DrawLine (this.gameObject.transform.position, vision, Color.yellow);
 					if (Physics.Linecast (this.gameObject.transform.position, vision, out hit)) {
 						if (hit.collider.tag == "Swapable") {
-							hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+							hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage, EType);
 						}
 					}
 				}
@@ -212,7 +212,7 @@ public class InputManager : MonoBehaviour {
 			}
 			//currentCD = CDMax;
 		}
-	}
+	}*/
 
 	void CheckSwap()
 	{

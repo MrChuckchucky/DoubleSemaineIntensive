@@ -20,6 +20,12 @@ public class PlayerScript : MonoBehaviour
 
     float rotation = 4;
 
+	[Header("General Settings")]
+	public float againstSupPercent;
+	public float againstSamePercent;
+	public float againstLessPercent;
+
+	[Header("Settings by EnnemyScript")]
 	public float maxLife;
 	public float life;
 	public float range;
@@ -60,6 +66,9 @@ public class PlayerScript : MonoBehaviour
 		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
+		againstLessPercent = this.gameObject.GetComponent<EnemyScript> ().againstLessPercent; 
+		againstSamePercent = this.gameObject.GetComponent<EnemyScript> ().againstSamePercent; 
+		againstSupPercent = this.gameObject.GetComponent<EnemyScript> ().againstSupPercent; 
 		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
 		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC, out distanceAlert);
 		maxLife = life;
@@ -106,7 +115,7 @@ public class PlayerScript : MonoBehaviour
 				checkTotem ();
 				if(!isSwaping)
 				{
-					CheckSwap();
+					//CheckSwap();
 					if (!isDying)
 					{
 						CheckJoystickInput();
@@ -193,22 +202,69 @@ public class PlayerScript : MonoBehaviour
             rotationDirection = -1;
             isTurning = true;
 		}
-        
-		if (TL > 0 && swaped != null)
+		if (TL > 0)
+		{
+			CheckSwap ();
+		}
+		if (TL == 0 && swaped != null)
         {
             this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Swap");
             swapStart = Time.time;
             isSwaping = true;
         }
-        if (TR > 0 || Input.GetKeyDown(KeyCode.Space)) {Fire ();}
-		if (Input.GetKeyDown (KeyCode.Joystick1Button2)) {takeDamage (20);}
-		if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {TPTotem ();}
+        if (TR > 0) {Fire ();}
+		//if (Input.GetKeyDown (KeyCode.Joystick1Button2)) {takeDamage (20);}
+		//if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {TPTotem ();}
 	}
 
-	public void takeDamage(float dmg)
+	float Percent(EnemyManager.EnemyType type)
+	{
+		if (EType == type) {return againstSamePercent;}
+		switch(type)
+		{
+			case EnemyManager.EnemyType.HEAVY:
+				switch(EType)
+				{
+					case EnemyManager.EnemyType.HEAVY:
+						return againstSamePercent;
+					case EnemyManager.EnemyType.SNIPER:
+						return againstSupPercent;
+					case EnemyManager.EnemyType.SNEAKY:
+						return againstLessPercent;
+				}
+			break;
+
+			case EnemyManager.EnemyType.SNIPER:
+				switch(EType)
+				{
+					case EnemyManager.EnemyType.HEAVY:
+						return againstLessPercent;
+					case EnemyManager.EnemyType.SNIPER:
+						return againstSamePercent;
+					case EnemyManager.EnemyType.SNEAKY:
+						return againstSupPercent;
+				}
+			break;
+
+			case EnemyManager.EnemyType.SNEAKY:
+			switch(EType)
+				{
+					case EnemyManager.EnemyType.HEAVY:
+						return againstSupPercent;
+					case EnemyManager.EnemyType.SNIPER:
+						return againstLessPercent;
+					case EnemyManager.EnemyType.SNEAKY:
+						return againstSamePercent;
+				}
+			break;
+		}
+		return againstSamePercent;
+	}
+
+	public void takeDamage(float dmg, EnemyManager.EnemyType type)
 	{
         //ParticleSystem blood = Instantiate(Resources.Load("Particules/Blood"), transform.position, transform.rotation) as ParticleSystem;
-		life -= dmg;
+		life -= dmg * Percent(type);
 		if (life <= 0 && !isDying) {Death ();}
 	}
 
@@ -339,6 +395,7 @@ public class PlayerScript : MonoBehaviour
 		if (swaped) 
 		{
 			//swaped.GetComponent<Renderer> ().material.color = Color.white;
+			//Particle effect possess
 			swaped.GetComponent<Renderer> ().material.color = swapedColor;
 			swaped = null;
 		}
@@ -393,10 +450,14 @@ public class PlayerScript : MonoBehaviour
 	{
 		Vector3 Pos1 = GO1.transform.position;
 		Vector3 Pos2 = GO2.transform.position;
+		Quaternion Rot1 = GO1.transform.rotation;
+		Quaternion Rot2 = GO2.transform.rotation;
 		GO1.GetComponent<Rigidbody> ().velocity = Vector3.zero;
 		GO2.GetComponent<Rigidbody> ().velocity = Vector3.zero;
 		GO1.transform.position = Pos2;
+		GO1.transform.rotation = Rot2;
 		GO2.transform.position = Pos1;
+		GO2.transform.rotation = Rot1;
 	}
 
 	GameObject fired = null;
@@ -432,7 +493,7 @@ public class PlayerScript : MonoBehaviour
 					if (hit.collider.tag == "Swapable") 
 					{
                         //Debug.Log("hit");
-						hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+						hit.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage, EType);
 					}
 				}
 			}
@@ -450,7 +511,7 @@ public class PlayerScript : MonoBehaviour
 							if(RH.collider.gameObject == go)
                             {
                                 //Debug.Log("hit");
-                                RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage);
+								RH.collider.gameObject.GetComponent<EnemyScript> ().takeDamage (damage, EType);
 							}
 						}
 					}
@@ -468,8 +529,8 @@ public class PlayerScript : MonoBehaviour
 		if (Input.GetKey (KeyCode.Q)) {DoMovement ("left");}
 		if (Input.GetKey (KeyCode.S)) {DoMovement ("down");}
 		if (Input.GetKey (KeyCode.D)) {DoMovement ("right");}
-		if (Input.GetKeyDown (KeyCode.Space)) {Fire();}
-		if (Input.GetButtonDown("Fire1")) {CheckSwap ();}
+		//if (Input.GetKeyDown (KeyCode.Space)) {Fire();}
+		//if (Input.GetButtonDown("Fire1")) {CheckSwap ();}
 		if (Input.GetKeyDown (KeyCode.A)) 
 		{
 			//Camera.main.transform.LookAt(this.gameObject.transform);

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections;
 using UnityEngine.UI;
 
-public class TextScript : MonoBehaviour
-{
+public class TextScript : MonoBehaviour {
     [Header("String")]
     [Multiline(20)]
     public string text;
