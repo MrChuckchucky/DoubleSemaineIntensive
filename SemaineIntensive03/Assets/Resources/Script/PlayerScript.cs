@@ -37,6 +37,7 @@ public class PlayerScript : MonoBehaviour
 	float currentCD = 0;
     bool isTurning;
     Vector3 angleTurn;
+    Vector3 angleTurnShaman;
     int rotationDirection;
     float swapStart;
     float swapDelay = 1;
@@ -68,10 +69,10 @@ public class PlayerScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        angleTurnShaman = transform.eulerAngles;
         isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
 		if (isPaused == false)
         {
-            transform.FindChild("Head").eulerAngles = transform.eulerAngles;
             if (isDying && deathDelay + deathStart <= Time.time)
 			{
 				trueDeath();
@@ -113,7 +114,11 @@ public class PlayerScript : MonoBehaviour
 				}
 				CheckFire ();
 			}
-		}
+            if (Mathf.Abs(transform.FindChild("Head").eulerAngles.y - angleTurnShaman.y) > rotation * 3)
+            {
+                transform.eulerAngles += new Vector3(0, rotation * rotationDirection, 0);
+            }
+        }
 	}
 
 	void CamCheck()
@@ -323,7 +328,7 @@ public class PlayerScript : MonoBehaviour
 			if (dist < totem.GetComponent<TotemScript>().distance)
             {
                 totem.GetComponent<TotemScript> ().loadTotem ();
-                transform.FindChild("Head").LookAt(new Vector3(totem.transform.position.x, transform.FindChild("Head").transform.position.y, totem.transform.position.z));
+                //angleTurnShaman = Vector3.Angle(transform.FindChild("Head").forward, transform.FindChild("Head").LookAt(new Vector3(totem.transform.position.x, transform.FindChild("Head").position.y, totem.transform.position.z));
             } 
 			else {totem.GetComponent<TotemScript> ().deloadTotem ();}
 		}
@@ -372,7 +377,6 @@ public class PlayerScript : MonoBehaviour
 		//this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
 		this.gameObject.transform.FindChild ("Head").gameObject.SetActive(false);
 		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
-        this.gameObject.GetComponent<EnemyScript>().stunStart = Time.time;
         this.gameObject.GetComponent<EnemyScript> ().isStun = true;
         this.gameObject.GetComponent<NavMeshObstacle>().enabled = false;
         this.gameObject.GetComponent<NavMeshAgent> ().enabled = true;

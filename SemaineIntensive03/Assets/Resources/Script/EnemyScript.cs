@@ -144,8 +144,9 @@ public class EnemyScript : MonoBehaviour
                 stunStart += Time.deltaTime;
 				destination = new Vector3 (Mathf.Round (transform.position.x * 10) / 10, Mathf.Round (transform.position.y * 10) / 10, Mathf.Round (transform.position.z * 10) / 10);
 				GetComponent<NavMeshAgent> ().SetDestination (destination);
-				if (stunStart <= stunDuration)
+				if (stunStart >= stunDuration)
                 {
+                    Debug.Log("yo");
 					isStun = false;
 				}
 			}
@@ -159,6 +160,9 @@ public class EnemyScript : MonoBehaviour
 
 	public void takeDamage(float dmg)
 	{
+        destination = GameObject.FindGameObjectWithTag("Player").transform.position;
+        PlayerDetected = true;
+        transform.LookAt(destination);
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Swapable");
         foreach(GameObject ally in allies)
         {
