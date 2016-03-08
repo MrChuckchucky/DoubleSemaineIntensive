@@ -8,7 +8,7 @@ public class TotemScript : MonoBehaviour
     float dysactiveStart;
     public float dysactiveDelay;
     public float distance;
-
+	bool isPaused;
     float unitLoad = 30;
 	public float loadBar;
     public bool animated;
@@ -22,29 +22,33 @@ public class TotemScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if(dysactiveStart + dysactiveDelay <= Time.time && dysActive)
-        {
-            loadBar = 0;
-            dysactive();
-        }
-        if(!dysActive)
-        {
-            dysactiveStart = Time.time;
-        }
-        if (isActive)
-        {
-            this.gameObject.GetComponent<Renderer> ().material.color = Color.green;
-        } 
-		else
-        {
-            this.gameObject.GetComponent<Renderer> ().material.color = Color.white;
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (animated && Vector3.Distance(player.transform.position, transform.position) > distance)
-            {
-                animated = false;
-                player.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Idle");
-            }
-        }
+		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
+		if (isPaused == false) 
+		{
+			if(dysactiveStart + dysactiveDelay <= Time.time && dysActive)
+			{
+				loadBar = 0;
+				dysactive();
+			}
+			if(!dysActive)
+			{
+				dysactiveStart = Time.time;
+			}
+			if (isActive)
+			{
+				this.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+			} 
+			else
+			{
+				this.gameObject.GetComponent<Renderer> ().material.color = Color.white;
+				GameObject player = GameObject.FindGameObjectWithTag("Player");
+				if (animated && Vector3.Distance(player.transform.position, transform.position) > distance)
+				{
+					animated = false;
+					player.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Idle");
+				}
+			}
+		}
 	}
 
 	public void loadTotem()

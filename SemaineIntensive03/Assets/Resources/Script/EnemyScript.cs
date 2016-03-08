@@ -52,6 +52,8 @@ public class EnemyScript : MonoBehaviour
 
     private int indexpatrol;
     float dispShotgun = 1.5f;
+
+	bool isPaused;
     // Use this for initialization
     void Start ()
     {
@@ -90,56 +92,65 @@ public class EnemyScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if(NavigationPoints.Length == 0)
-        {
-            setNavigationPoints();
-        }
-		currentCD -= Time.deltaTime;
-        if(!isStun)
-        {
-            PlayerDetected = PlayerDetection();
-            if (!PlayerDetected)
-            {
-                if(reachtotem)
-                {
-                    reachTotem();
-                }
-                else
-                {
-                    if (!totemDetected)
-                    {
-                        totemDetected = totemDetection();
-                        if (patrouilleRandom)
-                        {
-                            Randompatrol();
-                        }
-                        else
-                        {
-                            patrol();
-                        }
-                    }
-                    else
-                    {
-                        cloche();
-                    }
-                }
-            }
-            else
-            {
-                chase();
-            }
-            GetComponent<NavMeshAgent>().SetDestination(destination);
-            stunStart = Time.time;
-        }
-        else
-        {
-            destination = new Vector3(Mathf.Round(transform.position.x * 10) / 10, Mathf.Round(transform.position.y * 10) / 10, Mathf.Round(transform.position.z * 10) / 10);
-            GetComponent<NavMeshAgent>().SetDestination(destination);
-            if (stunStart + stunDuration <= Time.time)
-            {
-                isStun = false;
-            }
-        }
+		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
+		if (isPaused == false) 
+		{
+			if (NavigationPoints.Length == 0) 
+			{
+				setNavigationPoints ();
+			}
+			currentCD -= Time.deltaTime;
+			if (!isStun) 
+			{
+				PlayerDetected = PlayerDetection ();
+				if (!PlayerDetected) 
+				{
+					if (reachtotem) 
+					{
+						reachTotem ();
+					} 
+					else 
+					{
+						if (!totemDetected) 
+						{
+							totemDetected = totemDetection ();
+							if (patrouilleRandom) 
+							{
+								Randompatrol ();
+							} 
+							else 
+							{
+								patrol ();
+							}
+						} 
+						else 
+						{
+							cloche ();
+						}
+					}
+				} 
+				else 
+				{
+					chase ();
+				}
+				GetComponent<NavMeshAgent> ().SetDestination (destination);
+				stunStart = Time.time;
+			} 
+			else 
+			{
+				destination = new Vector3 (Mathf.Round (transform.position.x * 10) / 10, Mathf.Round (transform.position.y * 10) / 10, Mathf.Round (transform.position.z * 10) / 10);
+				GetComponent<NavMeshAgent> ().SetDestination (destination);
+				if (stunStart + stunDuration <= Time.time) {
+					
+					isStun = false;
+				}
+			}
+		} 
+		else 
+		{
+			Vector3 pos = new Vector3 (Mathf.Round (transform.position.x * 10) / 10, Mathf.Round (transform.position.y * 10) / 10, Mathf.Round (transform.position.z * 10) / 10);
+			GetComponent<NavMeshAgent> ().SetDestination (pos);
+		}
     }
 
 	public void takeDamage(float dmg)

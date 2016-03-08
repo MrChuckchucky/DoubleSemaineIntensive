@@ -20,6 +20,7 @@ public class PlayerScript : MonoBehaviour
 
     float rotation = 4;
 
+	public float maxLife;
 	public float life;
 	public float range;
 	public float damage;
@@ -43,6 +44,7 @@ public class PlayerScript : MonoBehaviour
     float deathStart;
     float deathDelay = 1f;
     bool isDying;
+	bool isPaused;
     // Use this for initialization
     void Start ()
     {
@@ -59,52 +61,57 @@ public class PlayerScript : MonoBehaviour
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
 		Emanage = GameObject.FindObjectOfType<EnemyManager> ();
 		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC, out distanceAlert);
-        isTurning = false;
+		maxLife = life;
+		isTurning = false;
     }
 
 	// Update is called once per frame
 	void Update () 
 	{
-        if(isDying && deathDelay + deathStart <= Time.time)
-        {
-            trueDeath();
-        }
-        if(isSwaping && swapStart + swapDelay <= Time.time)
-        {
-            Swap();
-        }
-        if(isTurning)
-        {
-            if(Mathf.Abs(transform.eulerAngles.y - angleTurn.y) > rotation * 3)
-            {
-                transform.eulerAngles += new Vector3(0, rotation * rotationDirection, 0);
-            }
-            else
-            {
-                isTurning = false;
-                RectifyAngle();
-            }
-        }
-		Camera.main.transform.LookAt (this.gameObject.transform);
-		currentCD -= Time.deltaTime;
-		CamCheck ();
-		//CheckInput ();
-		if (choosingTotem) 
+		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
+		if (isPaused == false) 
 		{
-			chooseDest();
-		} 
-		else
-        {
-            checkTotem ();
-            if(!isSwaping)
-            {
-                CheckSwap();
-                if (!isDying)
-                {
-                    CheckJoystickInput();
-                }
-            }
-			CheckFire ();
+			if(isDying && deathDelay + deathStart <= Time.time)
+			{
+				trueDeath();
+			}
+			if(isSwaping && swapStart + swapDelay <= Time.time)
+			{
+				Swap();
+			}
+			if(isTurning)
+			{
+				if(Mathf.Abs(transform.eulerAngles.y - angleTurn.y) > rotation * 3)
+				{
+					transform.eulerAngles += new Vector3(0, rotation * rotationDirection, 0);
+				}
+				else
+				{
+					isTurning = false;
+					RectifyAngle();
+				}
+			}
+			Camera.main.transform.LookAt (this.gameObject.transform);
+			currentCD -= Time.deltaTime;
+			CamCheck ();
+			//CheckInput ();
+			if (choosingTotem) 
+			{
+				chooseDest();
+			} 
+			else
+			{
+				checkTotem ();
+				if(!isSwaping)
+				{
+					CheckSwap();
+					if (!isDying)
+					{
+						CheckJoystickInput();
+					}
+				}
+				CheckFire ();
+			}
 		}
 	}
 

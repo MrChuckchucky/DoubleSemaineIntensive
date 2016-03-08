@@ -6,8 +6,8 @@ public class TotemManager : MonoBehaviour
     public int objectif;
     public float checkStart;
     public float checkDelay;
-
-    private int points;
+	bool isPaused;
+    public int points;
     private GameObject[] totems;
 	// Use this for initialization
 	void Start ()
@@ -19,7 +19,8 @@ public class TotemManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if(checkStart + checkDelay <= Time.time)
+		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
+		if(checkStart + checkDelay <= Time.time && isPaused == false)
         {
             checkStart = Time.time;
             int point = 0;
@@ -47,5 +48,6 @@ public class TotemManager : MonoBehaviour
     }
     void defeat()
     {
+		Application.LoadLevel(3);
     }
 }

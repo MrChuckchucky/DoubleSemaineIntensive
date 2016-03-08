@@ -10,6 +10,7 @@ public class SpawnScript : MonoBehaviour
     public bool randomPatrol;
     public int ID;
     public bool isActive;
+	bool isPaused;
 	// Use this for initialization
 	void Start ()
     {
@@ -20,7 +21,8 @@ public class SpawnScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if(spawnStart + spawnDelay <= Time.time && isActive)
+		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
+		if(spawnStart + spawnDelay <= Time.time && isActive && isPaused == false)
         {
             GameObject Enemy = Instantiate(enemy, transform.position, transform.rotation) as GameObject;
             Enemy.GetComponent<EnemyScript>().ID = ID;

@@ -6,7 +6,7 @@ public class SpawnManager : MonoBehaviour
     public bool isActiveted;
     public float spawnStart;
     public float spawnDelay;
-
+	bool isPaused;
     private GameObject[] spawners;
     void Start()
     {
@@ -16,7 +16,8 @@ public class SpawnManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if(isActiveted)
+		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
+		if(isActiveted && isPaused == false)
         {
             if(spawnStart + spawnDelay <= Time.time)
             {
