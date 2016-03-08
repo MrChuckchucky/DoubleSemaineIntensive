@@ -16,6 +16,7 @@ public class EnemyScript : MonoBehaviour
     public bool isStun;
     public bool reachtotem;
 
+    private bool setNavRand;
     public float stunStart;
     private float walk;
     private float observation;
@@ -57,6 +58,7 @@ public class EnemyScript : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        setNavRand = false;
 		Coloring ();
         indexpatrol = 0;
         Emanage = GameObject.FindObjectOfType<EnemyManager>();
@@ -95,8 +97,9 @@ public class EnemyScript : MonoBehaviour
 		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
 		if (isPaused == false) 
 		{
-			if (NavigationPoints.Length == 0) 
+			if (!setNavRand)
 			{
+                setNavRand = true;
 				setNavigationPoints ();
 			}
 			currentCD -= Time.deltaTime;
@@ -134,14 +137,15 @@ public class EnemyScript : MonoBehaviour
 					chase ();
 				}
 				GetComponent<NavMeshAgent> ().SetDestination (destination);
-				stunStart = Time.time;
+				stunStart = 0;
 			} 
 			else 
 			{
+                stunStart += Time.deltaTime;
 				destination = new Vector3 (Mathf.Round (transform.position.x * 10) / 10, Mathf.Round (transform.position.y * 10) / 10, Mathf.Round (transform.position.z * 10) / 10);
 				GetComponent<NavMeshAgent> ().SetDestination (destination);
-				if (stunStart + stunDuration <= Time.time) {
-					
+				if (stunStart <= stunDuration)
+                {
 					isStun = false;
 				}
 			}
@@ -188,7 +192,6 @@ public class EnemyScript : MonoBehaviour
                     if (id == ID)
                     {
                         valid = true;
-                        break;
                     }
                 }
                 if (valid)
@@ -258,7 +261,7 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
         {
-            int rand = Random.Range(0, NavigationPoints.Length);
+            int rand = Random.Range(0, index);
             destination = NavigationPoints[rand].transform.position;
             isMoving = true;
         }
@@ -321,7 +324,7 @@ public class EnemyScript : MonoBehaviour
         }
         else if (canMove)
         {
-            if (Vector3.Distance(transform.position, destination) <= 1)
+            if (Vector3.Distance(transform.position, destination) <= 2)
             {
                 isMoving = false;
                 canMove = false;
@@ -333,7 +336,7 @@ public class EnemyScript : MonoBehaviour
                 rot *= 90;
                 rotationStart = Time.time;
                 rotationDestination = rot;
-                destination = transform.position;
+                destination = new Vector3(Mathf.Round(transform.position.x * 10) / 10, Mathf.Round(transform.position.y * 10) / 10, Mathf.Round(transform.position.z * 10) / 10);
             }
         }
         if (!canMove)
