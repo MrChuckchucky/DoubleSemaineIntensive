@@ -16,7 +16,7 @@ public class EnemyScript : MonoBehaviour
     public bool isStun;
     public bool reachtotem;
 
-    private float stunStart;
+    public float stunStart;
     private float walk;
     private float observation;
     private bool isMoving;
@@ -258,13 +258,13 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
         {
-            int rand = Random.Range(0, index);
+            int rand = Random.Range(0, NavigationPoints.Length);
             destination = NavigationPoints[rand].transform.position;
             isMoving = true;
         }
         else if (canMove)
         {
-            if (Vector3.Distance(transform.position, destination) <= 1)
+            if (Vector3.Distance(transform.position, destination) <= 2)
             {
                 isMoving = false;
                 canMove = false;
@@ -276,7 +276,7 @@ public class EnemyScript : MonoBehaviour
                 rot *= 90;
                 rotationStart = Time.time;
                 rotationDestination = rot;
-                destination = transform.position;
+                destination = new Vector3(Mathf.Round(transform.position.x * 10) / 10, Mathf.Round(transform.position.y * 10) / 10, Mathf.Round(transform.position.z * 10) / 10);
             }
         }
         if (!canMove)
@@ -436,17 +436,6 @@ public class EnemyScript : MonoBehaviour
     }
     public void death()
     {
-        GameObject[] spawners = GameObject.FindGameObjectsWithTag("Spawner");
-        foreach(GameObject spawner in spawners)
-        {
-            if(spawner.GetComponent<SpawnScript>().ID == ID)
-            {
-                spawner.GetComponent<SpawnScript>().spawnStart = Time.time;
-                spawner.GetComponent<SpawnScript>().isActive = true;
-                Destroy(this.gameObject);
-                return;
-            }
-        }
         Destroy(this.gameObject);
     }
 }

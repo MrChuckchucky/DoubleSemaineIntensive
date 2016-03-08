@@ -50,10 +50,10 @@ public class PlayerScript : MonoBehaviour
     {
         isSwaping = false;
         isDying = false;
+        this.gameObject.transform.FindChild("Head").gameObject.SetActive(true);
         this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Idle");
         AllTotems = GameObject.FindGameObjectsWithTag ("Totem");
         //this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
-        this.gameObject.transform.FindChild("Head").gameObject.SetActive(true);
 		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
@@ -364,13 +364,14 @@ public class PlayerScript : MonoBehaviour
 
 		Camera.main.transform.localPosition = pos;
 
-		swaped.AddComponent<PlayerScript> ();
+		swaped.AddComponent<PlayerScript>();
 
 		SwitchPos (this.gameObject, swaped);
 		//this.gameObject.GetComponent<Renderer> ().material.color = Color.white;	
 		this.gameObject.transform.FindChild ("Head").gameObject.SetActive(false);
 		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
-		this.gameObject.GetComponent<EnemyScript> ().isStun = true;
+        this.gameObject.GetComponent<EnemyScript>().stunStart = Time.time;
+        this.gameObject.GetComponent<EnemyScript> ().isStun = true;
         this.gameObject.GetComponent<NavMeshObstacle>().enabled = false;
         this.gameObject.GetComponent<NavMeshAgent> ().enabled = true;
 		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = true;

@@ -7,6 +7,7 @@ public class TotemManager : MonoBehaviour
     public float checkStart;
     public float checkDelay;
 	bool isPaused;
+    
     public int points;
     private GameObject[] totems;
 	// Use this for initialization
