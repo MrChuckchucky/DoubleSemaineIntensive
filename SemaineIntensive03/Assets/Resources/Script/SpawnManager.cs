@@ -12,7 +12,7 @@ public class SpawnManager : MonoBehaviour
     
     private GameObject[] spawners;
     private int index;
-    private int[] ID;
+    public int[] ID;
     void Start()
     {
         index = 0;
@@ -43,12 +43,12 @@ public class SpawnManager : MonoBehaviour
                         if (enemies.Length < MaxEnemy3)
                         {
                             foreach (GameObject enemy in enemies)
-                            {
+							{
                                 ID[enemy.GetComponent<EnemyScript>().ID] += 1;
                             }
-                            for (int i = 0; i < ID.Length; i++)
+                            for (int i = 1; i < ID.Length; i++)
                             {
-                                if (i == 0)
+                                if (i == 1)
                                 {
                                     min = ID[i];
                                     index = i;
@@ -70,9 +70,9 @@ public class SpawnManager : MonoBehaviour
                             {
                                 ID[enemy.GetComponent<EnemyScript>().ID] += 1;
                             }
-                            for (int i = 0; i < ID.Length; i++)
+                            for (int i = 1; i < ID.Length; i++)
                             {
-                                if (i == 0)
+                                if (i == 1)
                                 {
                                     min = ID[i];
                                     index = i;
@@ -92,12 +92,12 @@ public class SpawnManager : MonoBehaviour
                     if (enemies.Length < MaxEnemy1)
                     {
                         foreach (GameObject enemy in enemies)
-                        {
+						{
                             ID[enemy.GetComponent<EnemyScript>().ID] += 1;
                         }
-                        for (int i = 0; i < ID.Length; i++)
+                        for (int i = 1; i < ID.Length; i++)
                         {
-                            if (i == 0)
+                            if (i == 1)
                             {
                                 min = ID[i];
                                 index = i;
