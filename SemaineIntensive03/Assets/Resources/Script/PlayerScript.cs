@@ -66,12 +66,13 @@ public class PlayerScript : MonoBehaviour
     }
 
 	// Update is called once per frame
-	void Update () 
-	{
-		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
-		if (isPaused == false) 
-		{
-			if(isDying && deathDelay + deathStart <= Time.time)
+	void Update ()
+    {
+        isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
+		if (isPaused == false)
+        {
+            transform.FindChild("Head").eulerAngles = transform.eulerAngles;
+            if (isDying && deathDelay + deathStart <= Time.time)
 			{
 				trueDeath();
 			}
@@ -322,6 +323,7 @@ public class PlayerScript : MonoBehaviour
 			if (dist < totem.GetComponent<TotemScript>().distance)
             {
                 totem.GetComponent<TotemScript> ().loadTotem ();
+                transform.FindChild("Head").LookAt(new Vector3(totem.transform.position.x, transform.FindChild("Head").transform.position.y, totem.transform.position.z));
             } 
 			else {totem.GetComponent<TotemScript> ().deloadTotem ();}
 		}
