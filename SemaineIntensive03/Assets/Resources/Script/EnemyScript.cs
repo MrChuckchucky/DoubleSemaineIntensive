@@ -299,7 +299,7 @@ public class EnemyScript : MonoBehaviour
             }
             Vector3 forward = Vector3.Normalize(transform.TransformDirection(Vector3.forward));
             Vector3 toOther = Vector3.Normalize(totem.transform.position - transform.position);
-            if (Vector3.Dot(forward, toOther) < 0.4 || Vector3.Dot(forward, toOther) > 1.6f)
+            if (Vector3.Dot(forward, toOther) < 0.55 || Vector3.Dot(forward, toOther) > 1.45f)
             {
                 continue;
             }
