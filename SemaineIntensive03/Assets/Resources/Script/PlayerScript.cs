@@ -42,7 +42,7 @@ public class PlayerScript : MonoBehaviour
     
 	float currentCD = 0;
     bool isTurning;
-    Vector3 angleTurn;
+    public Vector3 angleTurn;
     Vector3 angleTurnShaman;
     int rotationDirection;
     float swapStart;
@@ -52,9 +52,15 @@ public class PlayerScript : MonoBehaviour
     float deathDelay = 1f;
     bool isDying;
 	bool isPaused;
+    bool isIdling;
+    bool isWalking;
+    bool isRunning;
     // Use this for initialization
     void Start ()
     {
+        isIdling = false;
+        isWalking = false;
+        isRunning = false;
         isSwaping = false;
         isDying = false;
         this.gameObject.transform.FindChild("Head").gameObject.SetActive(true);
@@ -140,7 +146,122 @@ public class PlayerScript : MonoBehaviour
 			}
             if (Mathf.Abs(transform.FindChild("Head").eulerAngles.y - angleTurnShaman.y) > rotation * 3)
             {
-                transform.eulerAngles += new Vector3(0, rotation * rotationDirection, 0);
+                //transform.eulerAngles += new Vector3(0, rotation * rotationDirection, 0);
+            }
+            switch (EType)
+            {
+                case EnemyManager.EnemyType.HEAVY:
+                    switch (shootIndic)
+                    {
+                        case 0:
+                            if(!isIdling)
+                            {
+                                isIdling = true;
+                                isWalking = false;
+                                isRunning = false;
+                                int random = Random.Range(0, 2);
+                                if (random == 0)
+                                {
+                                    transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Idle 1");
+                                }
+                                else
+                                {
+                                    transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Idle 2");
+                                }
+                            }
+                            break;
+                        case 1:
+                            if(!isWalking)
+                            {
+                                isWalking = true;
+                                isIdling = false;
+                                isRunning = false;
+                                transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+                            }
+                            break;
+                        case 2:
+                            if(!isRunning)
+                            {
+                                isRunning = true;
+                                isIdling = false;
+                                isWalking = false;
+                                transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                            }
+                            break;
+                    }
+                    break;
+                case EnemyManager.EnemyType.SNEAKY:
+                    switch (shootIndic)
+                    {
+                        case 0:
+                            if(!isIdling)
+                            {
+                                isIdling = true;
+                                isWalking = false;
+                                isRunning = false;
+                                transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Idle");
+                            }
+                            break;
+                        case 1:
+                            if(!isWalking)
+                            {
+                                isWalking = true;
+                                isIdling = false;
+                                isRunning = false;
+                                int random = Random.Range(0, 2);
+                                if (random == 0)
+                                {
+                                    transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk 1");
+                                }
+                                else
+                                {
+                                    transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk 2");
+                                }
+                            }
+                            break;
+                        case 2:
+                            if(!isRunning)
+                            {
+                                isRunning = true;
+                                isIdling = false;
+                                isWalking = false;
+                                transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                            }
+                            break;
+                    }
+                    break;
+                case EnemyManager.EnemyType.SNIPER:
+                    switch (shootIndic)
+                    {
+                        case 0:
+                            if(!isIdling)
+                            {
+                                isIdling = true;
+                                isWalking = false;
+                                isRunning = false;
+                                transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Idle");
+                            }
+                            break;
+                        case 1:
+                            if(!isWalking)
+                            {
+                                isWalking = true;
+                                isIdling = false;
+                                isRunning = false;
+                                transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+                            }
+                            break;
+                        case 2:
+                            if(!isRunning)
+                            {
+                                isRunning = true;
+                                isIdling = false;
+                                isWalking = false;
+                                transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                            }
+                            break;
+                    }
+                    break;
             }
         }
 	}
@@ -650,51 +771,6 @@ public class PlayerScript : MonoBehaviour
 
 	void DoMovement(string dir)
     {
-        switch (EType)
-        {
-            case EnemyManager.EnemyType.HEAVY:
-                switch(shootIndic)
-                {
-                    case 0:
-                        transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Idle");
-                        break;
-                    case 1:
-                        transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Walk");
-                        break;
-                    case 2:
-                        transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Run");
-                        break;
-                }
-                break;
-            case EnemyManager.EnemyType.SNEAKY:
-                switch (shootIndic)
-                {
-                    case 0:
-                        transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Idle");
-                        break;
-                    case 1:
-                        transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk");
-                        break;
-                    case 2:
-                        transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Run");
-                        break;
-                }
-                break;
-            case EnemyManager.EnemyType.SNIPER:
-                switch (shootIndic)
-                {
-                    case 0:
-                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Idle");
-                        break;
-                    case 1:
-                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk");
-                        break;
-                    case 2:
-                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Run");
-                        break;
-                }
-                break;
-        }
         Vector3 forward = Camera.main.transform.forward;
 		Vector3 right = Camera.main.transform.right;
 		forward.y = right.y = 0;
