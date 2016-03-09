@@ -499,16 +499,9 @@ public class PlayerScript : MonoBehaviour
             GameObject smoke = Instantiate(Resources.Load("Particules/Shoot"), transform.position, transform.rotation) as GameObject;
             Destroy(smoke, 1);
             nbMunitions--;
-			if (EType != EnemyManager.EnemyType.HEAVY) 
+			if (EType == EnemyManager.EnemyType.SNIPER) 
 			{
-				if (EType == EnemyManager.EnemyType.SNIPER)
-				{
-					MasterAudio.FireCustomEvent ("SniperFireSFX", this.transform.position);
-				}
-				if (EType == EnemyManager.EnemyType.SNEAKY)
-				{
-					MasterAudio.FireCustomEvent ("SneakyFireSFX", this.transform.position);
-				}
+				MasterAudio.FireCustomEvent ("SniperFireSFX", this.transform.position);
 				if (Physics.Raycast(this.gameObject.transform.position, this.gameObject.transform.forward, out hit, range)) 
 				{
 					if (hit.collider.tag == "Swapable") 
@@ -520,7 +513,14 @@ public class PlayerScript : MonoBehaviour
 			}
 			else 
 			{
-				MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
+				if (EType == EnemyManager.EnemyType.HEAVY)
+				{
+					MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
+				}
+				if (EType == EnemyManager.EnemyType.SNEAKY)
+				{
+					MasterAudio.FireCustomEvent ("SneakyFireSFX", this.transform.position);
+				}
 				GameObject[] targets = GameObject.FindGameObjectsWithTag ("Swapable");
 				RaycastHit[] inSphere = Physics.SphereCastAll(this.gameObject.transform.position, dispShotgun, this.gameObject.transform.forward, range);
 				foreach (GameObject go in targets) 

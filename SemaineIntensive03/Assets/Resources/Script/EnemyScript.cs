@@ -466,16 +466,9 @@ public class EnemyScript : MonoBehaviour
             int chance = Random.Range(0, 101);
             if(chance < HC)
             {
-                if (EType != EnemyManager.EnemyType.HEAVY)
+				if (EType == EnemyManager.EnemyType.SNIPER)
                 {
-					if (EType == EnemyManager.EnemyType.SNIPER)
-					{
-						MasterAudio.FireCustomEvent ("SniperFireSFX", this.transform.position);
-					}
-					if (EType == EnemyManager.EnemyType.SNEAKY)
-					{
-						MasterAudio.FireCustomEvent ("SneakyFireSFX", this.transform.position);
-					}
+					MasterAudio.FireCustomEvent ("SniperFireSFX", this.transform.position);
                     if (Physics.Raycast(this.gameObject.transform.position, this.gameObject.transform.forward, out hit, range))
                     {
                         if (hit.collider.tag == "Player")
@@ -486,7 +479,14 @@ public class EnemyScript : MonoBehaviour
                 }
                 else
                 {
-					MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
+					if (EType == EnemyManager.EnemyType.HEAVY)
+					{
+						MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
+					}
+					if (EType == EnemyManager.EnemyType.SNEAKY)
+					{
+						MasterAudio.FireCustomEvent ("SneakyFireSFX", this.transform.position);
+					}
                     GameObject targets = GameObject.FindGameObjectWithTag("Player");
                     RaycastHit[] inSphere = Physics.SphereCastAll(this.gameObject.transform.position, dispShotgun, this.gameObject.transform.forward, range);
                     float dist = Vector3.Distance(this.gameObject.transform.position, targets.transform.position);

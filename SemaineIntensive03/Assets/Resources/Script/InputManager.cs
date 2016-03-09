@@ -3,7 +3,7 @@ using System.Collections;
 
 public class InputManager : MonoBehaviour {
 
-	float degreeCam = 90;
+	/*float degreeCam = 90;
 	RaycastHit hit;
 	GameObject lastHit = null;
 	float speedShake = 3;
@@ -48,7 +48,7 @@ public class InputManager : MonoBehaviour {
 		CamCheck ();
 		//ScreenShake ();
 		CheckInput ();
-		if (camFix) {Camera.main.transform.LookAt (this.gameObject.transform);}*/
+		if (camFix) {Camera.main.transform.LookAt (this.gameObject.transform);}
     }
 
     void CamCheck()
@@ -212,7 +212,7 @@ public class InputManager : MonoBehaviour {
 			}
 			//currentCD = CDMax;
 		}
-	}*/
+	}
 
 	void CheckSwap()
 	{
@@ -327,5 +327,5 @@ public class InputManager : MonoBehaviour {
 				//Camera.main.transform.position -= right * speed * Time.deltaTime;
 				break;
 		}
-	}
+	}*/
 }
