@@ -450,6 +450,7 @@ public class EnemyScript : MonoBehaviour
         {
             cloche.GetComponent<ClocheScript>().totemSpotted = totemSpotted;
             cloche.GetComponent<ClocheScript>().isActive = true;
+			cloche.GetComponent<ClocheScript> ().BellSound ();
         }
     }
     void reachTotem()

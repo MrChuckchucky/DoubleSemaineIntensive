@@ -4,6 +4,8 @@ using System.Collections;
 
 public class PlayerScript : MonoBehaviour
 {
+	public GameObject musicManager;
+
 	GameObject swaped;
 	Color swapedColor;
 	RaycastHit hit;
@@ -54,6 +56,8 @@ public class PlayerScript : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+		musicManager = GameObject.FindGameObjectWithTag ("MusicManager");
+
         isSwaping = false;
         isDying = false;
         this.gameObject.transform.FindChild("Head").gameObject.SetActive(true);
@@ -72,6 +76,16 @@ public class PlayerScript : MonoBehaviour
 		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC, out distanceAlert);
 		maxLife = life;
 		isTurning = false;
+
+		if (EType == EnemyManager.EnemyType.HEAVY) {
+			musicManager.GetComponent<MusicManager> ().HeavyVariation ();
+		}
+		if (EType == EnemyManager.EnemyType.SNEAKY) {
+			musicManager.GetComponent<MusicManager> ().SneakyVariation ();
+		}
+		if (EType == EnemyManager.EnemyType.SNIPER) {
+			musicManager.GetComponent<MusicManager> ().SniperVariation ();
+		}
     }
 
 	// Update is called once per frame

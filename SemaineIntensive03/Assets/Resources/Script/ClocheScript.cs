@@ -39,4 +39,8 @@ public class ClocheScript : MonoBehaviour
 			}
 		}
     }
+
+	public void BellSound () {
+		this.GetComponent<AudioSource> ().Play ();
+	}
 }
