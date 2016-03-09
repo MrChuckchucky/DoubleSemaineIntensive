@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DarkTonic.MasterAudio;
 using System.Collections;
 
 public class PlayerScript : MonoBehaviour
@@ -20,13 +21,11 @@ public class PlayerScript : MonoBehaviour
 
     float rotation = 4;
 
-	[Header("General Settings")]
-	public float againstSupPercent;
-	public float againstSamePercent;
-	public float againstLessPercent;
-
 	[Header("Settings by EnnemyScript")]
 	public float maxLife;
+	public float againstSupPercent;
+	public float againstSamePercent;
+	public float againstLessPercent;	
 	public float life;
 	public float range;
 	public float damage;
@@ -186,6 +185,12 @@ public class PlayerScript : MonoBehaviour
 
 		this.gameObject.transform.position += camFor * speed * Time.deltaTime * LJH;
 		this.gameObject.transform.position += camRight * speed * Time.deltaTime * LJV;
+
+		if (LJV != 0 || LJH != 0) {
+			this.GetComponent<AudioSource> ().volume = 1;
+		} else {
+			this.GetComponent<AudioSource> ().volume = 0;
+		}
         
         if (Input.GetKeyDown(KeyCode.Joystick1Button5) && !isTurning)
 		{
@@ -208,6 +213,7 @@ public class PlayerScript : MonoBehaviour
 		}
 		if (TL == 0 && swaped != null)
         {
+			MasterAudio.FireCustomEvent ("SwapSFX", this.transform.position);
             this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Swap");
             swapStart = Time.time;
             isSwaping = true;
@@ -264,12 +270,14 @@ public class PlayerScript : MonoBehaviour
 	public void takeDamage(float dmg, EnemyManager.EnemyType type)
 	{
         //ParticleSystem blood = Instantiate(Resources.Load("Particules/Blood"), transform.position, transform.rotation) as ParticleSystem;
+		MasterAudio.FireCustomEvent ("HitSFX", this.transform.position);
 		life -= dmg * Percent(type);
 		if (life <= 0 && !isDying) {Death ();}
 	}
 
 	void Death()
     {
+		MasterAudio.FireCustomEvent ("DeathSFX", this.transform.position);
         this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Death");
         deathStart = Time.time;
         isDying = true;
@@ -480,6 +488,11 @@ public class PlayerScript : MonoBehaviour
 
 	void Fire()
     {
+		if (nbMunitions == 0) {
+			EmptyWeapon ();
+		}
+
+
         if (currentCD < 0 && nbMunitions > 0)
         {
             //Debug.Log("fire");
@@ -488,6 +501,14 @@ public class PlayerScript : MonoBehaviour
             nbMunitions--;
 			if (EType != EnemyManager.EnemyType.HEAVY) 
 			{
+				if (EType == EnemyManager.EnemyType.SNIPER)
+				{
+					MasterAudio.FireCustomEvent ("SniperFireSFX", this.transform.position);
+				}
+				if (EType == EnemyManager.EnemyType.SNEAKY)
+				{
+					MasterAudio.FireCustomEvent ("SneakyFireSFX", this.transform.position);
+				}
 				if (Physics.Raycast(this.gameObject.transform.position, this.gameObject.transform.forward, out hit, range)) 
 				{
 					if (hit.collider.tag == "Swapable") 
@@ -499,6 +520,7 @@ public class PlayerScript : MonoBehaviour
 			}
 			else 
 			{
+				MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
 				GameObject[] targets = GameObject.FindGameObjectsWithTag ("Swapable");
 				RaycastHit[] inSphere = Physics.SphereCastAll(this.gameObject.transform.position, dispShotgun, this.gameObject.transform.forward, range);
 				foreach (GameObject go in targets) 
@@ -522,6 +544,10 @@ public class PlayerScript : MonoBehaviour
 	}
 
 	//USELESS FOR NOW
+	void EmptyWeapon () {
+		MasterAudio.FireCustomEvent ("EmptyWeaponSFX", this.transform.position);
+	}
+
 
 	void CheckInput()
 	{

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DarkTonic.MasterAudio;
 using System.Collections;
 
 public class EnemyScript : MonoBehaviour
@@ -211,6 +212,7 @@ public class EnemyScript : MonoBehaviour
 
 	public void takeDamage(float dmg,  EnemyManager.EnemyType type)
 	{
+		MasterAudio.FireCustomEvent ("HitSFX", this.transform.position);
         destination = GameObject.FindGameObjectWithTag("Player").transform.position;
         PlayerDetected = true;
         transform.LookAt(destination);
@@ -374,11 +376,13 @@ public class EnemyScript : MonoBehaviour
                 indexpatrol = 0;
             }
             destination = NavigationPoints[indexpatrol].transform.position;
+			this.GetComponent<AudioSource> ().volume = 0;
             isMoving = true;
             indexpatrol++;
         }
         else if (canMove)
         {
+			this.GetComponent<AudioSource> ().volume = 1;
             if (Vector3.Distance(transform.position, destination) <= 2)
             {
                 isMoving = false;
@@ -464,6 +468,14 @@ public class EnemyScript : MonoBehaviour
             {
                 if (EType != EnemyManager.EnemyType.HEAVY)
                 {
+					if (EType == EnemyManager.EnemyType.SNIPER)
+					{
+						MasterAudio.FireCustomEvent ("SniperFireSFX", this.transform.position);
+					}
+					if (EType == EnemyManager.EnemyType.SNEAKY)
+					{
+						MasterAudio.FireCustomEvent ("SneakyFireSFX", this.transform.position);
+					}
                     if (Physics.Raycast(this.gameObject.transform.position, this.gameObject.transform.forward, out hit, range))
                     {
                         if (hit.collider.tag == "Player")
@@ -474,6 +486,7 @@ public class EnemyScript : MonoBehaviour
                 }
                 else
                 {
+					MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
                     GameObject targets = GameObject.FindGameObjectWithTag("Player");
                     RaycastHit[] inSphere = Physics.SphereCastAll(this.gameObject.transform.position, dispShotgun, this.gameObject.transform.forward, range);
                     float dist = Vector3.Distance(this.gameObject.transform.position, targets.transform.position);
@@ -494,6 +507,7 @@ public class EnemyScript : MonoBehaviour
     }
     public void death()
     {
+		MasterAudio.FireCustomEvent ("DeathSFX", this.transform.position);
         Destroy(this.gameObject);
     }
 }

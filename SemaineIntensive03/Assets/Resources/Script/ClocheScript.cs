@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DarkTonic.MasterAudio;
 using System.Collections;
 
 public class ClocheScript : MonoBehaviour
@@ -26,6 +27,7 @@ public class ClocheScript : MonoBehaviour
 
     void signal()
     {
+		MasterAudio.FireCustomEvent ("BellRinging", this.transform.position);
 		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Swapable");
 		foreach(GameObject enemy in enemies)
 		{

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DarkTonic.MasterAudio;
 using System.Collections;
 
 public class TotemScript : MonoBehaviour
@@ -61,6 +62,7 @@ public class TotemScript : MonoBehaviour
                 GameObject.FindGameObjectWithTag("Player").transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Invocation");
             }
 			loadBar += unitLoad * Time.deltaTime;
+			MasterAudio.FireCustomEvent ("TotemSummonSFX", this.transform.position);
 			if (loadBar >= 100) {isActive = true;}
 		}
 	}
@@ -95,6 +97,7 @@ public class TotemScript : MonoBehaviour
     void dysactive()
     {
         //Debug.Log("yo2");
+		MasterAudio.FireCustomEvent("TotemDestroySFX", this.transform.position);
         animated = false;
         dysActive = false;
         isActive = false;

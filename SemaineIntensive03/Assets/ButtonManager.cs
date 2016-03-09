@@ -60,12 +60,14 @@ public class ButtonManager : MonoBehaviour {
 
     public void ButtonNewGame ()
     {
+		this.GetComponent<AudioSource> ().Play ();
         StartCoroutine("Fondu");
         
     }
 
     public void ButtonQuitGame()
     {
+		this.GetComponent<AudioSource> ().Play ();
         Application.Quit();
     }
 
