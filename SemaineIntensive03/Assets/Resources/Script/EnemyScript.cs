@@ -17,6 +17,9 @@ public class EnemyScript : MonoBehaviour
     public bool isStun;
     public bool reachtotem;
 
+    private bool isDying;
+    private bool isRunning;
+
     private bool setNavRand;
     public float stunStart;
     private float walk;
@@ -63,6 +66,8 @@ public class EnemyScript : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        isDying = false;
+        isRunning = false;
         setNavRand = false;
 		Coloring ();
         indexpatrol = 0;
@@ -85,16 +90,19 @@ public class EnemyScript : MonoBehaviour
 		switch(EType)
 		{
 			case EnemyManager.EnemyType.HEAVY:
-				this.gameObject.GetComponent<Renderer> ().material.color = Color.red;
-				this.gameObject.transform.FindChild ("HeavyO").GetComponent<Renderer> ().enabled = true;
+                transform.FindChild("Sniper_Prefab").gameObject.SetActive(false);
+                transform.FindChild("Brisk_Prefab").gameObject.SetActive(false);
+                this.gameObject.transform.FindChild ("HeavyO").GetComponent<Renderer> ().enabled = true;
 			break;
 			case EnemyManager.EnemyType.SNIPER:
-				this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
-				this.gameObject.transform.FindChild ("SniperO").GetComponent<Renderer> ().enabled = true;
+                transform.FindChild("Brisk_Prefab").gameObject.SetActive(false);
+                transform.FindChild("Heavy_Prefab").gameObject.SetActive(false);
+                this.gameObject.transform.FindChild ("SniperO").GetComponent<Renderer> ().enabled = true;
 			break;
 			case EnemyManager.EnemyType.SNEAKY:
-				this.gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
-				this.gameObject.transform.FindChild ("SneakyO").GetComponent<Renderer> ().enabled = true;
+                transform.FindChild("Sniper_Prefab").gameObject.SetActive(false);
+                transform.FindChild("Heavy_Prefab").gameObject.SetActive(false);
+                this.gameObject.transform.FindChild ("SneakyO").GetComponent<Renderer> ().enabled = true;
 			break;
 		}
 	}
@@ -103,7 +111,7 @@ public class EnemyScript : MonoBehaviour
 	void Update ()
     {
 		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
-		if (isPaused == false) 
+		if (isPaused == false && !isDying) 
 		{
 			if (!setNavRand)
 			{
@@ -227,7 +235,7 @@ public class EnemyScript : MonoBehaviour
             }
         }
 		life -= dmg * Percent(type);
-		if (life <= 0)
+		if (life <= 0 && !isDying)
         {
             death();
         }
@@ -318,6 +326,28 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
         {
+            isRunning = false;
+            switch (EType)
+            {
+                case EnemyManager.EnemyType.HEAVY:
+                    transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+                    break;
+                case EnemyManager.EnemyType.SNEAKY:
+                    int random = Random.Range(0, 2);
+                    if (random == 0)
+                    {
+                        transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk 1");
+                    }
+                    else
+                    {
+                        transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk 2");
+                    }
+                    transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+                    break;
+                case EnemyManager.EnemyType.SNIPER:
+                    transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+                    break;
+            }
             int rand = Random.Range(0, index);
             destination = NavigationPoints[rand].transform.position;
             isMoving = true;
@@ -326,6 +356,27 @@ public class EnemyScript : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, destination) <= 2)
             {
+                isRunning = false;
+                switch (EType)
+                {
+                    case EnemyManager.EnemyType.HEAVY:
+                        int random = Random.Range(0, 2);
+                        if(random == 0)
+                        {
+                            transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Idle 1");
+                        }
+                        else
+                        {
+                            transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Idle 2");
+                        }
+                        break;
+                    case EnemyManager.EnemyType.SNEAKY:
+                        transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Idle");
+                        break;
+                    case EnemyManager.EnemyType.SNIPER:
+                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Idle");
+                        break;
+                }
                 isMoving = false;
                 canMove = false;
                 patrolStart = Time.time;
@@ -362,7 +413,28 @@ public class EnemyScript : MonoBehaviour
         }
         if (patrolStart + patrolDuration <= Time.time)
         {
+            isRunning = false;
             canMove = true;
+            switch (EType)
+            {
+                case EnemyManager.EnemyType.HEAVY:
+                    transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+                    break;
+                case EnemyManager.EnemyType.SNEAKY:
+                    transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+                    break;
+                case EnemyManager.EnemyType.SNIPER:
+                    int random = Random.Range(0, 2);
+                    if (random == 0)
+                    {
+                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk 1");
+                    }
+                    else
+                    {
+                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk 2");
+                    }
+                    break;
+            }
         }
     }
     void patrol()
@@ -371,7 +443,28 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
         {
-            if(indexpatrol == NavigationPoints.Length)
+            isRunning = false;
+            switch (EType)
+            {
+                case EnemyManager.EnemyType.HEAVY:
+                    transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+                    break;
+                case EnemyManager.EnemyType.SNEAKY:
+                    transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+                    break;
+                case EnemyManager.EnemyType.SNIPER:
+                    int random = Random.Range(0, 2);
+                    if (random == 0)
+                    {
+                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk 1");
+                    }
+                    else
+                    {
+                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk 2");
+                    }
+                    break;
+            }
+            if (indexpatrol == NavigationPoints.Length)
             {
                 indexpatrol = 0;
             }
@@ -385,6 +478,27 @@ public class EnemyScript : MonoBehaviour
 			this.GetComponent<AudioSource> ().volume = 1;
             if (Vector3.Distance(transform.position, destination) <= 2)
             {
+                isRunning = false;
+                switch (EType)
+                {
+                    case EnemyManager.EnemyType.HEAVY:
+                        int random = Random.Range(0, 2);
+                        if (random == 0)
+                        {
+                            transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Idle 1");
+                        }
+                        else
+                        {
+                            transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Idle 2");
+                        }
+                        break;
+                    case EnemyManager.EnemyType.SNEAKY:
+                        transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Idle");
+                        break;
+                    case EnemyManager.EnemyType.SNIPER:
+                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Idle");
+                        break;
+                }
                 isMoving = false;
                 canMove = false;
                 patrolStart = Time.time;
@@ -426,6 +540,22 @@ public class EnemyScript : MonoBehaviour
     }
     void chase()
     {
+        if(!isRunning)
+        {
+            isRunning = true;
+            switch (EType)
+            {
+                case EnemyManager.EnemyType.HEAVY:
+                    transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                    break;
+                case EnemyManager.EnemyType.SNEAKY:
+                    transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                    break;
+                case EnemyManager.EnemyType.SNIPER:
+                    transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                    break;
+            }
+        }
         GetComponent<NavMeshAgent>().speed = sprint;
         destination = Player.transform.position;
         transform.LookAt(destination);
@@ -437,6 +567,22 @@ public class EnemyScript : MonoBehaviour
     }
     void cloche()
     {
+        if (!isRunning)
+        {
+            isRunning = true;
+            switch (EType)
+            {
+                case EnemyManager.EnemyType.HEAVY:
+                    transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                    break;
+                case EnemyManager.EnemyType.SNEAKY:
+                    transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                    break;
+                case EnemyManager.EnemyType.SNIPER:
+                    transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                    break;
+            }
+        }
         GetComponent<NavMeshAgent>().speed = sprint;
         GameObject cloche = GameObject.FindGameObjectWithTag("Cloche");
         destination = cloche.transform.position;
@@ -449,6 +595,22 @@ public class EnemyScript : MonoBehaviour
     }
     void reachTotem()
     {
+        if (!isRunning)
+        {
+            isRunning = true;
+            switch (EType)
+            {
+                case EnemyManager.EnemyType.HEAVY:
+                    transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                    break;
+                case EnemyManager.EnemyType.SNEAKY:
+                    transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                    break;
+                case EnemyManager.EnemyType.SNIPER:
+                    transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Run");
+                    break;
+            }
+        }
         GetComponent<NavMeshAgent>().speed = sprint;
         destination = totemSpotted.transform.position;
         if (Vector3.Distance(transform.position, destination) <= totemSpotted.GetComponent<TotemScript>().distance - 1)
@@ -471,10 +633,20 @@ public class EnemyScript : MonoBehaviour
 					if (EType == EnemyManager.EnemyType.SNIPER)
 					{
 						MasterAudio.FireCustomEvent ("SniperFireSFX", this.transform.position);
+                        transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("StaticShoot");
 					}
 					if (EType == EnemyManager.EnemyType.SNEAKY)
 					{
 						MasterAudio.FireCustomEvent ("SneakyFireSFX", this.transform.position);
+                        int random = Random.Range(0, 2);
+                        if(random == 0)
+                        {
+                            transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Attack 1");
+                        }
+                        else
+                        {
+                            transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Attack 2");
+                        }
 					}
                     if (Physics.Raycast(this.gameObject.transform.position, this.gameObject.transform.forward, out hit, range))
                     {
@@ -486,7 +658,8 @@ public class EnemyScript : MonoBehaviour
                 }
                 else
                 {
-					MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
+                    transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("StaticShoot");
+                    MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
                     GameObject targets = GameObject.FindGameObjectWithTag("Player");
                     RaycastHit[] inSphere = Physics.SphereCastAll(this.gameObject.transform.position, dispShotgun, this.gameObject.transform.forward, range);
                     float dist = Vector3.Distance(this.gameObject.transform.position, targets.transform.position);
@@ -507,7 +680,20 @@ public class EnemyScript : MonoBehaviour
     }
     public void death()
     {
-		MasterAudio.FireCustomEvent ("DeathSFX", this.transform.position);
-        Destroy(this.gameObject);
+        isDying = true;
+        switch (EType)
+        {
+            case EnemyManager.EnemyType.HEAVY:
+                transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Death");
+                break;
+            case EnemyManager.EnemyType.SNEAKY:
+                transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Death");
+                break;
+            case EnemyManager.EnemyType.SNIPER:
+                transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Death");
+                break;
+        }
+        MasterAudio.FireCustomEvent ("DeathSFX", this.transform.position);
+        Destroy(this.gameObject, 1);
     }
 }
