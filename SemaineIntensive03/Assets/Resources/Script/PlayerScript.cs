@@ -421,7 +421,7 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
-	GameObject oldSwap = null;
+	GameObject oldSwaped = null;
 
 	void CheckSwap()
 	{
@@ -430,7 +430,23 @@ public class PlayerScript : MonoBehaviour
 		if (swaped) 
 		{
 			//swaped.GetComponent<Renderer> ().material.color = Color.white;
-			/*if (oldSwap != swaped){*/Destroy(GameObject.FindGameObjectWithTag("FXSwap"));//} 
+			bool isOK = true;
+			ParticleSystem[] swapFx = GameObject.FindObjectsOfType<ParticleSystem>();
+			foreach (ParticleSystem go in swapFx) 
+			{
+				if (go.gameObject.transform.parent && go.gameObject.transform.parent.tag == "FXSwap")
+				{
+					if (go.IsAlive() == true) 
+					{
+						isOK = false;
+					}
+				}
+			}
+			if (isOK) 
+			{
+				Destroy (GameObject.FindGameObjectWithTag ("FXSwap"));
+				oldSwaped = null;
+			}
 			swaped.GetComponent<Renderer> ().material.color = swapedColor;
 			swaped = null;
 		}
@@ -438,17 +454,16 @@ public class PlayerScript : MonoBehaviour
 		{
 			if (hit.collider.tag == "Swapable") 
 			{
-				//if (hit.collider.gameObject != oldSwap) 
-				//{
-					//Debug.Log ("in");
-					oldSwap = hit.collider.gameObject;
-					swaped = hit.collider.gameObject;
-					swapedColor = swaped.GetComponent<Renderer> ().material.color;
-					swaped.GetComponent<Renderer> ().material.color = Color.green;
+				swaped = hit.collider.gameObject;
+				swapedColor = swaped.GetComponent<Renderer> ().material.color;
+				swaped.GetComponent<Renderer> ().material.color = Color.green;
+				if (oldSwaped != swaped) 
+				{
+					oldSwaped = swaped;
 					GameObject swapFX = Resources.Load ("FX/FX_Swap") as GameObject;
 					GameObject go = Instantiate (swapFX, swaped.transform.position,Quaternion.identity) as GameObject;
 					go.transform.parent = swaped.transform;
-				//}
+				}
 			}
 		}
 	}
