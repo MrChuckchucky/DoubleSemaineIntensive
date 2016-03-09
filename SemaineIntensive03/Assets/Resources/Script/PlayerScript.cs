@@ -99,6 +99,7 @@ public class PlayerScript : MonoBehaviour
 				{
 					isTurning = false;
 					RectifyAngle();
+					Camera.main.GetComponent<UnityStandardAssets.ImageEffects.CameraMotionBlur> ().enabled = false;
 				}
 			}
 			Camera.main.transform.LookAt (this.gameObject.transform);
@@ -194,6 +195,7 @@ public class PlayerScript : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Joystick1Button5) && !isTurning)
 		{
+			Camera.main.GetComponent<UnityStandardAssets.ImageEffects.CameraMotionBlur> ().enabled = true;
 			angleTurn = new Vector3(0,transform.eulerAngles.y + 90,0);
             angleTurn = new Vector3(0, Mathf.Round(angleTurn.y / 90) * 90 % 360, 0);
             rotationDirection = 1;
@@ -202,6 +204,7 @@ public class PlayerScript : MonoBehaviour
 
 		if (Input.GetKeyDown (KeyCode.Joystick1Button4) && !isTurning)
         {
+			Camera.main.GetComponent<UnityStandardAssets.ImageEffects.CameraMotionBlur> ().enabled = true;
             angleTurn = new Vector3(0, (transform.eulerAngles.y - 90 + 360) % 360, 0);
             angleTurn = new Vector3(0, Mathf.Round(angleTurn.y / 90) * 90 % 360, 0);
             rotationDirection = -1;
@@ -211,12 +214,17 @@ public class PlayerScript : MonoBehaviour
 		{
 			CheckSwap ();
 		}
-		if (TL == 0 && swaped != null)
+		if (TL == 0)
         {
-			MasterAudio.FireCustomEvent ("SwapSFX", this.transform.position);
-            this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Swap");
-            swapStart = Time.time;
-            isSwaping = true;
+			Time.timeScale = 1;
+			//Time.fixedDeltaTime = 1;
+			if (swaped != null) 
+			{
+				MasterAudio.FireCustomEvent ("SwapSFX", this.transform.position);
+				this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Swap");
+				swapStart = Time.time;
+				isSwaping = true;
+			}
         }
         if (TR > 0) {Fire ();}
 		//if (Input.GetKeyDown (KeyCode.Joystick1Button2)) {takeDamage (20);}
@@ -281,6 +289,7 @@ public class PlayerScript : MonoBehaviour
         this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Death");
         deathStart = Time.time;
         isDying = true;
+		GameObject.FindObjectOfType<fadeManager> ().startFadeDeath (deathDelay);
     }
     void trueDeath()
     {
@@ -398,12 +407,16 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
+	GameObject oldSwap = null;
+
 	void CheckSwap()
 	{
+		Time.timeScale = 0.3f;
+		//Time.fixedDeltaTime = 0.5f;
 		if (swaped) 
 		{
 			//swaped.GetComponent<Renderer> ().material.color = Color.white;
-			//Particle effect possess
+			/*if (oldSwap != swaped){*/Destroy(GameObject.FindGameObjectWithTag("FXSwap"));//} 
 			swaped.GetComponent<Renderer> ().material.color = swapedColor;
 			swaped = null;
 		}
@@ -411,9 +424,17 @@ public class PlayerScript : MonoBehaviour
 		{
 			if (hit.collider.tag == "Swapable") 
 			{
-				swaped = hit.collider.gameObject;
-				swapedColor = swaped.GetComponent<Renderer> ().material.color;
-				swaped.GetComponent<Renderer> ().material.color = Color.green;
+				//if (hit.collider.gameObject != oldSwap) 
+				//{
+					//Debug.Log ("in");
+					oldSwap = hit.collider.gameObject;
+					swaped = hit.collider.gameObject;
+					swapedColor = swaped.GetComponent<Renderer> ().material.color;
+					swaped.GetComponent<Renderer> ().material.color = Color.green;
+					GameObject swapFX = Resources.Load ("FX/FX_Swap") as GameObject;
+					GameObject go = Instantiate (swapFX, swaped.transform.position,Quaternion.identity) as GameObject;
+					go.transform.parent = swaped.transform;
+				//}
 			}
 		}
 	}

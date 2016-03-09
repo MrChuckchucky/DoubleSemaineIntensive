@@ -314,6 +314,11 @@ public class EnemyScript : MonoBehaviour
     }
     void Randompatrol()
     {
+		if (!setNavRand)
+		{
+			setNavRand = true;
+			setNavigationPoints ();
+		}
         GetComponent<NavMeshAgent>().speed = walk;
         GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
