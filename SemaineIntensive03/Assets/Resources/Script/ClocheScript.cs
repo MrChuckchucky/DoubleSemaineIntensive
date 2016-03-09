@@ -9,6 +9,8 @@ public class ClocheScript : MonoBehaviour
     public float signalDistance;
 	// Use this for initialization
 	bool isPaused;
+	float timerStart;
+	public float timerDelay;
 
 	void Start ()
     {
@@ -21,6 +23,13 @@ public class ClocheScript : MonoBehaviour
 		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
 		if(isActive && isPaused == false)
         {
+			timerStart += Time.deltaTime;
+			if (timerStart >= timerDelay) 
+			{
+				timerStart = 0;
+				isActive = false;
+				totemSpotted = null;
+			}
             signal();
         }
 	}
