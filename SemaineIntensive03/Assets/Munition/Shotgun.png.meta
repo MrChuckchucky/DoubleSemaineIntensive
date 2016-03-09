@@ -1,0 +1,238 @@
+fileFormatVersion: 2
+guid: a83c579bf75dc234cba51a983abff092
+timeCreated: 1457543595
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Shotgun_0
+    21300002: Shotgun_2
+    21300004: Shotgun_3
+    21300006: Shotgun_4
+    21300008: Shotgun_5
+    21300010: Shotgun_6
+    21300012: Shotgun_7
+    21300014: Shotgun_8
+    21300016: Shotgun_9
+    21300018: Shotgun_10
+    21300020: Shotgun_11
+    21300022: Shotgun_12
+    21300024: Shotgun_13
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Shotgun_0
+      rect:
+        serializedVersion: 2
+        x: 190
+        y: 205
+        width: 70
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -30, y: 39}
+        - {x: -35, y: 32}
+        - {x: -35, y: -39}
+        - {x: -2, y: -39}
+        - {x: -2, y: 29}
+        - {x: -10, y: 39}
+      - - {x: 3, y: 39}
+        - {x: -1, y: 27}
+        - {x: -1, y: -39}
+        - {x: 34, y: -39}
+        - {x: 34, y: 26}
+        - {x: 29, y: 39}
+    - name: Shotgun_2
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 214
+        width: 21
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_3
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 214
+        width: 32
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -16, y: 17.5}
+        - {x: -16, y: -17.5}
+        - {x: 16, y: -17.5}
+        - {x: 16, y: 17.5}
+    - name: Shotgun_4
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 214
+        width: 25
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_5
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_6
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_7
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 214
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_8
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_9
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_10
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 214
+        width: 29
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_11
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 214
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_12
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 214
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Shotgun_13
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 65
+        width: 306
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 151, y: 2.5}
+        - {x: 72, y: 46.5}
+        - {x: -101, y: 46.5}
+        - {x: -153, y: 28.5}
+        - {x: -153, y: -32.5}
+        - {x: -142, y: -46.5}
+        - {x: 126, y: -46.5}
+        - {x: 153, y: -34.5}
+        - {x: 153, y: -2.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

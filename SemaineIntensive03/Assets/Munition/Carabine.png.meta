@@ -1,0 +1,244 @@
+fileFormatVersion: 2
+guid: 017b8ce7324566b449f027e2cc74c0e6
+timeCreated: 1457545662
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Carabine_0
+    21300002: Carabine_2
+    21300004: Carabine_3
+    21300006: Carabine_4
+    21300008: Carabine_5
+    21300010: Carabine_6
+    21300012: Carabine_7
+    21300014: Carabine_8
+    21300016: Carabine_9
+    21300018: Carabine_10
+    21300020: Carabine_11
+    21300022: Carabine_12
+    21300024: Carabine_13
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Carabine_0
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 205
+        width: 66
+        height: 99
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -28, y: 49.5}
+        - {x: -33, y: 43.5}
+        - {x: -33, y: -49.5}
+        - {x: -5, y: -49.5}
+        - {x: -5, y: 19.5}
+        - {x: -6, y: 41.5}
+        - {x: -12, y: 49.5}
+      - - {x: 4, y: 49.5}
+        - {x: 1, y: 41.5}
+        - {x: 1, y: -49.5}
+        - {x: 31, y: -49.5}
+        - {x: 31, y: 48.5}
+        - {x: 29, y: 49.5}
+    - name: Carabine_2
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 214
+        width: 21
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_3
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 214
+        width: 32
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -16, y: 17.5}
+        - {x: -16, y: -17.5}
+        - {x: 16, y: -17.5}
+        - {x: 16, y: 17.5}
+    - name: Carabine_4
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 214
+        width: 25
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_5
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_6
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_7
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 214
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_8
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_9
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_10
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 214
+        width: 29
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_11
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 214
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_12
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 214
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine_13
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 33
+        width: 527
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 261.5, y: -10}
+        - {x: 263.5, y: -3}
+        - {x: 263.5, y: 45}
+        - {x: 251.5, y: 55}
+        - {x: 135.5, y: 61}
+        - {x: -106.5, y: 61}
+        - {x: -263.5, y: 50}
+        - {x: -263.5, y: -26}
+        - {x: -260.5, y: -53}
+        - {x: -241.5, y: -61}
+        - {x: -201.5, y: -61}
+        - {x: -82.5, y: -21}
+        - {x: -43.5, y: -6}
+        - {x: 104.5, y: 2}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

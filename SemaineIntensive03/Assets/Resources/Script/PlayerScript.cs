@@ -17,9 +17,9 @@ public class PlayerScript : MonoBehaviour
 	bool axisChoose = false;
 	int indexTot = 0;
 
-	EnemyManager Emanage;
+	public EnemyManager Emanage;
 
-	EnemyManager.EnemyType EType;
+	public EnemyManager.EnemyType EType;
 
     float rotation = 4;
 
@@ -41,7 +41,7 @@ public class PlayerScript : MonoBehaviour
 	float rangeSwap = 10;
 	float dispShotgun = 1.75f;
     
-	float currentCD = 0;
+	public float currentCD = 0;
     bool isTurning;
     Vector3 angleTurn;
     Vector3 angleTurnShaman;
@@ -107,13 +107,13 @@ public class PlayerScript : MonoBehaviour
 			{
 				if(Mathf.Abs(transform.eulerAngles.y - angleTurn.y) > rotation * 3)
 				{
-					transform.eulerAngles += new Vector3(0, rotation * rotationDirection, 0);
+					transform.eulerAngles += new Vector3(0, rotation * rotationDirection * 1.1f, 0);
 				}
 				else
 				{
 					isTurning = false;
 					RectifyAngle();
-					Camera.main.GetComponent<UnityStandardAssets.ImageEffects.CameraMotionBlur> ().enabled = false;
+					//Camera.main.GetComponent<UnityStandardAssets.ImageEffects.CameraMotionBlur> ().enabled = false;
 				}
 			}
 			Camera.main.transform.LookAt (this.gameObject.transform);
@@ -209,7 +209,7 @@ public class PlayerScript : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Joystick1Button5) && !isTurning)
 		{
-			Camera.main.GetComponent<UnityStandardAssets.ImageEffects.CameraMotionBlur> ().enabled = true;
+			//Camera.main.GetComponent<UnityStandardAssets.ImageEffects.CameraMotionBlur> ().enabled = true;
 			angleTurn = new Vector3(0,transform.eulerAngles.y + 90,0);
             angleTurn = new Vector3(0, Mathf.Round(angleTurn.y / 90) * 90 % 360, 0);
             rotationDirection = 1;
@@ -218,7 +218,7 @@ public class PlayerScript : MonoBehaviour
 
 		if (Input.GetKeyDown (KeyCode.Joystick1Button4) && !isTurning)
         {
-			Camera.main.GetComponent<UnityStandardAssets.ImageEffects.CameraMotionBlur> ().enabled = true;
+			//Camera.main.GetComponent<UnityStandardAssets.ImageEffects.CameraMotionBlur> ().enabled = true;
             angleTurn = new Vector3(0, (transform.eulerAngles.y - 90 + 360) % 360, 0);
             angleTurn = new Vector3(0, Mathf.Round(angleTurn.y / 90) * 90 % 360, 0);
             rotationDirection = -1;
