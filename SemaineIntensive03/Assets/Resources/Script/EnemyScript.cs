@@ -65,7 +65,7 @@ public class EnemyScript : MonoBehaviour
     void Start ()
     {
         setNavRand = false;
-		Coloring ();
+		Spriting ();
         indexpatrol = 0;
         Emanage = GameObject.FindObjectOfType<EnemyManager>();
 		againstSupPercent = Emanage.againstSupPercent;
@@ -81,22 +81,22 @@ public class EnemyScript : MonoBehaviour
         PlayerDetected = false;
 	}
 
-	void Coloring()
+	void Spriting()
 	{
 		switch(EType)
 		{
 			case EnemyManager.EnemyType.HEAVY:
-				this.gameObject.GetComponent<Renderer> ().material.color = Color.red;
+				//this.gameObject.GetComponent<Renderer> ().material.color = Color.red;
 				//this.gameObject.transform.FindChild ("HeavyO").GetComponent<Renderer> ().enabled = true;
 				this.gameObject.transform.FindChild ("HeavyDist").GetComponent<SpriteRenderer> ().enabled = true;
 			break;
 			case EnemyManager.EnemyType.SNIPER:
-				this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
+				//this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
 				//this.gameObject.transform.FindChild ("SniperO").GetComponent<Renderer> ().enabled = true;
 				this.gameObject.transform.FindChild ("SniperDist").GetComponent<SpriteRenderer> ().enabled = true;
 			break;
 			case EnemyManager.EnemyType.SNEAKY:
-				this.gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
+				//this.gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
 				//this.gameObject.transform.FindChild ("SneakyO").GetComponent<Renderer> ().enabled = true;
 				this.gameObject.transform.FindChild ("SneakyDist").GetComponent<SpriteRenderer> ().enabled = true;
 			break;

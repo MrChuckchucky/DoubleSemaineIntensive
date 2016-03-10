@@ -7,7 +7,7 @@ public class PlayerScript : MonoBehaviour
 	public GameObject musicManager;
 
 	GameObject swaped;
-	Color swapedColor;
+	//Color swapedColor;
 	RaycastHit hit;
 	GameObject lastHit = null;
 	int layerMask = 1 << 8; //layer 8 = Obstacle
@@ -17,8 +17,9 @@ public class PlayerScript : MonoBehaviour
 	bool axisChoose = false;
 	int indexTot = 0;
 
+	[HideInInspector]
 	public EnemyManager Emanage;
-
+	[HideInInspector]
 	public EnemyManager.EnemyType EType;
 
     float rotation = 4;
@@ -465,7 +466,7 @@ public class PlayerScript : MonoBehaviour
 
 	void CheckSwap()
 	{
-		Time.timeScale = 0.3f;
+		Time.timeScale = 0.2f;
 		//Time.fixedDeltaTime = 0.5f;
 		if (swaped) 
 		{
@@ -487,7 +488,7 @@ public class PlayerScript : MonoBehaviour
 				Destroy (GameObject.FindGameObjectWithTag ("FXSwap"));
 				oldSwaped = null;
 			}
-			swaped.GetComponent<Renderer> ().material.color = swapedColor;
+			//swaped.GetComponent<Renderer> ().material.color = swapedColor;
 			swaped = null;
 		}
 		if (Physics.Raycast(this.gameObject.transform.position,  this.gameObject.transform.forward, out hit, rangeSwap)) 
@@ -495,8 +496,8 @@ public class PlayerScript : MonoBehaviour
 			if (hit.collider.tag == "Swapable") 
 			{
 				swaped = hit.collider.gameObject;
-				swapedColor = swaped.GetComponent<Renderer> ().material.color;
-				swaped.GetComponent<Renderer> ().material.color = Color.green;
+				//swapedColor = swaped.GetComponent<Renderer> ().material.color;
+				//swaped.GetComponent<Renderer> ().material.color = Color.green;
 				if (oldSwaped != swaped) 
 				{
 					oldSwaped = swaped;
