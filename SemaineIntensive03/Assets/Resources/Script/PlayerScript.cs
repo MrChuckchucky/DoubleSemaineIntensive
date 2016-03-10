@@ -23,6 +23,8 @@ public class PlayerScript : MonoBehaviour
 	bool isMoonWalking;
 	bool isMoonRunning;
 	int shootIndic;
+	float trailStart;
+	float trailDelay = 0.5f;
 
 	[HideInInspector]
 	public EnemyManager Emanage;
@@ -64,7 +66,11 @@ public class PlayerScript : MonoBehaviour
 	bool isPaused;
     // Use this for initialization
     void Start ()
-    {
+	{
+		if (EType == EnemyManager.EnemyType.SNEAKY)
+		{
+			transform.GetComponentInChildren<TrailRenderer> ().enabled = false;
+		}
 		musicManager = GameObject.FindGameObjectWithTag ("MusicManager");
 		isIdling = isRunning = isWalking = isMoonWalking = isMoonRunning = isSwaping = isDying = false;
         this.gameObject.transform.FindChild("Head").gameObject.SetActive(true);
@@ -73,7 +79,7 @@ public class PlayerScript : MonoBehaviour
 		//this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = false;
 		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
-		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
+		//this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
 		//this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
 		againstLessPercent = this.gameObject.GetComponent<EnemyScript> ().againstLessPercent; 
@@ -135,6 +141,10 @@ public class PlayerScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		if (trailStart + trailDelay <= Time.time && EType == EnemyManager.EnemyType.SNEAKY)
+		{
+			transform.GetComponentInChildren<TrailRenderer> ().enabled = false;
+		}
 		angleTurnShaman = transform.eulerAngles;
 		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
 		if (isPaused == false) {
@@ -700,14 +710,15 @@ public class PlayerScript : MonoBehaviour
 			//swaped.GetComponent<Renderer> ().material.color = swapedColor;
 			swaped = null;
 		}
-		Debug.DrawRay (this.gameObject.transform.position, this.gameObject.transform.forward, Color.red, 10);
 		if (Physics.Raycast(this.gameObject.transform.position,  this.gameObject.transform.forward, out hit, rangeSwap)) 
 		{
+			//Debug.Log (hit.collider.tag);
 			if (hit.collider.tag == "Swapable") 
 			{
-				swaped = hit.collider.gameObject;
+				//Debug.Log (hit.collider.name);
 				//swapedColor = swaped.GetComponent<Renderer> ().material.color;
 				//swaped.GetComponent<Renderer> ().material.color = Color.green;
+				swaped = hit.collider.gameObject;
 				if (oldSwaped != swaped) 
 				{
 					oldSwaped = swaped;
@@ -757,7 +768,7 @@ public class PlayerScript : MonoBehaviour
 		this.gameObject.transform.FindChild ("Head").gameObject.SetActive(false);
 		this.gameObject.GetComponent<EnemyScript> ().enabled = true;
         this.gameObject.GetComponent<EnemyScript> ().isStun = true;
-        this.gameObject.GetComponent<NavMeshObstacle>().enabled = false;
+        //this.gameObject.GetComponent<NavMeshObstacle>().enabled = false;
         this.gameObject.GetComponent<NavMeshAgent> ().enabled = true;
 		//this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = true;
 
@@ -810,11 +821,11 @@ public class PlayerScript : MonoBehaviour
         if (currentCD < 0 && nbMunitions > 0)
         {
             //Debug.Log("fire");
-            GameObject smoke = Instantiate(Resources.Load("Particules/Shoot"), transform.position, transform.rotation) as GameObject;
-            Destroy(smoke, 1);
             nbMunitions--;
 			if (EType == EnemyManager.EnemyType.SNIPER) 
 			{
+				GameObject smoke = Instantiate(Resources.Load("Particules/Sniper_particles"), new Vector3(transform.position.x, transform.position.y + 1, transform.position.z) + transform.forward * 10, transform.rotation) as GameObject;
+				Destroy(smoke, 1);
 				MasterAudio.FireCustomEvent ("SniperFireSFX", this.transform.position);
 				switch(shootIndic)
 				{
@@ -841,6 +852,8 @@ public class PlayerScript : MonoBehaviour
 			{
 				if (EType == EnemyManager.EnemyType.HEAVY)
 				{
+					GameObject smoke = Instantiate(Resources.Load("Particules/Heavy-particles"), new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z) + transform.forward * 4, transform.rotation) as GameObject;
+					Destroy(smoke, 1);
 					MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
 					switch (shootIndic)
 					{
@@ -857,6 +870,8 @@ public class PlayerScript : MonoBehaviour
 				}
 				if (EType == EnemyManager.EnemyType.SNEAKY)
 				{
+					trailStart = Time.time;
+					transform.GetComponentInChildren<TrailRenderer> ().enabled = true;
 					MasterAudio.FireCustomEvent ("SneakyFireSFX", this.transform.position);
 					int random = Random.Range(0, 2);
 					if(random == 0)

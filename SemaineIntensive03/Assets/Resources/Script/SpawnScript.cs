@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SpawnScript : MonoBehaviour
 {
-    public GameObject enemy;
+    //public GameObject enemy;
     public GameObject[] NavigationPoint;
     public bool randomPatrol;
     public int ID;
@@ -16,7 +16,8 @@ public class SpawnScript : MonoBehaviour
 	// Update is called once per frame
 	public void Spawn ()
     {
-        GameObject Enemy = Instantiate(enemy, transform.position, transform.rotation) as GameObject;
+		GameObject go  = Resources.Load ("Prefabs/Enemy") as GameObject;
+        GameObject Enemy = Instantiate(go, transform.position, transform.rotation) as GameObject;
         Enemy.GetComponent<EnemyScript>().ID = ID;
         Enemy.GetComponent<EnemyScript>().NavigationPoints = NavigationPoint;
         Enemy.GetComponent<EnemyScript>().patrouilleRandom = randomPatrol;

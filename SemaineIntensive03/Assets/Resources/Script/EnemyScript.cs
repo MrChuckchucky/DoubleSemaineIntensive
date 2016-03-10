@@ -15,7 +15,9 @@ public class EnemyScript : MonoBehaviour
     public bool patrouilleRandom;
     public float stunDuration;
     public bool isStun;
-    public bool reachtotem;
+	public bool reachtotem;
+	float trailStart;
+	float trailDelay = 0.5f;
 
 	bool isRunning;
 	bool isDying;
@@ -69,7 +71,11 @@ public class EnemyScript : MonoBehaviour
 	bool isPaused;
     // Use this for initialization
     void Start ()
-    {
+	{
+		if (EType == EnemyManager.EnemyType.SNEAKY)
+		{
+			transform.GetComponentInChildren<TrailRenderer> ().enabled = false;
+		}
 		isFiring = false;
         setNavRand = false;
         indexpatrol = 0;
@@ -113,6 +119,10 @@ public class EnemyScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		if (trailStart + trailDelay <= Time.time && EType == EnemyManager.EnemyType.SNEAKY)
+		{
+			transform.GetComponentInChildren<TrailRenderer> ().enabled = false;
+		}
 		transform.position = new Vector3 (transform.position.x, 0, transform.position.z);
 		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
 		if (isPaused == false) 
@@ -635,13 +645,13 @@ public class EnemyScript : MonoBehaviour
     {
 		if (currentCD < 0)
         {
-            GameObject smoke = Instantiate(Resources.Load("Particules/Shoot"), transform.position, transform.rotation) as GameObject;
-            Destroy(smoke, 1);
             int chance = Random.Range(0, 101);
             if(chance < HC)
             {
 				if (EType == EnemyManager.EnemyType.SNIPER)
-                {
+				{
+					GameObject smoke = Instantiate(Resources.Load("Particules/Sniper_particles"), new Vector3(transform.position.x, transform.position.y + 1, transform.position.z) + transform.forward * 10, transform.rotation) as GameObject;
+					Destroy(smoke, 1);
 					MasterAudio.FireCustomEvent ("SniperFireSFX", this.transform.position);
 					transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("StaticShoot");
                     if (Physics.Raycast(this.gameObject.transform.position, this.gameObject.transform.forward, out hit, range))
@@ -660,11 +670,15 @@ public class EnemyScript : MonoBehaviour
                 {
 					if (EType == EnemyManager.EnemyType.HEAVY)
 					{
+						GameObject smoke = Instantiate(Resources.Load("Particules/Heavy-particles"), new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z) + transform.forward * 4, transform.rotation) as GameObject;
+						Destroy(smoke, 1);
 						MasterAudio.FireCustomEvent ("HeavyFireSFX", this.transform.position);
 						transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("StaticShoot");
 					}
 					if (EType == EnemyManager.EnemyType.SNEAKY)
 					{
+						trailStart = Time.time;
+						transform.GetComponentInChildren<TrailRenderer> ().enabled = true;
 						MasterAudio.FireCustomEvent ("SneakyFireSFX", this.transform.position);
 						int random = Random.Range(0, 2);
 						if(random == 0)
