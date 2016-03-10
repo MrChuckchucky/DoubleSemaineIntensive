@@ -141,7 +141,7 @@ public class PlayerScript : MonoBehaviour
 			if (CDBlood > 0) {
 				CDBlood -= Time.deltaTime;
 			} else {
-				//this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(false);
+				this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(false);
 			}
 			if (isDying && deathDelay + deathStart <= Time.time) {
 				trueDeath ();
@@ -525,8 +525,8 @@ public class PlayerScript : MonoBehaviour
 	public void takeDamage(float dmg, EnemyManager.EnemyType type)
 	{
         //ParticleSystem blood = Instantiate(Resources.Load("Particules/Blood"), transform.position, transform.rotation) as ParticleSystem;
-		//this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(true);
-		CDBlood = 3;
+		this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(true);
+		CDBlood = 2;
 		MasterAudio.FireCustomEvent ("HitSFX", this.transform.position);
 		life -= dmg * Percent(type);
 		if (life <= 0 && !isDying) {Death ();}

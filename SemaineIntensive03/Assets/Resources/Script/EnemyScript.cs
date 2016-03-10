@@ -133,7 +133,7 @@ public class EnemyScript : MonoBehaviour
 			}
 			else 
 			{
-				//this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(false);
+				this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(false);
 			}
 			if (!setNavRand)
 			{
@@ -243,8 +243,8 @@ public class EnemyScript : MonoBehaviour
 	public void takeDamage(float dmg,  EnemyManager.EnemyType type)
 	{
 		//activeBlood
-		//this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(true);
-		CDBlood = 3;
+		this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(true);
+		CDBlood = 2;
 		MasterAudio.FireCustomEvent ("HitSFX", this.transform.position);
         destination = GameObject.FindGameObjectWithTag("Player").transform.position;
         PlayerDetected = true;
