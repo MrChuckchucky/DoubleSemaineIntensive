@@ -97,6 +97,8 @@ public class PlayerScript : MonoBehaviour
 		if (EType == EnemyManager.EnemyType.SNIPER) {
 			musicManager.GetComponent<MusicManager> ().SniperVariation ();
 		}
+
+		GameObject.FindObjectOfType<lifewings> ().reset ();
     }
 
 	bool testSprite()

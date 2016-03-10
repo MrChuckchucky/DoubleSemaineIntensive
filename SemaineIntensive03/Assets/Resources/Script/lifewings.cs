@@ -37,10 +37,15 @@ public class lifewings : MonoBehaviour {
 	public int decal = 0;
 
 
+	float life ;
+	float lifeMax ;
+
 	// Update is called once per frame
 	void Update () {
-		float life = P.life;
-		float lifeMax = P.maxLife;
+		P =  GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerScript> ();
+
+		 life = P.life;
+		 lifeMax = P.maxLife;
 
 		if(life <= 0f)
 			life = 0f;
@@ -65,21 +70,24 @@ public class lifewings : MonoBehaviour {
 
 
 
-		int nombreDePlume = (int)((life/lifeMax)*8f);
+		int nombreDePlume = (int)((life/lifeMax)*8f); 
 
 
-		if (life == 0 & decal == 0) {
-			nombreDePlume = 0;
-		}
 
 
 		if(life <= 0f)
 			life = 0f;
 		
 
-		if( nombreDePlume == 0f) {
+
+		if( life == 0f) {
 			plumesList[0].sprite = deadH;
 		}
+
+		else {
+			plumesList[0].sprite = lifeH;
+		}
+
 
 		if (nombreDePlume == 8)
 			nombreDePlume = 7;
@@ -124,8 +132,10 @@ public class lifewings : MonoBehaviour {
 	}
 
 
-	public void reset() {
-		decal = 0; 
+	public void reset() { 
+		//P =  GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerScript> ();
+
+		decal = 0;  
 
 		for (int i = 0; i < 8 ; i++) {
 
@@ -137,7 +147,9 @@ public class lifewings : MonoBehaviour {
 				plumesList[i].sprite = lifeB;
 			}
 
-		} 
+		}
+
+		plumesList[0].sprite = lifeH;
 	}
 
 }

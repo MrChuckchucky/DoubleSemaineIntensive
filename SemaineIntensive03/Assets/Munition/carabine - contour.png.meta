@@ -1,0 +1,243 @@
+fileFormatVersion: 2
+guid: fb286a2335449254ba919ad437a90265
+timeCreated: 1457543535
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Carabine - Contour_0
+    21300002: Carabine - Contour_2
+    21300004: Carabine - Contour_3
+    21300006: Carabine - Contour_4
+    21300008: Carabine - Contour_5
+    21300010: Carabine - Contour_6
+    21300012: Carabine - Contour_7
+    21300014: Carabine - Contour_8
+    21300016: Carabine - Contour_9
+    21300018: Carabine - Contour_10
+    21300020: Carabine - Contour_11
+    21300022: Carabine - Contour_12
+    21300024: Carabine - Contour_13
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Carabine - Contour_0
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 205
+        width: 67
+        height: 99
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -33.5, y: -38.5}
+        - {x: -33.5, y: -49.5}
+        - {x: -20.5, y: -49.5}
+        - {x: -20.5, y: -43.5}
+        - {x: -32.5, y: -38.5}
+    - name: Carabine - Contour_2
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 214
+        width: 21
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_3
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 214
+        width: 32
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_4
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 214
+        width: 25
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_5
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_6
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_7
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 214
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_8
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_9
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 214
+        width: 30
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_10
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 214
+        width: 29
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_11
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 214
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_12
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 214
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Carabine - Contour_13
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 33
+        width: 527
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 216.5, y: 61}
+        - {x: 182.5, y: 61}
+        - {x: 183.5, y: 58}
+        - {x: 192.5, y: 56}
+        - {x: 237.5, y: 45}
+        - {x: 159.5, y: 61}
+        - {x: 17.5, y: 61}
+        - {x: 17.5, y: 58}
+        - {x: 18.5, y: 57}
+        - {x: 64.5, y: 40}
+        - {x: 244.5, y: 1}
+        - {x: 263.5, y: 1}
+        - {x: 263.5, y: 49}
+        - {x: 257.5, y: 51}
+      - - {x: -121.5, y: 6}
+        - {x: -1.5, y: 24}
+        - {x: -1.5, y: 61}
+        - {x: -254.5, y: 61}
+        - {x: -254.5, y: 28}
+        - {x: -248.5, y: 12}
+        - {x: -243.5, y: 6}
+        - {x: -235.5, y: 6}
+        - {x: -223.5, y: 9}
+        - {x: -203.5, y: 15}
+        - {x: -186.5, y: 6}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

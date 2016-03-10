@@ -33,11 +33,17 @@ public class MunitionUI : MonoBehaviour {
 	public UnityEngine.UI.Image munitionShow;
 
 
+	public UnityEngine.UI.Image shotgunContour;
+	public UnityEngine.UI.Image carabineContour;
+	public UnityEngine.UI.Image KnifeContour;
+
+
+
 	// Update is called once per frame
 	void Update () {
 		PlayerScript P = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
 
-		if(P && P.EType == EnemyManager.EnemyType.HEAVY) { // pour le moment ! 
+		if(P.EType == EnemyManager.EnemyType.HEAVY) { // pour le moment ! 
 			carabineIcone.gameObject.SetActive(false);
 			knifeIcone.gameObject.SetActive(false);
 			shotgunIcone.gameObject.SetActive(true);
@@ -49,6 +55,12 @@ public class MunitionUI : MonoBehaviour {
 			carabineIconeCharge.gameObject.SetActive(true);
 			knifeIconeCharge.gameObject.SetActive(false);
 			shotgunIconeBar.gameObject.SetActive(false);
+
+			carabineContour.gameObject.SetActive(false); 
+			KnifeContour.gameObject.SetActive(false);
+
+
+			shotgunContour.gameObject.SetActive(true);
 
 
 			carabineIconeCharge.fillAmount = 1f - P.currentCD / P.CDMax; 
@@ -96,7 +108,7 @@ public class MunitionUI : MonoBehaviour {
 
 
 
-		if(P && P.EType == EnemyManager.EnemyType.SNEAKY) { // pour le moment ! 
+		if(P.EType == EnemyManager.EnemyType.SNEAKY) { // pour le moment ! 
 			shotgunIconeBar.gameObject.SetActive(false);
 			carabineIcone.gameObject.SetActive(false);
 			knifeIcone.gameObject.SetActive(true);
@@ -108,6 +120,11 @@ public class MunitionUI : MonoBehaviour {
 
 			carabineIconeCharge.gameObject.SetActive(false);
 			knifeIconeCharge.gameObject.SetActive(true);
+
+
+			shotgunContour.gameObject.SetActive(false);
+			carabineContour.gameObject.SetActive(false);
+			KnifeContour.gameObject.SetActive(true);
 
 
 
@@ -123,19 +140,23 @@ public class MunitionUI : MonoBehaviour {
 		}
 
 
-		if(P && P.EType == EnemyManager.EnemyType.SNIPER) { // pour le moment ! 
+		if(P.EType == EnemyManager.EnemyType.SNIPER) { // pour le moment ! 
 			carabineIcone.gameObject.SetActive(true);
 			knifeIcone.gameObject.SetActive(false);
 			shotgunIcone.gameObject.SetActive(false);
 			carabineIconeCharge.gameObject.SetActive(false);
-			knifeIconeCharge.gameObject.SetActive(false);
-
 
 			shotgunIconeMunition.gameObject.SetActive(false);
 			carabineIconeMunition.gameObject.SetActive(true);
 
 			shotgunIconeBar.gameObject.SetActive(true);
+			knifeIconeCharge.gameObject.SetActive(false);
 
+			shotgunContour.gameObject.SetActive(false);
+			carabineContour.gameObject.SetActive(true);
+			KnifeContour.gameObject.SetActive(false);
+
+			carabineIconeCharge.gameObject.SetActive(false);
 			shotgunIconeBar.fillAmount = 1f - P.currentCD / P.CDMax; 
 
 
