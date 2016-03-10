@@ -54,6 +54,7 @@ public class EnemyScript : MonoBehaviour
     public int HC;
     public float distanceAlert;
 
+	float CDBlood = 0;
     float currentCD = 0;
 
     private int indexpatrol;
@@ -108,6 +109,14 @@ public class EnemyScript : MonoBehaviour
 		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
 		if (isPaused == false) 
 		{
+			if (CDBlood > 0) 
+			{
+				CDBlood -= Time.deltaTime;
+			}
+			else 
+			{
+				//this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(false);
+			}
 			if (!setNavRand)
 			{
                 setNavRand = true;
@@ -215,6 +224,9 @@ public class EnemyScript : MonoBehaviour
 
 	public void takeDamage(float dmg,  EnemyManager.EnemyType type)
 	{
+		//activeBlood
+		//this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(true);
+		CDBlood = 3;
 		MasterAudio.FireCustomEvent ("HitSFX", this.transform.position);
         destination = GameObject.FindGameObjectWithTag("Player").transform.position;
         PlayerDetected = true;

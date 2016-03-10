@@ -41,6 +41,7 @@ public class PlayerScript : MonoBehaviour
 	float rangeSwap = 10;
 	float dispShotgun = 1.75f;
     
+	float CDBlood = 0;
 	public float currentCD = 0;
     bool isTurning;
     Vector3 angleTurn;
@@ -124,6 +125,14 @@ public class PlayerScript : MonoBehaviour
         isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
 		if (isPaused == false)
         {
+			if (CDBlood > 0) 
+			{
+				CDBlood -= Time.deltaTime;
+			}
+			else 
+			{
+				//this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(false);
+			}
             if (isDying && deathDelay + deathStart <= Time.time)
 			{
 				trueDeath();
@@ -321,6 +330,8 @@ public class PlayerScript : MonoBehaviour
 	public void takeDamage(float dmg, EnemyManager.EnemyType type)
 	{
         //ParticleSystem blood = Instantiate(Resources.Load("Particules/Blood"), transform.position, transform.rotation) as ParticleSystem;
+		//this.gameObject.transform.FindChild ("FX_Blood").gameObject.SetActive(true);
+		CDBlood = 3;
 		MasterAudio.FireCustomEvent ("HitSFX", this.transform.position);
 		life -= dmg * Percent(type);
 		if (life <= 0 && !isDying) {Death ();}
@@ -524,7 +535,7 @@ public class PlayerScript : MonoBehaviour
         this.gameObject.GetComponent<EnemyScript> ().isStun = true;
         this.gameObject.GetComponent<NavMeshObstacle>().enabled = false;
         this.gameObject.GetComponent<NavMeshAgent> ().enabled = true;
-		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = true;
+		//this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = true;
 
 
 		float rectY = (Mathf.Round( swaped.transform.eulerAngles.y / 90) * 90) % 360;
