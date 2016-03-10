@@ -21,6 +21,7 @@ public class PlayerScript : MonoBehaviour
 	bool isWalking;
 	bool isRunning;
 	bool isMoonWalking;
+	bool isMoonRunning;
 	int shootIndic;
 
 	[HideInInspector]
@@ -59,19 +60,19 @@ public class PlayerScript : MonoBehaviour
     bool isSwaping;
     float deathStart;
     float deathDelay = 1f;
-    bool isDying;
+    public bool isDying;
 	bool isPaused;
     // Use this for initialization
     void Start ()
     {
 		musicManager = GameObject.FindGameObjectWithTag ("MusicManager");
-		isIdling = isRunning = isWalking = isMoonWalking = isSwaping = isDying = false;
+		isIdling = isRunning = isWalking = isMoonWalking = isMoonRunning = isSwaping = isDying = false;
         this.gameObject.transform.FindChild("Head").gameObject.SetActive(true);
         this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Idle");
         AllTotems = GameObject.FindGameObjectsWithTag ("Totem");
-        //this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
-		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
+		//this.gameObject.GetComponent<Renderer> ().material.color = Color.blue;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = false;
+		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
 		//this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
@@ -143,8 +144,13 @@ public class PlayerScript : MonoBehaviour
 			if (isDying && deathDelay + deathStart <= Time.time) {
 				trueDeath ();
 			}
-			if (isSwaping && swapStart + swapDelay <= Time.time) {
-				Swap ();
+			if (isSwaping)
+			{
+				swapStart += Time.deltaTime;
+				if (swapStart >= swapDelay)
+				{
+					Swap();
+				}
 			}
 			if (isTurning) {
 				if (Mathf.Abs (transform.eulerAngles.y - angleTurn.y) > rotation * 3) {
@@ -174,6 +180,16 @@ public class PlayerScript : MonoBehaviour
 			switch (EType) {
 			case EnemyManager.EnemyType.HEAVY:
 				switch (shootIndic) {
+				case -2:
+					if (!isMoonRunning) {
+						isMoonRunning = true;
+						isMoonWalking = false;
+						isIdling = false;
+						isWalking = false;
+						isRunning = false;
+						transform.FindChild ("Heavy_Prefab").GetComponent<Animator> ().SetTrigger ("Reverse Run");
+					}
+					break;
 				case -1:
 					if (!isMoonWalking) {
 						isMoonWalking = true;
@@ -189,6 +205,7 @@ public class PlayerScript : MonoBehaviour
 						isWalking = false;
 						isRunning = false;
 						isMoonWalking = false;
+						isMoonRunning = false;
 						int random = Random.Range (0, 2);
 						if (random == 0) {
 							transform.FindChild ("Heavy_Prefab").GetComponent<Animator> ().SetTrigger ("Idle 1");
@@ -203,6 +220,7 @@ public class PlayerScript : MonoBehaviour
 						isIdling = false;
 						isRunning = false;
 						isMoonWalking = false;
+						isMoonRunning = false;
 						transform.FindChild ("Heavy_Prefab").GetComponent<Animator> ().SetTrigger ("Walk");
 					}
 					break;
@@ -212,6 +230,7 @@ public class PlayerScript : MonoBehaviour
 						isIdling = false;
 						isWalking = false;
 						isMoonWalking = false;
+						isMoonRunning = false;
 						transform.FindChild ("Heavy_Prefab").GetComponent<Animator> ().SetTrigger ("Run");
 					}
 					break;
@@ -219,12 +238,23 @@ public class PlayerScript : MonoBehaviour
 				break;
 			case EnemyManager.EnemyType.SNEAKY:
 				switch (shootIndic) {
+				case -2:
+					if (!isMoonRunning) {
+						isMoonRunning = true;
+						isMoonWalking = false;
+						isIdling = false;
+						isWalking = false;
+						isRunning = false;
+						transform.FindChild ("Brisk_Prefab").GetComponent<Animator> ().SetTrigger ("Reverse Run");
+					}
+					break;
 				case -1:
 					if (!isMoonWalking) {
 						isMoonWalking = true;
 						isIdling = false;
 						isWalking = false;
 						isRunning = false;
+						isMoonRunning = false;
 						transform.FindChild ("Brisk_Prefab").GetComponent<Animator> ().SetTrigger ("Reverse Walk");
 					}
 					break;
@@ -234,6 +264,7 @@ public class PlayerScript : MonoBehaviour
 						isWalking = false;
 						isRunning = false;
 						isMoonWalking = false;
+						isMoonRunning = false;
 						transform.FindChild ("Brisk_Prefab").GetComponent<Animator> ().SetTrigger ("Idle");
 					}
 					break;
@@ -243,6 +274,7 @@ public class PlayerScript : MonoBehaviour
 						isIdling = false;
 						isRunning = false;
 						isMoonWalking = false;
+						isMoonRunning = false;
 						int random = Random.Range (0, 2);
 						if (random == 0) {
 							transform.FindChild ("Brisk_Prefab").GetComponent<Animator> ().SetTrigger ("Walk 1");
@@ -257,6 +289,7 @@ public class PlayerScript : MonoBehaviour
 						isIdling = false;
 						isWalking = false;
 						isMoonWalking = false;
+						isMoonRunning = false;
 						transform.FindChild ("Brisk_Prefab").GetComponent<Animator> ().SetTrigger ("Run");
 					}
 					break;
@@ -264,12 +297,23 @@ public class PlayerScript : MonoBehaviour
 				break;
 			case EnemyManager.EnemyType.SNIPER:
 				switch (shootIndic) {
+				case -2:
+					if (!isMoonRunning) {
+						isMoonRunning = true;
+						isMoonWalking = false;
+						isIdling = false;
+						isWalking = false;
+						isRunning = false;
+						transform.FindChild ("Sniper_Prefab").GetComponent<Animator> ().SetTrigger ("Reverse Run");
+					}
+					break;
 				case -1:
 					if (!isMoonWalking) {
 						isMoonWalking = true;
 						isIdling = false;
 						isWalking = false;
 						isRunning = false;
+						isMoonRunning = false;
 						transform.FindChild ("Sniper_Prefab").GetComponent<Animator> ().SetTrigger ("Reverse Walk");
 					}
 					break;
@@ -279,6 +323,7 @@ public class PlayerScript : MonoBehaviour
 						isWalking = false;
 						isRunning = false;
 						isMoonWalking = false;
+						isMoonRunning = false;
 						transform.FindChild ("Sniper_Prefab").GetComponent<Animator> ().SetTrigger ("Idle");
 					}
 					break;
@@ -288,6 +333,7 @@ public class PlayerScript : MonoBehaviour
 						isIdling = false;
 						isRunning = false;
 						isMoonWalking = false;
+						isMoonRunning = false;
 						transform.FindChild ("Sniper_Prefab").GetComponent<Animator> ().SetTrigger ("Walk");
 					}
 					break;
@@ -297,6 +343,7 @@ public class PlayerScript : MonoBehaviour
 						isIdling = false;
 						isWalking = false;
 						isMoonWalking = false;
+						isMoonRunning = false;
 						transform.FindChild ("Sniper_Prefab").GetComponent<Animator> ().SetTrigger ("Run");
 					}
 					break;
@@ -380,6 +427,10 @@ public class PlayerScript : MonoBehaviour
 			if (LJH < 0)
 			{
 				shootIndic = -1;
+				if (LJH < -0.5f)
+				{
+					shootIndic = -2;
+				}
 			}
 		}
 		else
@@ -416,7 +467,7 @@ public class PlayerScript : MonoBehaviour
 			{
 				MasterAudio.FireCustomEvent ("SwapSFX", this.transform.position);
 				this.gameObject.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Swap");
-				swapStart = Time.time;
+				swapStart = 0;
 				isSwaping = true;
 			}
         }
@@ -504,8 +555,8 @@ public class PlayerScript : MonoBehaviour
     {
         checkFreeTotem();
         this.gameObject.GetComponent<EnemyScript>().enabled = true;
-        Destroy(this.gameObject.GetComponent<PlayerScript>());
-        this.gameObject.GetComponent<EnemyScript>().death();
+		Destroy(this.gameObject.GetComponent<PlayerScript>());
+		Destroy(this.gameObject);
     }
 
 	void checkFreeTotem()
@@ -585,7 +636,7 @@ public class PlayerScript : MonoBehaviour
 	{
 		GameObject newEnn = Resources.Load ("Prefabs/Player") as GameObject;
 		Vector3 totPos = totem.transform.position;
-		totPos.y = 2;
+		//totPos.y = 2;
 		GameObject Enemy = Instantiate(newEnn, totPos, Quaternion.identity) as GameObject;
 		Enemy.GetComponent<EnemyScript>().ID = 0;
 		Enemy.GetComponent<EnemyScript>().patrouilleRandom = true;
@@ -647,6 +698,7 @@ public class PlayerScript : MonoBehaviour
 			//swaped.GetComponent<Renderer> ().material.color = swapedColor;
 			swaped = null;
 		}
+		Debug.DrawRay (this.gameObject.transform.position, this.gameObject.transform.forward, Color.red, 10);
 		if (Physics.Raycast(this.gameObject.transform.position,  this.gameObject.transform.forward, out hit, rangeSwap)) 
 		{
 			if (hit.collider.tag == "Swapable") 

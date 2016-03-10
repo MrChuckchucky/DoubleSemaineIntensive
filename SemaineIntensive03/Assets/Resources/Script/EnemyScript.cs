@@ -19,13 +19,16 @@ public class EnemyScript : MonoBehaviour
 
 	bool isRunning;
 	bool isDying;
+	bool isFiring;
+	float firingStart;
+	public float firingDelay;
 
     private bool setNavRand;
     public float stunStart;
     private float walk;
     private float observation;
-    private bool isMoving;
-    private bool canMove;
+	private bool isMoving;
+	private bool canMove;
     private float patrolStart;
     private float patrolDuration;
     private float rotationStart;
@@ -67,6 +70,7 @@ public class EnemyScript : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+		isFiring = false;
         setNavRand = false;
         indexpatrol = 0;
 		Spriting ();
@@ -108,10 +112,21 @@ public class EnemyScript : MonoBehaviour
 
 	// Update is called once per frame
 	void Update ()
-    {
+	{
+		transform.position = new Vector3 (transform.position.x, 0, transform.position.z);
 		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
 		if (isPaused == false) 
 		{
+			if (isFiring)
+			{
+				firingStart += Time.deltaTime;
+				if (firingStart >= firingDelay)
+				{
+					isFiring = false;
+					isRunning = false;
+					firingStart = 0;
+				}
+			}
 			if (CDBlood > 0) 
 			{
 				CDBlood -= Time.deltaTime;
@@ -340,11 +355,15 @@ public class EnemyScript : MonoBehaviour
         GetComponent<NavMeshAgent>().speed = walk;
         GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
-        {
+		{
+			isRunning = false;
 			switch (EType)
 			{
 			case EnemyManager.EnemyType.HEAVY:
 				transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+				break;
+			case EnemyManager.EnemyType.SNIPER:
+				transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk");
 				break;
 			case EnemyManager.EnemyType.SNEAKY:
 				int random = Random.Range(0, 2);
@@ -356,10 +375,6 @@ public class EnemyScript : MonoBehaviour
 				{
 					transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk 2");
 				}
-				transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk");
-				break;
-			case EnemyManager.EnemyType.SNIPER:
-				transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk");
 				break;
 			}
             int rand = Random.Range(0, index);
@@ -370,11 +385,12 @@ public class EnemyScript : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, destination) <= 2)
             {
+				isRunning = false;
 				switch (EType)
 				{
 				case EnemyManager.EnemyType.HEAVY:
 					int random = Random.Range(0, 2);
-					if(random == 0)
+					if (random == 0)
 					{
 						transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Idle 1");
 					}
@@ -424,56 +440,36 @@ public class EnemyScript : MonoBehaviour
                 }
             }
         }
-        if (patrolStart + patrolDuration <= Time.time)
-        {
-			isRunning = false;
+
+		if (patrolStart + patrolDuration <= Time.time)
+		{
 			canMove = true;
-			switch (EType)
-			{
-			case EnemyManager.EnemyType.HEAVY:
-				transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Walk");
-				break;
-			case EnemyManager.EnemyType.SNEAKY:
-				transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk");
-				break;
-			case EnemyManager.EnemyType.SNIPER:
-				int random = Random.Range(0, 2);
-				if (random == 0)
-				{
-					transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk 1");
-				}
-				else
-				{
-					transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk 2");
-				}
-				break;
-			}
-        }
+		}
     }
     void patrol()
-    {
+	{
         GetComponent<NavMeshAgent>().speed = walk;
         GetComponent<NavMeshAgent>().angularSpeed = observation;
         if (!isMoving && canMove)
-        {
+		{
 			isRunning = false;
 			switch (EType)
 			{
 			case EnemyManager.EnemyType.HEAVY:
 				transform.FindChild("Heavy_Prefab").GetComponent<Animator>().SetTrigger("Walk");
 				break;
-			case EnemyManager.EnemyType.SNEAKY:
-				transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk");
-				break;
 			case EnemyManager.EnemyType.SNIPER:
+				transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk");
+				break;
+			case EnemyManager.EnemyType.SNEAKY:
 				int random = Random.Range(0, 2);
 				if (random == 0)
 				{
-					transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk 1");
+					transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk 1");
 				}
 				else
 				{
-					transform.FindChild("Sniper_Prefab").GetComponent<Animator>().SetTrigger("Walk 2");
+					transform.FindChild("Brisk_Prefab").GetComponent<Animator>().SetTrigger("Walk 2");
 				}
 				break;
 			}
@@ -574,6 +570,7 @@ public class EnemyScript : MonoBehaviour
         transform.LookAt(destination);
         if (Vector3.Distance(transform.position, destination) <= range)
         {
+			isFiring = true;
             destination = new Vector3(Mathf.Round(transform.position.x * 10) / 10, Mathf.Round(transform.position.y * 10) / 10, Mathf.Round(transform.position.z * 10) / 10);
             Fire();
         }
@@ -635,7 +632,7 @@ public class EnemyScript : MonoBehaviour
     }
     void Fire()
     {
-        if (currentCD < 0)
+		if (currentCD < 0)
         {
             GameObject smoke = Instantiate(Resources.Load("Particules/Shoot"), transform.position, transform.rotation) as GameObject;
             Destroy(smoke, 1);
@@ -651,6 +648,10 @@ public class EnemyScript : MonoBehaviour
                         if (hit.collider.tag == "Player")
                         {
 							hit.collider.gameObject.GetComponent<PlayerScript>().takeDamage(damage, EType);
+							if (hit.collider.gameObject.GetComponent<PlayerScript> ().isDying)
+							{
+								PlayerDetected = false;
+							}
                         }
                     }
                 }
@@ -684,6 +685,10 @@ public class EnemyScript : MonoBehaviour
                             if (RH.collider.gameObject == targets)
                             {
 								RH.collider.gameObject.GetComponent<PlayerScript>().takeDamage(damage, EType);
+								if (RH.collider.gameObject.GetComponent<PlayerScript> ().isDying)
+								{
+									PlayerDetected = false;
+								}
                             }
                         }
                     }
