@@ -67,7 +67,7 @@ public class PlayerScript : MonoBehaviour
 		this.gameObject.GetComponent<EnemyScript> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshAgent> ().enabled = false;
 		this.gameObject.GetComponent<NavMeshObstacle> ().enabled = true;
-		this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
+		//this.gameObject.GetComponentInChildren<test> ().gameObject.GetComponent<MeshRenderer> ().enabled = false;
 		EType = this.gameObject.GetComponent<EnemyScript> ().EType;
 		againstLessPercent = this.gameObject.GetComponent<EnemyScript> ().againstLessPercent; 
 		againstSamePercent = this.gameObject.GetComponent<EnemyScript> ().againstSamePercent; 
@@ -76,6 +76,10 @@ public class PlayerScript : MonoBehaviour
 		Emanage.SetClass (EType, out life, out range, out damage, out speed, out CDMax, out nbMunitions, out HC, out distanceAlert);
 		maxLife = life;
 		isTurning = false;
+		if (testSprite () == false) 
+		{
+			Spriting ();
+		}
 
 		if (EType == EnemyManager.EnemyType.HEAVY) {
 			musicManager.GetComponent<MusicManager> ().HeavyVariation ();
@@ -87,6 +91,31 @@ public class PlayerScript : MonoBehaviour
 			musicManager.GetComponent<MusicManager> ().SniperVariation ();
 		}
     }
+
+	bool testSprite()
+	{
+		bool HeavyDistOK = this.gameObject.transform.FindChild ("HeavyDist").GetComponent<SpriteRenderer> ().enabled;
+		bool SneakyDistOK = this.gameObject.transform.FindChild ("SneakyDist").GetComponent<SpriteRenderer> ().enabled;
+		bool SniperDistOK = this.gameObject.transform.FindChild ("SniperDist").GetComponent<SpriteRenderer> ().enabled;
+		if (!HeavyDistOK && !SneakyDistOK && !SniperDistOK) {return false;}
+		return true;
+	}
+
+	void Spriting()
+	{
+		switch(EType)
+		{
+		case EnemyManager.EnemyType.HEAVY:
+			this.gameObject.transform.FindChild ("HeavyDist").GetComponent<SpriteRenderer> ().enabled = true;
+			break;
+		case EnemyManager.EnemyType.SNIPER:
+			this.gameObject.transform.FindChild ("SniperDist").GetComponent<SpriteRenderer> ().enabled = true;
+			break;
+		case EnemyManager.EnemyType.SNEAKY:
+			this.gameObject.transform.FindChild ("SneakyDist").GetComponent<SpriteRenderer> ().enabled = true;
+			break;
+		}
+	}
 
 	// Update is called once per frame
 	void Update ()
