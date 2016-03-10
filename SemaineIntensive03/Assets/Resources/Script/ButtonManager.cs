@@ -6,27 +6,43 @@ public class ButtonManager : MonoBehaviour {
 
     public GameObject NewGame;
     public GameObject Quit;
+    public GameObject Controls;
+
+    public GameObject ControlPanel;
     public GameObject PanelNoir;
+
+    public bool IsInPanel;
     public bool OneButtonAtATime;
+
+    
 
 	// Use this for initialization
 	void Start () {
         Quit.GetComponent<Animator>().SetBool("IsAnimating", false);
+        Controls.GetComponent<Animator>().SetBool("IsAnimating", false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	        if (Input.GetAxis("LeftJoystickHorizontal") > 0.3f || Input.GetAxis("LeftJoystickHorizontal") < -0.3f)
+	        if (Input.GetAxis("LeftJoystickHorizontal") < -0.3f)
             {
                 if (OneButtonAtATime == false) 
                 {
                     if (NewGame.GetComponent<Button>().interactable)
                     {
                         NewGame.GetComponent<Button>().interactable = false;
-                        Quit.GetComponent<Button>().interactable = true;
+                        Controls.GetComponent<Button>().interactable = true;
                         OneButtonAtATime = true;
                         NewGame.GetComponent<Animator>().SetBool("IsAnimating", false);
+                        Controls.GetComponent<Animator>().SetBool("IsAnimating", true);
+                    }
+                    else if (Controls.GetComponent<Button>().interactable)
+                    {
+                        Quit.GetComponent<Button>().interactable = true;
+                        Controls.GetComponent<Button>().interactable = false;
+                        OneButtonAtATime = true;
                         Quit.GetComponent<Animator>().SetBool("IsAnimating", true);
+                        Controls.GetComponent<Animator>().SetBool("IsAnimating", false);
                     }
                     else
                     {
@@ -39,36 +55,81 @@ public class ButtonManager : MonoBehaviour {
                 }
                 
             }
+            else if (Input.GetAxis("LeftJoystickHorizontal") > 0.3f)
+            {
+                if (OneButtonAtATime == false)
+                {
+                    if (NewGame.GetComponent<Button>().interactable)
+                    {
+                        NewGame.GetComponent<Button>().interactable = false;
+                        Quit.GetComponent<Button>().interactable = true;
+                        OneButtonAtATime = true;
+                        NewGame.GetComponent<Animator>().SetBool("IsAnimating", false);
+                        Quit.GetComponent<Animator>().SetBool("IsAnimating", true);
+                    }
+                    else if (Controls.GetComponent<Button>().interactable)
+                    {
+                        NewGame.GetComponent<Button>().interactable = true;
+                        Controls.GetComponent<Button>().interactable = false;
+                        OneButtonAtATime = true;
+                        NewGame.GetComponent<Animator>().SetBool("IsAnimating", true);
+                        Controls.GetComponent<Animator>().SetBool("IsAnimating", false);
+                    }
+                    else
+                    {
+                        Controls.GetComponent<Button>().interactable = true;
+                        Quit.GetComponent<Button>().interactable = false;
+                        OneButtonAtATime = true;
+                        Controls.GetComponent<Animator>().SetBool("IsAnimating", true);
+                        Quit.GetComponent<Animator>().SetBool("IsAnimating", false);
+                    }
+                }
+
+            }
             else
             {
                 OneButtonAtATime = false;
             }
 
-        if (Input.GetKeyDown(KeyCode.Joystick1Button0))
+        if (Input.GetKeyDown(KeyCode.Joystick1Button0) && !IsInPanel)
         {
             if (NewGame.GetComponent<Button>().interactable)
             {
                 ButtonNewGame();
-                //Debug.Log("a");
+                Debug.Log("a");
             }
-            else
+            else if (Quit.GetComponent<Button>().interactable)
             {
                 ButtonQuitGame();
             }
+            else
+            {
+                ControlsButton();
+            }
+            
+        }
+        if (Input.GetKeyDown(KeyCode.Joystick1Button1) && IsInPanel)
+        {
+            ControlPanel.SetActive(false);
+            IsInPanel = false;
         }
 	}
 
     public void ButtonNewGame ()
     {
-		this.GetComponent<AudioSource> ().Play ();
         StartCoroutine("Fondu");
         
     }
 
     public void ButtonQuitGame()
     {
-		this.GetComponent<AudioSource> ().Play ();
         Application.Quit();
+    }
+
+    public void ControlsButton()
+    {
+        ControlPanel.SetActive(true);
+        IsInPanel = true;
     }
 
     IEnumerator Fondu()
@@ -80,7 +141,7 @@ public class ButtonManager : MonoBehaviour {
             PanelNoir.GetComponent<Image>().color = new Color(0f, 0f, 0f, x);
             yield return new WaitForEndOfFrame();
         }
-        //Debug.Log("a");
+        Debug.Log("a");
         Application.LoadLevel(1);
 
     }
