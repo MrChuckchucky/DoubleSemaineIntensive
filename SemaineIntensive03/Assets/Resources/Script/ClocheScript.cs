@@ -28,7 +28,6 @@ public class ClocheScript : MonoBehaviour
 			{
 				timerStart = 0;
 				isActive = false;
-				totemSpotted = null;
 			}
             signal();
         }

@@ -27,7 +27,7 @@ public class TotemManager : MonoBehaviour
             int point = 0;
             foreach (GameObject totem in totems)
             {
-                if (totem.GetComponent<TotemScript>().isActive)
+				if (totem.GetComponentInChildren<TotemScript>().isActive)
                 {
                     point++;
                 }

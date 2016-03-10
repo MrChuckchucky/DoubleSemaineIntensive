@@ -567,7 +567,7 @@ public class PlayerScript : MonoBehaviour
 		float distRet = 9999;
 		foreach (GameObject totem in AllTotems)
 		{
-			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.position);
+			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.parent.position);
 			if (dist < distRet && totem.GetComponent<TotemScript>().dysActive == false && totem.GetComponent<TotemScript>().isActive) {chooseTotem = totem;}
 			if (dist > distMax && totem.GetComponent<TotemScript>().isActive) {farTotem = totem;}
 		}
@@ -581,7 +581,7 @@ public class PlayerScript : MonoBehaviour
 		float distMax = 9999;
 		foreach (GameObject totem in AllTotems)
 		{
-			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.position);
+			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.parent.position);
 			if (dist < totem.GetComponent<TotemScript>().distance && dist < distMax && totem.GetComponent<TotemScript>().isActive) {closeTotem = totem;}
 		}
 		if (closeTotem) 
@@ -627,7 +627,7 @@ public class PlayerScript : MonoBehaviour
 			axisChoose = false;
 		}    
 
-		if (AllTotems [indexTot].GetComponent<TotemScript> ().isActive && startChoose) {this.gameObject.transform.position = AllTotems [indexTot].transform.position;}
+		if (AllTotems [indexTot].GetComponent<TotemScript> ().isActive && startChoose) {this.gameObject.transform.position = AllTotems [indexTot].transform.parent.position;}
 		if (Input.GetKeyDown (KeyCode.Joystick1Button3)) {choosingTotem = false;startChoose = false;}
 
 	}
@@ -659,10 +659,10 @@ public class PlayerScript : MonoBehaviour
 	{
 		foreach (GameObject totem in AllTotems)
 		{
-			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.position);
+			float dist = Vector3.Distance (this.gameObject.transform.position, totem.transform.parent.position);
 			if (dist < totem.GetComponent<TotemScript>().distance)
             {
-                totem.GetComponent<TotemScript> ().loadTotem ();
+				totem.GetComponent<TotemScript> ().loadTotem ();
                 //angleTurnShaman = Vector3.Angle(transform.FindChild("Head").forward, transform.FindChild("Head").LookAt(new Vector3(totem.transform.position.x, transform.FindChild("Head").position.y, totem.transform.position.z));
             } 
 			else {totem.GetComponent<TotemScript> ().deloadTotem ();}

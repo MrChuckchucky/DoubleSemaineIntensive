@@ -37,13 +37,13 @@ public class TotemScript : MonoBehaviour
 			}
 			if (isActive)
 			{
-				this.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+				//this.gameObject.GetComponent<Renderer> ().material.color = Color.green;
 			} 
 			else
 			{
-				this.gameObject.GetComponent<Renderer> ().material.color = Color.white;
+				//this.gameObject.GetComponent<Renderer> ().material.color = Color.white;
 				GameObject player = GameObject.FindGameObjectWithTag("Player");
-				if (animated && Vector3.Distance(player.transform.position, transform.position) > distance)
+				if (animated && Vector3.Distance(player.transform.position, this.transform.parent.position) > distance)
 				{
 					animated = false;
 					player.transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Idle");
@@ -62,6 +62,7 @@ public class TotemScript : MonoBehaviour
                 GameObject.FindGameObjectWithTag("Player").transform.FindChild("Head").GetComponent<Animator>().SetTrigger("Invocation");
             }
 			loadBar += unitLoad * Time.deltaTime;
+			this.gameObject.GetComponent<TotemFX> ().createdAnimTime = loadBar / 100;
 			MasterAudio.FireCustomEvent ("TotemSummonSFX", this.transform.position);
 			if (loadBar >= 100) {isActive = true;}
 		}
@@ -72,6 +73,7 @@ public class TotemScript : MonoBehaviour
 		if (!isActive && loadBar >= 0) 
 		{
 			loadBar -= unitLoad * Time.deltaTime;
+			this.gameObject.GetComponent<TotemFX> ().createdAnimTime = loadBar / 100;
 			if (loadBar < 0) {loadBar = 0;}
 		}
         if(dysActive)
@@ -80,7 +82,7 @@ public class TotemScript : MonoBehaviour
             bool test = true;
             foreach(GameObject enemy in enemies)
             {
-                float far = Vector3.Distance(enemy.transform.position, transform.position);
+                float far = Vector3.Distance(enemy.transform.position, transform.parent.position);
                 if (far < distance)
                 {
                     test = false;
@@ -98,6 +100,7 @@ public class TotemScript : MonoBehaviour
     {
         //Debug.Log("yo2");
 		MasterAudio.FireCustomEvent("TotemDestroySFX", this.transform.position);
+		this.gameObject.GetComponent<Animator>().SetTrigger("Totem_Destroyed");
         animated = false;
         dysActive = false;
         isActive = false;

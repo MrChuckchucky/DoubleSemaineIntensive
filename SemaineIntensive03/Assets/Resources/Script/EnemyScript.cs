@@ -321,7 +321,7 @@ public class EnemyScript : MonoBehaviour
         GameObject[] totems = GameObject.FindGameObjectsWithTag("Totem");
         foreach(GameObject totem in totems)
         {
-            if(totem.GetComponent<TotemScript>().isActive == false)
+			if(totem.GetComponentInChildren<TotemScript>().isActive == false)
             {
                 continue;
             }
@@ -623,11 +623,12 @@ public class EnemyScript : MonoBehaviour
 			}
 		}
         GetComponent<NavMeshAgent>().speed = sprint;
-        destination = totemSpotted.transform.position;
-        if (Vector3.Distance(transform.position, destination) <= totemSpotted.GetComponent<TotemScript>().distance - 1)
+        destination = totemSpotted.transform.parent.position;
+		if (Vector3.Distance(transform.position, destination) <= totemSpotted.GetComponentInChildren<TotemScript>().distance - 1)
         {
+			totemSpotted.GetComponentInChildren<Animator>().SetTrigger("Totem_Hit");
             destination = new Vector3(Mathf.Round(transform.position.x * 10) / 10, Mathf.Round(transform.position.y * 10) / 10, Mathf.Round(transform.position.z * 10) / 10);
-            totemSpotted.GetComponent<TotemScript>().dysActive = true;
+			totemSpotted.GetComponentInChildren<TotemScript>().dysActive = true;
         }
     }
     void Fire()
