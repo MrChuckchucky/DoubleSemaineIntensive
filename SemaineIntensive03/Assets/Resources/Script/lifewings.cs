@@ -25,35 +25,38 @@ public class lifewings : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		P =  GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerScript> ();
-		float life = P.life;
-		float lifeMax = P.maxLife;
-
-		if (life <= 0f)
-			life = 0f;
-		int nombreDePlume = (int)((life/lifeMax)*8f);
-
-
-		if (life <= 0f)
-			life = 0f;
-
-
-		for (int i = 0; i < 8 ; i++) {
-			if ( i  < nombreDePlume ) {
-				if (i % 2 == 0) {
-					plumesList[i].sprite = lifeH;
+		if (P) 
+		{
+			float life = P.life;
+			float lifeMax = P.maxLife;
+			
+			if (life <= 0f)
+				life = 0f;
+			int nombreDePlume = (int)((life/lifeMax)*8f);
+			
+			
+			if (life <= 0f)
+				life = 0f;
+			
+			
+			for (int i = 0; i < 8 ; i++) {
+				if ( i  < nombreDePlume ) {
+					if (i % 2 == 0) {
+						plumesList[i].sprite = lifeH;
+					}
+					
+					else {
+						plumesList[i].sprite = lifeB;
+					}
 				}
-
 				else {
-					plumesList[i].sprite = lifeB;
-				}
-			}
-			else {
-				if (i % 2 == 0) {
-					plumesList[i].sprite = deadH;
-				}
-
-				else {
-					plumesList[i].sprite = deadB;
+					if (i % 2 == 0) {
+						plumesList[i].sprite = deadH;
+					}
+					
+					else {
+						plumesList[i].sprite = deadB;
+					}
 				}
 			}
 		}

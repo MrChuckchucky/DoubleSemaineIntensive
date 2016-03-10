@@ -37,7 +37,7 @@ public class MunitionUI : MonoBehaviour {
 	void Update () {
 		PlayerScript P = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
 
-		if(P.EType == EnemyManager.EnemyType.HEAVY) { // pour le moment ! 
+		if(P && P.EType == EnemyManager.EnemyType.HEAVY) { // pour le moment ! 
 			carabineIcone.gameObject.SetActive(false);
 			knifeIcone.gameObject.SetActive(false);
 			shotgunIcone.gameObject.SetActive(true);
@@ -96,7 +96,7 @@ public class MunitionUI : MonoBehaviour {
 
 
 
-		if(P.EType == EnemyManager.EnemyType.SNEAKY) { // pour le moment ! 
+		if(P && P.EType == EnemyManager.EnemyType.SNEAKY) { // pour le moment ! 
 			shotgunIconeBar.gameObject.SetActive(false);
 			carabineIcone.gameObject.SetActive(false);
 			knifeIcone.gameObject.SetActive(true);
@@ -123,7 +123,7 @@ public class MunitionUI : MonoBehaviour {
 		}
 
 
-		if(P.EType == EnemyManager.EnemyType.SNIPER) { // pour le moment ! 
+		if(P && P.EType == EnemyManager.EnemyType.SNIPER) { // pour le moment ! 
 			carabineIcone.gameObject.SetActive(true);
 			knifeIcone.gameObject.SetActive(false);
 			shotgunIcone.gameObject.SetActive(false);
