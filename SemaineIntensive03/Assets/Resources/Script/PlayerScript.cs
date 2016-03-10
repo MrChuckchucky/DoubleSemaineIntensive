@@ -166,19 +166,15 @@ public class PlayerScript : MonoBehaviour
 			else
 			{
 				checkTotem ();
-				if(!isSwaping)
+				if(!isSwaping && !isDying && !isTurning)
 				{
-					//CheckSwap();
-					if (!isDying)
-					{
-						CheckJoystickInput();
-					}
+					CheckJoystickInput();
 				}
 				CheckFire ();
 			}
             if (Mathf.Abs(transform.FindChild("Head").eulerAngles.y - angleTurnShaman.y) > rotation * 3)
             {
-                transform.eulerAngles += new Vector3(0, rotation * rotationDirection, 0);
+                //transform.eulerAngles += new Vector3(0, rotation * rotationDirection, 0);
             }
         }
 	}
@@ -223,6 +219,8 @@ public class PlayerScript : MonoBehaviour
 	{
 		float LJH = Input.GetAxis ("LeftJoystickHorizontal");
 		float LJV = Input.GetAxis ("LeftJoystickVertical");
+		//LJV = 0; //Lock sides
+
 		float RJH = Input.GetAxis ("RightJoystickHorizontal");
 
 		float TL = Input.GetAxis ("TriggerLeft");
