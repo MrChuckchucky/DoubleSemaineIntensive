@@ -1,14 +1,15 @@
 // Shader created with Shader Forge v1.26 
 // Shader Forge (c) Neat Corporation / Joachim Holmer - http://www.acegikmo.com/shaderforge/
 // Note: Manually altering this data may prevent you from opening it in Shader Forge
-/*SF_DATA;ver:1.26;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:0,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:0,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False;n:type:ShaderForge.SFN_Final,id:2865,x:32719,y:32712,varname:node_2865,prsc:2|diff-7736-RGB,spec-358-OUT,gloss-1813-OUT,normal-5964-RGB;n:type:ShaderForge.SFN_Tex2d,id:7736,x:31921,y:32620,ptovrint:True,ptlb:Base Color,ptin:_MainTex,varname:_MainTex,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:c8d68702aad2de14faa4f63b3cb27f04,ntxv:0,isnm:False;n:type:ShaderForge.SFN_Tex2d,id:5964,x:32407,y:32978,ptovrint:True,ptlb:Normal Map,ptin:_BumpMap,varname:_BumpMap,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:3,isnm:True;n:type:ShaderForge.SFN_Slider,id:358,x:32250,y:32780,ptovrint:False,ptlb:Metallic,ptin:_Metallic,varname:node_358,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0.6581197,max:1;n:type:ShaderForge.SFN_Slider,id:1813,x:32250,y:32882,ptovrint:False,ptlb:Gloss,ptin:_Gloss,varname:_Metallic_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0.3589744,max:1;proporder:5964-7736-358-1813;pass:END;sub:END;*/
+/*SF_DATA;ver:1.26;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:1,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:0,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False;n:type:ShaderForge.SFN_Final,id:2865,x:32719,y:32712,varname:node_2865,prsc:2|diff-7736-RGB,spec-358-OUT,gloss-7559-OUT,normal-5964-RGB;n:type:ShaderForge.SFN_Tex2d,id:7736,x:31921,y:32620,ptovrint:True,ptlb:Base Color,ptin:_MainTex,varname:_MainTex,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:c8d68702aad2de14faa4f63b3cb27f04,ntxv:0,isnm:False;n:type:ShaderForge.SFN_Tex2d,id:5964,x:32407,y:32978,ptovrint:True,ptlb:Normal Map,ptin:_BumpMap,varname:_BumpMap,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:56c16f97f6d6963469693cd45667cc55,ntxv:3,isnm:True;n:type:ShaderForge.SFN_Slider,id:358,x:32250,y:32780,ptovrint:False,ptlb:Metallic,ptin:_Metallic,varname:node_358,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:1,max:1;n:type:ShaderForge.SFN_Slider,id:1813,x:32250,y:32882,ptovrint:False,ptlb:Gloss,ptin:_Gloss,varname:_Metallic_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0.3589744,max:1;n:type:ShaderForge.SFN_Tex2d,id:163,x:31972,y:33018,ptovrint:False,ptlb:node_163,ptin:_node_163,varname:node_163,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:e64521af7d267db4ebb1ed7c0df74dc9,ntxv:0,isnm:False;n:type:ShaderForge.SFN_Add,id:7559,x:32207,y:33035,varname:node_7559,prsc:2|A-163-R,B-8835-OUT;n:type:ShaderForge.SFN_Vector1,id:8835,x:32072,y:33217,varname:node_8835,prsc:2,v1:0.3;proporder:5964-7736-358-1813-163;pass:END;sub:END;*/
 
 Shader "Shader Forge/Roof1" {
     Properties {
         _BumpMap ("Normal Map", 2D) = "bump" {}
         _MainTex ("Base Color", 2D) = "white" {}
-        _Metallic ("Metallic", Range(0, 1)) = 0.6581197
+        _Metallic ("Metallic", Range(0, 1)) = 1
         _Gloss ("Gloss", Range(0, 1)) = 0.3589744
+        _node_163 ("node_163", 2D) = "white" {}
     }
     SubShader {
         Tags {
@@ -42,7 +43,7 @@ Shader "Shader Forge/Roof1" {
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform sampler2D _BumpMap; uniform float4 _BumpMap_ST;
             uniform float _Metallic;
-            uniform float _Gloss;
+            uniform sampler2D _node_163; uniform float4 _node_163_ST;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -106,7 +107,8 @@ Shader "Shader Forge/Roof1" {
                 float Pi = 3.141592654;
                 float InvPi = 0.31830988618;
 ///////// Gloss:
-                float gloss = _Gloss;
+                float4 _node_163_var = tex2D(_node_163,TRANSFORM_TEX(i.uv0, _node_163));
+                float gloss = 1.0 - (_node_163_var.r+0.3); // Convert roughness to gloss
                 float specPow = exp2( gloss * 10.0+1.0);
 /////// GI Data:
                 UnityLight light;
@@ -208,7 +210,7 @@ Shader "Shader Forge/Roof1" {
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform sampler2D _BumpMap; uniform float4 _BumpMap_ST;
             uniform float _Metallic;
-            uniform float _Gloss;
+            uniform sampler2D _node_163; uniform float4 _node_163_ST;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -260,7 +262,8 @@ Shader "Shader Forge/Roof1" {
                 float Pi = 3.141592654;
                 float InvPi = 0.31830988618;
 ///////// Gloss:
-                float gloss = _Gloss;
+                float4 _node_163_var = tex2D(_node_163,TRANSFORM_TEX(i.uv0, _node_163));
+                float gloss = 1.0 - (_node_163_var.r+0.3); // Convert roughness to gloss
                 float specPow = exp2( gloss * 10.0+1.0);
 ////// Specular:
                 float NdotL = max(0, dot( normalDirection, lightDirection ));
@@ -320,7 +323,7 @@ Shader "Shader Forge/Roof1" {
             #pragma target 3.0
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform float _Metallic;
-            uniform float _Gloss;
+            uniform sampler2D _node_163; uniform float4 _node_163_ST;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float2 texcoord0 : TEXCOORD0;
@@ -355,7 +358,8 @@ Shader "Shader Forge/Roof1" {
                 float specularMonochrome;
                 float3 specColor;
                 diffColor = DiffuseAndSpecularFromMetallic( diffColor, _Metallic, specColor, specularMonochrome );
-                float roughness = 1.0 - _Gloss;
+                float4 _node_163_var = tex2D(_node_163,TRANSFORM_TEX(i.uv0, _node_163));
+                float roughness = (_node_163_var.r+0.3);
                 o.Albedo = diffColor + specColor * roughness * roughness * 0.5;
                 
                 return UnityMetaFragment( o );

@@ -123,7 +123,7 @@ public class EnemyScript : MonoBehaviour
 		{
 			transform.GetComponentInChildren<TrailRenderer> ().enabled = false;
 		}
-		transform.position = new Vector3 (transform.position.x, 0, transform.position.z);
+		transform.position = new Vector3 (transform.position.x, -2.5f, transform.position.z);
 		isPaused = GameObject.Find ("Managers").GetComponent<PauseManager> ().IsPaused;
 		if (isPaused == false) 
 		{

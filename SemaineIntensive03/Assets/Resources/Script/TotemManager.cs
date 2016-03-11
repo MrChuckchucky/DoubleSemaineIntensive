@@ -46,7 +46,9 @@ public class TotemManager : MonoBehaviour
 
     void win()
     {
+		Application.LoadLevel(4);
     }
+
     void defeat()
     {
 		Application.LoadLevel(3);
