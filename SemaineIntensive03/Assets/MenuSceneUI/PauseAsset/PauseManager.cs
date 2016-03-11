@@ -74,7 +74,7 @@ public class PauseManager : MonoBehaviour {
             if (Controls.GetComponent<Button>().interactable)
             {
                 ControlsButton();
-                Debug.Log("a");
+                //Debug.Log("a");
             }
             else
             {

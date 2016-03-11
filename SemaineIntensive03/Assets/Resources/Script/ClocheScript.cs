@@ -31,11 +31,13 @@ public class ClocheScript : MonoBehaviour
 			}
             signal();
         }
+		if (!isActive) {this.gameObject.GetComponent<AudioSource> ().Stop ();}
 	}
 
     void signal()
     {
-		MasterAudio.FireCustomEvent ("BellRinging", this.transform.position);
+		//MasterAudio.FireCustomEvent ("BellRinging", this.transform.position);
+		if (this.gameObject.GetComponent<AudioSource> ().isPlaying == false){this.gameObject.GetComponent<AudioSource> ().Play ();}
 		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Swapable");
 		foreach(GameObject enemy in enemies)
 		{
