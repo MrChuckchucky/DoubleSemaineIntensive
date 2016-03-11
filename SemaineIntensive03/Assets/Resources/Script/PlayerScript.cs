@@ -681,13 +681,17 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
-	GameObject oldSwaped = null;
+	GameObject oldParticle = null;
+	float timeAnim = 0;
 
 	void CheckSwap()
 	{
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Swapable");
 		Time.timeScale = 0.2f;
+		if (swaped) {timeAnim += Time.deltaTime;} 
+		else {timeAnim = 0;}
 		//Time.fixedDeltaTime = 0.5f;
-		if (swaped) 
+		/*if (swaped) 
 		{
 			//swaped.GetComponent<Renderer> ().material.color = Color.white;
 			bool isOK = true;
@@ -709,25 +713,39 @@ public class PlayerScript : MonoBehaviour
 			}
 			//swaped.GetComponent<Renderer> ().material.color = swapedColor;
 			swaped = null;
-		}
-		if (Physics.Raycast(this.gameObject.transform.position,  this.gameObject.transform.forward, out hit, rangeSwap)) 
+		}*/
+		foreach (GameObject enemy in enemies)
 		{
-			//Debug.Log (hit.collider.tag);
-			if (hit.collider.tag == "Swapable") 
+			float minDist = 999;
+			Vector3 posP = new Vector3(transform.FindChild ("Head").position.x, 0, transform.FindChild ("Head").position.z);
+			Vector3 posE = new Vector3(enemy.transform.FindChild ("Head").position.x, 0, enemy.transform.FindChild ("Head").position.z);
+			float dist = Vector3.Distance (posP, posE);
+			if (dist <= rangeSwap)
 			{
-				//Debug.Log (hit.collider.name);
-				//swapedColor = swaped.GetComponent<Renderer> ().material.color;
-				//swaped.GetComponent<Renderer> ().material.color = Color.green;
-				swaped = hit.collider.gameObject;
-				if (oldSwaped != swaped) 
+				Vector3 forward = Vector3.Normalize(transform.forward);
+				Vector3 toOther = Vector3.Normalize(posE - posP);
+				if (Vector3.Dot(forward, toOther) > 0.99f)
 				{
-					oldSwaped = swaped;
-					GameObject swapFX = Resources.Load ("FX/FX_Swap") as GameObject;
-					GameObject go = Instantiate (swapFX, swaped.transform.position,Quaternion.identity) as GameObject;
-					go.transform.parent = swaped.transform;
+					if (dist < minDist && (swaped != enemy || timeAnim > 0.8f))
+					{
+						timeAnim = 0;
+						minDist = dist;
+						swaped = enemy;
+						GameObject swapFX = Resources.Load ("FX/FX_Swap") as GameObject;
+						GameObject go = Instantiate (swapFX, enemy.transform.position,Quaternion.identity) as GameObject;
+						go.transform.parent = enemy.transform;
+						oldParticle = go;
+					}
 				}
 			}
 		}
+		/*if (oldSwaped != swaped) 
+		{
+			oldSwaped = swaped;
+			GameObject swapFX = Resources.Load ("FX/FX_Swap") as GameObject;
+			GameObject go = Instantiate (swapFX, swaped.transform.position,Quaternion.identity) as GameObject;
+			go.transform.parent = swaped.transform;
+		}*/
 	}
 
 	void Swap()
